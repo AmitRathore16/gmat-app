@@ -31,15 +31,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
       obscureText: widget.isPassword && _obscureText,
       decoration: InputDecoration(
         hintText: widget.hintText,
-        hintStyle: TextStyle(color: Colors.black),
+        hintStyle: TextStyle(color: GlobalVariables.primaryTextColor),
         prefixIcon: widget.prefixIcon != null
-            ? Icon(widget.prefixIcon, color: Colors.black)
+            ? Icon(widget.prefixIcon, color: GlobalVariables.primaryTextColor)
             : null,
         suffixIcon: widget.isPassword
             ? IconButton(
                 icon: Icon(
                   _obscureText ? Icons.visibility_off : Icons.visibility,
-                  color: Colors.black,
+                  color: GlobalVariables.primaryTextColor,
                 ),
                 onPressed: () {
                   setState(() {
@@ -50,7 +50,21 @@ class _CustomTextFieldState extends State<CustomTextField> {
             : null,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.69),
-          borderSide: BorderSide(color: Colors.black, width: 0.77),
+          borderSide: BorderSide(color: GlobalVariables.appGreenLight, width: 0.77),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(7.69),
+          borderSide: BorderSide(
+            color: GlobalVariables.appGreenLight,
+            width: 1.2,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(7.69),
+          borderSide: BorderSide(
+            color: GlobalVariables.appGreenLight,
+            width: 1.2,
+          ),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),

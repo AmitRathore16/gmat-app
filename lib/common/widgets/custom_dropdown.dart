@@ -20,10 +20,24 @@ class CustomDropdown extends StatelessWidget {
       value: value,
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(color: Colors.black),
+        hintStyle: TextStyle(color: GlobalVariables.primaryTextColor),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.69),
-          borderSide: BorderSide(color: Colors.black, width: 0.77),
+          borderSide: BorderSide(color: GlobalVariables.appGreenLight, width: 0.77),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(7.69),
+          borderSide: BorderSide(
+            color: GlobalVariables.appGreenLight,
+            width: 1.2,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(7.69),
+          borderSide: BorderSide(
+            color: GlobalVariables.appGreenLight,
+            width: 1.2,
+          ),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),

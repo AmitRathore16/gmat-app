@@ -3,14 +3,12 @@ import 'package:get_me_a_tutor/import_export.dart';
 class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
-  final Color backgroundColor;
-  final Color textColor;
+  final bool isFilled;
   const CustomButton({
     super.key,
     required this.text,
     required this.onTap,
-    required this.backgroundColor,
-    required this.textColor,
+    required this.isFilled,
   });
 
   @override
@@ -22,27 +20,33 @@ class CustomButton extends StatelessWidget {
     return SizedBox(
       width: buttonWidth,
       height: buttonHeight,
-      child: OutlinedButton(
-        onPressed: onTap,
-        style: OutlinedButton.styleFrom(
-          backgroundColor: backgroundColor,
-          side: const BorderSide(
-            color: Colors.black,
-            width: 1,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 12,
-          ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: isFilled ? GlobalVariables.greenGradient : null,
+          borderRadius: BorderRadius.circular(30),
         ),
+        child: OutlinedButton(
+          onPressed: onTap,
+          style: OutlinedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            side: const BorderSide(
+              color: GlobalVariables.appGreenDark,
+              width: 1,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 12,
+            ),
+          ),
         child: SecondaryText(
           text: text,
           size: 20,
-          color: textColor,
+          color: isFilled ? Colors.white : GlobalVariables.appGreenDark,
         ),
+      ),
       ),
     );
   }

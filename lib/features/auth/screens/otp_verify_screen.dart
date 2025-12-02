@@ -169,7 +169,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                   8 * scaleFactor,
                                 ),
                                 borderSide: const BorderSide(
-                                  color: Colors.black,
+                                  color: GlobalVariables.primaryTextColor,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
@@ -177,7 +177,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                   8 * scaleFactor,
                                 ),
                                 borderSide: const BorderSide(
-                                  color: Colors.black,
+                                  color: GlobalVariables.primaryTextColor,
                                   width: 2,
                                 ),
                               ),
@@ -195,7 +195,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                   8 * scaleFactor,
                                 ),
                                 borderSide: const BorderSide(
-                                  color: Colors.black,
+                                  color: GlobalVariables.primaryTextColor,
                                 ),
                               ),
                               contentPadding: EdgeInsets.zero,
@@ -265,7 +265,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                   8 * scaleFactor,
                                 ),
                                 borderSide: const BorderSide(
-                                  color: Colors.black,
+                                  color: GlobalVariables.primaryTextColor,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
@@ -273,7 +273,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                   8 * scaleFactor,
                                 ),
                                 borderSide: const BorderSide(
-                                  color: Colors.black,
+                                  color: GlobalVariables.primaryTextColor,
                                   width: 2,
                                 ),
                               ),
@@ -291,7 +291,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                   8 * scaleFactor,
                                 ),
                                 borderSide: const BorderSide(
-                                  color: Colors.black,
+                                  color: GlobalVariables.primaryTextColor,
                                 ),
                               ),
                               contentPadding: EdgeInsets.zero,
@@ -324,8 +324,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                               ? const Loader()
                               : CustomButton(
                                   text: "Verify",
-                                  backgroundColor: Colors.black,
-                                  textColor: Colors.white,
+                                  isFilled: true,
                                   onTap: () async {
                                     FocusScope.of(context).unfocus();
 

@@ -80,8 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   CustomButton(
                     text: "Login",
-                    backgroundColor: Colors.black,
-                    textColor: Colors.white,
+                    isFilled: true,
                     onTap: () {
                       Navigator.pushNamed(context, LoginScreen.routeName);
                     },
@@ -89,8 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(width: buttonRowGap),
                   CustomButton(
                     text: "Register",
-                    backgroundColor: Colors.white,
-                    textColor: Colors.black,
+                    isFilled: false,
                     onTap: () {
                       Navigator.pushNamed(context, SignUpScreen.routeName);
                     },

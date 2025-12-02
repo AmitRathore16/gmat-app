@@ -162,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Expanded(
                                 child: Divider(
-                                  color: Colors.grey,
+                                  color: GlobalVariables.appGreenDark,
                                   thickness: 2,
                                 ),
                               ),
@@ -179,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               Expanded(
                                 child: Divider(
-                                  color: Colors.grey,
+                                  color: GlobalVariables.appGreenDark,
                                   thickness: 1,
                                 ),
                               ),
@@ -239,8 +239,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ? const Loader()
                                     : CustomButton(
                                         text: "Login",
-                                        backgroundColor: Colors.black,
-                                        textColor: Colors.white,
+                                        isFilled: false,
                                         onTap: () async {
                                           FocusScope.of(context).unfocus();
 

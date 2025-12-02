@@ -171,8 +171,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             children: [
                               Expanded(
                                 child: Divider(
-                                  color: Colors.grey,
-                                  thickness: 2,
+                                  color: GlobalVariables.appGreenDark,
+                                  thickness: 1,
                                 ),
                               ),
 
@@ -188,7 +188,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                               Expanded(
                                 child: Divider(
-                                  color: Colors.grey,
+                                  color: GlobalVariables.appGreenDark,
                                   thickness: 1,
                                 ),
                               ),
@@ -199,7 +199,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             height: detailsSectionGap,
                           ), // same as detailsSectionGap
                           // Name Field
-                          SecondaryText(text: "Name", size: 14 * scaleFactor),
+                          PrimaryText(text: "Name", size: 14 * scaleFactor),
                           SizedBox(height: 6),
                           CustomTextField(
                             controller: _nameController,
@@ -209,7 +209,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           SizedBox(height: detailsSectionGap),
 
                           // Email Field
-                          SecondaryText(
+                          PrimaryText(
                             text: "Email Address",
                             size: 14 * scaleFactor,
                           ),
@@ -222,7 +222,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
 
                           SizedBox(height: detailsSectionGap),
-                          SecondaryText(
+                          PrimaryText(
                             text: "Phone Number",
                             size: 14 * scaleFactor,
                           ),
@@ -243,7 +243,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                           SizedBox(height: detailsSectionGap),
                           // Role Dropdown
-                          SecondaryText(
+                          PrimaryText(
                             text: "Select your role",
                             size: 14 * scaleFactor,
                           ),
@@ -263,7 +263,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           SizedBox(height: detailsSectionGap),
 
                           // Password field
-                          SecondaryText(
+                          PrimaryText(
                             text: "Password",
                             size: 14 * scaleFactor,
                           ),
@@ -286,7 +286,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           SizedBox(height: detailsSectionGap),
 
                           // Confirm Password Field
-                          SecondaryText(
+                          PrimaryText(
                             text: "Confirm Password",
                             size: 14 * scaleFactor,
                           ),
@@ -313,8 +313,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     ? const Loader()
                                     : CustomButton(
                                         text: "Sign up",
-                                        backgroundColor: Colors.black,
-                                        textColor: Colors.white,
+                                        isFilled : true,
                                         onTap: () async {
                                           FocusScope.of(context).unfocus();
 
