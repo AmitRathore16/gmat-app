@@ -68,7 +68,14 @@ class _ParentProfileUpdateScreenState extends State<ParentProfileUpdateScreen> {
       backgroundColor: GlobalVariables.backgroundColor,
       appBar: AppBar(
         centerTitle: true,
-        title: const PrimaryText(text: 'Edit Profile', size: 22),
+        title: Text(
+          'Edit Profile',
+          style: GoogleFonts.inter(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -86,20 +93,40 @@ class _ParentProfileUpdateScreenState extends State<ParentProfileUpdateScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 /// ───────── AVATAR ─────────
-                const Center(
-                  child: CircleAvatar(
-                    radius: 52,
-                    backgroundColor: Color(0xFFEAEAEA),
-                    child: Icon(Icons.person, size: 36),
+                Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: GlobalVariables.selectedColor.withOpacity(0.2),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: CircleAvatar(
+                      radius: 52,
+                      backgroundColor: GlobalVariables.selectedColor.withOpacity(0.15),
+                      child: Icon(
+                        Icons.person,
+                        size: 42,
+                        color: GlobalVariables.selectedColor,
+                      ),
+                    ),
                   ),
                 ),
 
                 const SizedBox(height: 32),
 
+                _sectionHeader('Personal Information'),
+                const SizedBox(height: 16),
+
                 _label('Full Name'),
                 CustomTextField(
                   controller: nameCtrl,
                   hintText: 'Enter your name',
+                  prefixIcon: Icons.person,
                 ),
 
                 _gap(),
@@ -108,13 +135,7 @@ class _ParentProfileUpdateScreenState extends State<ParentProfileUpdateScreen> {
                   controller: phoneCtrl,
                   hintText: 'Enter phone number',
                   keyboardType: TextInputType.phone,
-                ),
-
-                _gap(),
-                _label('Street'),
-                CustomTextField(
-                  controller: streetCtrl,
-                  hintText: 'Street address',
+                  prefixIcon: Icons.phone,
                 ),
 
                 _gap(),
@@ -122,6 +143,19 @@ class _ParentProfileUpdateScreenState extends State<ParentProfileUpdateScreen> {
                 CustomTextField(
                   controller: cityCtrl,
                   hintText: 'City',
+                  prefixIcon: Icons.location_city,
+                ),
+
+                const SizedBox(height: 32),
+
+                _sectionHeader('Address Details'),
+                const SizedBox(height: 16),
+
+                _label('Street Address'),
+                CustomTextField(
+                  controller: streetCtrl,
+                  hintText: 'Street address',
+                  prefixIcon: Icons.location_on,
                 ),
 
                 _gap(),
@@ -129,6 +163,7 @@ class _ParentProfileUpdateScreenState extends State<ParentProfileUpdateScreen> {
                 CustomTextField(
                   controller: stateCtrl,
                   hintText: 'State',
+                  prefixIcon: Icons.map,
                 ),
 
                 _gap(),
@@ -137,6 +172,7 @@ class _ParentProfileUpdateScreenState extends State<ParentProfileUpdateScreen> {
                   controller: pincodeCtrl,
                   hintText: 'Pincode',
                   keyboardType: TextInputType.number,
+                  prefixIcon: Icons.pin_drop,
                 ),
 
                 const SizedBox(height: 32),
@@ -163,9 +199,39 @@ class _ParentProfileUpdateScreenState extends State<ParentProfileUpdateScreen> {
   }
 
   /// ───────── HELPERS ─────────
+  Widget _sectionHeader(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            GlobalVariables.selectedColor.withOpacity(0.1),
+            GlobalVariables.selectedColor.withOpacity(0.03),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        text,
+        style: GoogleFonts.inter(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: GlobalVariables.selectedColor,
+        ),
+      ),
+    );
+  }
+
   Widget _label(String text) => Padding(
     padding: const EdgeInsets.only(bottom: 8),
-    child: PrimaryText(text: text, size: 16),
+    child: Text(
+      text,
+      style: GoogleFonts.inter(
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+        color: Colors.grey.shade700,
+      ),
+    ),
   );
 
   Widget _gap() => const SizedBox(height: 20);

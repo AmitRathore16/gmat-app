@@ -85,23 +85,121 @@ class _ParentProfileCreateScreenState extends State<ParentProfileCreateScreen> {
         )
             : null,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
         child: Column(
           children: [
-            Expanded(child: _buildStep()),
-            Consumer<ParentProfileProvider>(
-              builder: (context, provider, _) {
-                return provider.isLoading
-                    ? const Loader()
-                    : CustomButton(
-                  text: currentStep == 1 ? 'Finish' : 'Continue',
-                  onTap: onContinue,
-                );
-              },
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _progressBar(),
+                  const SizedBox(height: 24),
+                  _stepTitle(),
+                  const SizedBox(height: 8),
+                  _stepSubtitle(),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: _buildStep(),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, -2),
+                  ),
+                ],
+              ),
+              child: Consumer<ParentProfileProvider>(
+                builder: (context, provider, _) {
+                  return provider.isLoading
+                      ? const Loader()
+                      : CustomButton(
+                    text: currentStep == 1 ? 'Finish Setup' : 'Continue',
+                    onTap: onContinue,
+                  );
+                },
+              ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _progressBar() {
+    return Row(
+      children: List.generate(
+        2,
+            (index) => Expanded(
+          child: Container(
+            height: 6,
+            margin: const EdgeInsets.symmetric(horizontal: 4),
+            decoration: BoxDecoration(
+              gradient: index <= currentStep
+                  ? LinearGradient(
+                colors: [
+                  GlobalVariables.selectedColor,
+                  GlobalVariables.selectedColor.withOpacity(0.7),
+                ],
+              )
+                  : null,
+              color: index > currentStep
+                  ? GlobalVariables.greyBackgroundColor
+                  : null,
+              borderRadius: BorderRadius.circular(3),
+              boxShadow: index <= currentStep
+                  ? [
+                BoxShadow(
+                  color: GlobalVariables.selectedColor.withOpacity(0.3),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+                  : null,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _stepTitle() {
+    final titles = [
+      'Parent Details',
+      'Address Information',
+    ];
+    return Text(
+      titles[currentStep],
+      style: GoogleFonts.inter(
+        fontSize: 26,
+        fontWeight: FontWeight.w700,
+        color: Colors.black87,
+      ),
+    );
+  }
+
+  Widget _stepSubtitle() {
+    final subtitles = [
+      'Tell us about yourself',
+      'Where are you located?',
+    ];
+    return Text(
+      subtitles[currentStep],
+      style: GoogleFonts.inter(
+        fontSize: 14,
+        color: Colors.grey.shade600,
       ),
     );
   }
@@ -113,8 +211,34 @@ class _ParentProfileCreateScreenState extends State<ParentProfileCreateScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const PrimaryText(text: 'Parent Details', size: 22),
-            const SizedBox(height: 24),
+            const SizedBox(height: 8),
+
+            // Profile Icon
+            Center(
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 24),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: GlobalVariables.selectedColor.withOpacity(0.2),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: CircleAvatar(
+                  radius: 48,
+                  backgroundColor: GlobalVariables.selectedColor.withOpacity(0.15),
+                  child: Icon(
+                    Icons.person,
+                    size: 40,
+                    color: GlobalVariables.selectedColor,
+                  ),
+                ),
+              ),
+            ),
+
             CustomTextField(
               controller: nameCtrl,
               hintText: 'Parent Name',
@@ -144,15 +268,69 @@ class _ParentProfileCreateScreenState extends State<ParentProfileCreateScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const PrimaryText(text: 'Address', size: 22),
-          const SizedBox(height: 24),
-          CustomTextField(controller: streetCtrl, hintText: 'Street'),
+          const SizedBox(height: 8),
+
+          // Location Icon
+          Center(
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 24),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    GlobalVariables.selectedColor.withOpacity(0.15),
+                    GlobalVariables.selectedColor.withOpacity(0.05),
+                  ],
+                ),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: GlobalVariables.selectedColor.withOpacity(0.2),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Icon(
+                Icons.location_on,
+                size: 48,
+                color: GlobalVariables.selectedColor,
+              ),
+            ),
+          ),
+
+          CustomTextField(
+            controller: streetCtrl,
+            hintText: 'Street Address',
+            prefixIcon: Icons.home,
+          ),
           const SizedBox(height: 16),
-          CustomTextField(controller: cityCtrl, hintText: 'City'),
+          Row(
+            children: [
+              Expanded(
+                child: CustomTextField(
+                  controller: cityCtrl,
+                  hintText: 'City',
+                  prefixIcon: Icons.location_city,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: CustomTextField(
+                  controller: stateCtrl,
+                  hintText: 'State',
+                  prefixIcon: Icons.map,
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 16),
-          CustomTextField(controller: stateCtrl, hintText: 'State'),
-          const SizedBox(height: 16),
-          CustomTextField(controller: pincodeCtrl, hintText: 'Pincode'),
+          CustomTextField(
+            controller: pincodeCtrl,
+            hintText: 'Pincode',
+            prefixIcon: Icons.pin_drop,
+            keyboardType: TextInputType.number,
+          ),
         ],
       ),
     );

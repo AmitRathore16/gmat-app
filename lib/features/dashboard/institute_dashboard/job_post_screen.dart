@@ -374,17 +374,63 @@ class _JobPostScreenState extends State<JobPostScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
-                title: const Text('Add Subject'),
-                content: TextField(
-                  controller: subjectInputCtrl,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter subject name',
+                title: Text(
+                  'Add Subject',
+                  style: GoogleFonts.inter(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
                   ),
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+                    TextField(
+                      controller: subjectInputCtrl,
+                      autofocus: true,
+                      style: GoogleFonts.inter(
+                        fontSize: 15,
+                        color: Colors.black87,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: 'e.g. Mathematics',
+                        hintStyle: GoogleFonts.inter(
+                          fontSize: 15,
+                          color: Colors.grey.shade500,
+                        ),
+                        filled: true,
+                        fillColor: GlobalVariables.greyBackgroundColor,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: GlobalVariables.selectedColor,
+                            width: 2,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel'),
+                    child: Text(
+                      'Cancel',
+                      style: GoogleFonts.inter(
+                        color: Colors.grey.shade700,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                   TextButton(
                     onPressed: () {
@@ -395,7 +441,13 @@ class _JobPostScreenState extends State<JobPostScreen> {
                       }
                       Navigator.pop(context);
                     },
-                    child: const Text('Add'),
+                    child: Text(
+                      'Add',
+                      style: GoogleFonts.inter(
+                        color: GlobalVariables.selectedColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ],
               ),

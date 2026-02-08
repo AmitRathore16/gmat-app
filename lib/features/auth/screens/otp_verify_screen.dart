@@ -14,12 +14,12 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   bool _isResendingOtp = false;
   final List<TextEditingController> _emailOtpControllers = List.generate(
     6,
-    (index) => TextEditingController(),
+        (index) => TextEditingController(),
   );
 
   final List<FocusNode> _emailOtpFocusNodes = List.generate(
     6,
-    (index) => FocusNode(),
+        (index) => FocusNode(),
   );
 
   @override
@@ -46,8 +46,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final scaleFactor = screenWidth / 393;
 
-    // OTP box dimensions
-    final otpBoxSize = 50 * scaleFactor;
+    // OTP box dimensions - slightly larger and more consistent
+    final otpBoxSize = 52.0;
+    final spacing = 8.0;
 
     return Scaffold(
       backgroundColor: GlobalVariables.backgroundColor,
@@ -65,198 +66,303 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 16 * scaleFactor),
+
                     // Back Button
                     IconButton(
                       icon: Icon(
                         Icons.chevron_left,
-                        size: 32 * scaleFactor,
+                        size: 36,
                         color: GlobalVariables.primaryTextColor,
                       ),
                       onPressed: () => Navigator.pop(context),
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                     ),
+
                     SizedBox(height: 24 * scaleFactor),
-                    // Title
-                    PrimaryText(
-                      text: 'OTP Verification',
-                      size: 28 * scaleFactor,
-                    ),
-                    SizedBox(height: 8 * scaleFactor),
-                    // Subtitle
-                    SecondaryText(
-                      text:
-                          'Enter the OTP sent to your email address to verify your account.',
-                      size: 14 * scaleFactor,
-                    ),
-                    SizedBox(height: 40 * scaleFactor),
-                    // Instruction text
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: SecondaryText(
-                        text: 'Enter the OTP sent on your email',
-                        size: 14 * scaleFactor,
-                      ),
-                    ),
-                    SizedBox(height: 16 * scaleFactor),
-                    // OTP Input Fields
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: List.generate(6, (index) {
-                        return SizedBox(
-                          width: otpBoxSize,
-                          height: otpBoxSize,
-                          child: TextFormField(
-                            controller: _emailOtpControllers[index],
-                            focusNode: _emailOtpFocusNodes[index],
-                            textAlign: TextAlign.center,
-                            keyboardType: TextInputType.number,
-                            cursorColor: GlobalVariables.secondaryTextColor,
-                            maxLength: 1,
-                            style: TextStyle(
-                              fontSize: 24 * scaleFactor,
-                              fontWeight: FontWeight.bold,
-                              color: GlobalVariables.primaryTextColor,
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return ''; // triggers red border without text
-                              }
-                              return null;
-                            },
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            decoration: InputDecoration(
-                              counterText: '',
-                              isDense: true,
-                              errorStyle: const TextStyle(
-                                fontSize: 0,
-                                height: 0,
-                              ),
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(
-                                  12 * scaleFactor,
-                                ),
-                                borderSide: BorderSide.none,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(
-                                  12 * scaleFactor,
-                                ),
-                                borderSide: BorderSide(
-                                  color: GlobalVariables.selectedColor,
-                                  width: 2,
-                                ),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(
-                                  12 * scaleFactor,
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.red,
-                                  width: 2,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(
-                                  12 * scaleFactor,
-                                ),
-                                borderSide: BorderSide.none,
-                              ),
-                              contentPadding: EdgeInsets.zero,
-                            ),
-                            onChanged: (value) =>
-                                _onEmailOtpChanged(index, value),
+
+                    // Icon
+                    Center(
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              GlobalVariables.selectedColor.withOpacity(0.15),
+                              GlobalVariables.selectedColor.withOpacity(0.05),
+                            ],
                           ),
-                        );
-                      }),
-                    ),
-                    SizedBox(height: 8 * scaleFactor),
-                    // Resend OTP
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: _isResendingOtp
-                          ? const Loader()
-                          : TextButton(
-                        style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                        onPressed: () async {
-                          setState(() {
-                            _isResendingOtp = true;
-                          });
-
-                          final authProvider =
-                          Provider.of<AuthProvider>(context, listen: false);
-
-                          await authProvider.resendEmailOtp(
-                            context: context,
-                          );
-
-                          setState(() {
-                            _isResendingOtp = false;
-                          });
-                        },
-                        child: Text(
-                          'Resend OTP',
-                          style: GoogleFonts.roboto(
-                            fontSize: 14 * scaleFactor,
-                            fontWeight: FontWeight.w400,
-                            color: GlobalVariables.selectedColor,
-                          ),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: GlobalVariables.selectedColor.withOpacity(0.2),
+                              blurRadius: 20,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.mark_email_read,
+                          size: 48,
+                          color: GlobalVariables.selectedColor,
                         ),
                       ),
                     ),
 
                     SizedBox(height: 32 * scaleFactor),
-                    // Verify Button
-                    Consumer<AuthProvider>(
-                      builder: (context, authProvider, _) {
-                        return authProvider.isLoading
-                            ? const Loader()
-                            : CustomButton(
-                                text: 'Verify',
-                                onTap: () async {
-                                  FocusScope.of(context).unfocus();
 
-                                  if (_formKey.currentState!.validate()) {
-                                    // Combine OTP digits
-                                    final otp = _emailOtpControllers
-                                        .map((c) => c.text)
-                                        .join();
-
-                                    final authProvider =
-                                        Provider.of<AuthProvider>(
-                                          context,
-                                          listen: false,
-                                        );
-                                    final role = await authProvider
-                                        .verifyEmailOtp(
-                                          otp: otp,
-                                          context: context,
-                                        );
-
-                                    if (role!=null) {
-                                      Navigator.pushNamedAndRemoveUntil(
-                                        context,
-                                        SignupSuccessScreen.routeName,
-                                        (route) => false,
-                                        arguments: role,
-                                      );
-                                    }
-                                  }
-                                },
-                              );
-                      },
+                    // Title
+                    Center(
+                      child: Text(
+                        'OTP Verification',
+                        style: GoogleFonts.inter(
+                          fontSize: 28 * scaleFactor,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black87,
+                        ),
+                      ),
                     ),
+
+                    SizedBox(height: 12 * scaleFactor),
+
+                    // Subtitle
+                    Center(
+                      child: Text(
+                        'Enter the 6-digit code sent to',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.inter(
+                          fontSize: 14 * scaleFactor,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 4),
+
+                    Center(
+                      child: Text(
+                        widget.email,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.inter(
+                          fontSize: 14 * scaleFactor,
+                          fontWeight: FontWeight.w600,
+                          color: GlobalVariables.selectedColor,
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 40 * scaleFactor),
+
+                    // OTP Input Fields
+                    Center(
+                      child: Wrap(
+                        spacing: spacing,
+                        runSpacing: spacing,
+                        alignment: WrapAlignment.center,
+                        children: List.generate(6, (index) {
+                          return Container(
+                            width: otpBoxSize,
+                            height: otpBoxSize,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: TextFormField(
+                              controller: _emailOtpControllers[index],
+                              focusNode: _emailOtpFocusNodes[index],
+                              textAlign: TextAlign.center,
+                              keyboardType: TextInputType.number,
+                              cursorColor: GlobalVariables.selectedColor,
+                              maxLength: 1,
+                              style: GoogleFonts.inter(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w700,
+                                color: GlobalVariables.primaryTextColor,
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return '';
+                                }
+                                return null;
+                              },
+                              autovalidateMode:
+                              AutovalidateMode.onUserInteraction,
+                              decoration: InputDecoration(
+                                counterText: '',
+                                isDense: true,
+                                errorStyle: const TextStyle(
+                                  fontSize: 0,
+                                  height: 0,
+                                ),
+                                filled: true,
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade300,
+                                    width: 1.5,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade300,
+                                    width: 1.5,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: GlobalVariables.selectedColor,
+                                    width: 2,
+                                  ),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    color: Colors.red,
+                                    width: 2,
+                                  ),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    color: Colors.red,
+                                    width: 2,
+                                  ),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
+                              ),
+                              onChanged: (value) =>
+                                  _onEmailOtpChanged(index, value),
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+
                     SizedBox(height: 24 * scaleFactor),
+
+                    // Resend OTP
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                      Text(
+                      "Didn't receive the code?",
+                      style: GoogleFonts.inter(
+                        fontSize: 14 * scaleFactor,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                    _isResendingOtp
+                        ? SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          GlobalVariables.selectedColor,
+                        ),
+                      ),
+                    )
+                        : GestureDetector(
+                      onTap: () async {
+                        setState(() {
+                          _isResendingOtp = true;
+                        });
+
+                        final authProvider =
+                        Provider.of<AuthProvider>(context,
+                            listen: false);
+
+                        await authProvider.resendEmailOtp(
+                          context: context,
+                        );
+
+                        setState(() {
+                          _isResendingOtp = false;
+                        });
+                      },
+                      child: Text(
+                        'Resend',
+                        style: GoogleFonts.inter(
+                          fontSize: 14 * scaleFactor,
+                          fontWeight: FontWeight.w600,
+                          color: GlobalVariables.selectedColor,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
+
+              SizedBox(height: 40 * scaleFactor),
+
+              // Verify Button
+              Consumer<AuthProvider>(
+                builder: (context, authProvider, _) {
+                  return authProvider.isLoading
+                      ? const Center(child: Loader())
+                      : CustomButton(
+                    text: 'Verify & Continue',
+                    onTap: () async {
+                      FocusScope.of(context).unfocus();
+
+                      if (_formKey.currentState!.validate()) {
+                        // Combine OTP digits
+                        final otp = _emailOtpControllers
+                            .map((c) => c.text)
+                            .join();
+
+                        if (otp.length != 6) {
+                          showSnackBar(
+                              context, 'Please enter complete OTP');
+                          return;
+                        }
+
+                        final authProvider =
+                        Provider.of<AuthProvider>(
+                          context,
+                          listen: false,
+                        );
+                        final role =
+                        await authProvider.verifyEmailOtp(
+                          otp: otp,
+                          context: context,
+                        );
+
+                        if (role != null) {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            SignupSuccessScreen.routeName,
+                                (route) => false,
+                            arguments: role,
+                          );
+                        }
+                      }
+                    },
+                  );
+                },
+              ),
+
+              SizedBox(height: 24 * scaleFactor),
+              ],
             ),
           ),
         ),
       ),
+    ),
+    ),
     );
   }
 }
