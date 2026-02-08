@@ -50,17 +50,24 @@ class _AppliedJobsScreenState extends State<AppliedJobsScreen> {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      GlobalVariables.greyBackgroundColor.withOpacity(0.5),
                       Colors.white,
+                      GlobalVariables.greyBackgroundColor.withOpacity(0.5),
                     ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: Colors.grey.shade300,
+                    color: GlobalVariables.selectedColor.withOpacity(0.1),
                     width: 1.5,
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.03),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -68,7 +75,12 @@ class _AppliedJobsScreenState extends State<AppliedJobsScreen> {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: GlobalVariables.selectedColor.withOpacity(0.1),
+                        gradient: LinearGradient(
+                          colors: [
+                            GlobalVariables.selectedColor.withOpacity(0.15),
+                            GlobalVariables.selectedColor.withOpacity(0.05),
+                          ],
+                        ),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(

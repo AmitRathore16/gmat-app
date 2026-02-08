@@ -412,56 +412,27 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
       children: [
         const SizedBox(height: 8),
         const PrimaryText(text: 'Profile Photo', size: 16),
-        const SizedBox(height: 12),
-        Center(
-          child: GestureDetector(
-            onTap: () async {
-              final files = await pickImages(type: FileType.image);
-              if (files.isNotEmpty) {
-                setState(() => photo = files.first);
-              }
-            },
-            child: Container(
-              height: 140,
-              width: 140,
-              decoration: BoxDecoration(
-                color: GlobalVariables.greyBackgroundColor,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: GlobalVariables.selectedColor.withOpacity(0.3),
-                  width: 2,
-                ),
-                image: photo != null
-                    ? DecorationImage(
-                  image: FileImage(photo!),
-                  fit: BoxFit.cover,
-                )
-                    : null,
-              ),
-              child: photo == null
-                  ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.add_photo_alternate,
-                    size: 40,
-                    color: GlobalVariables.selectedColor,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Upload Photo',
-                    style: TextStyle(
-                      color: GlobalVariables.selectedColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              )
-                  : null,
-            ),
+        const SizedBox(height: 4),
+        Text(
+          'Upload your professional photo',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 13,
           ),
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: 12),
+        _filePickerBox(
+          file: photo,
+          icon: Icons.person,
+          label: photo != null ? 'Photo uploaded' : 'Upload profile photo',
+          onTap: () async {
+            final files = await pickImages(type: FileType.image);
+            if (files.isNotEmpty) {
+              setState(() => photo = files.first);
+            }
+          },
+        ),
+        const SizedBox(height: 24),
         const PrimaryText(text: 'Demo Video', size: 16),
         const SizedBox(height: 4),
         Text(

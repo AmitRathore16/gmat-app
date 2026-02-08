@@ -122,21 +122,14 @@ class _TeacherProfileUpdateScreenState
     }
 
     return Scaffold(
-      backgroundColor: GlobalVariables.backgroundColor,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
-          'Edit Profile',
-          style: GoogleFonts.inter(
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            color: Colors.black87,
-          ),
-        ),
-        backgroundColor: GlobalVariables.backgroundColor,
+        title: const PrimaryText(text: 'Edit Profile', size: 22),
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.chevron_left, size: 32, color: Colors.black),
+          icon: const Icon(Icons.chevron_left, size: 36, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -154,113 +147,103 @@ class _TeacherProfileUpdateScreenState
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Profile Photo Section
+                          // Profile Photo Section - Matching Institute Pattern
                           Center(
-                            child: Column(
+                            child: Stack(
                               children: [
-                                Stack(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () async {
-                                        final files =
-                                        await pickImages(type: FileType.image);
-                                        if (files.isNotEmpty) {
-                                          setState(() {
-                                            newPhoto = files.first;
-                                            removePhoto = false;
-                                          });
-                                        }
+                                GestureDetector(
+                                  onTap: () async {
+                                    final files =
+                                    await pickImages(type: FileType.image);
+                                    if (files.isNotEmpty) {
+                                      setState(() {
+                                        newPhoto = files.first;
+                                        removePhoto = false;
+                                      });
+                                    }
+                                  },
+                                  child: Container(
+                                    height: 120,
+                                    width: 120,
+                                    decoration: BoxDecoration(
+                                      color: GlobalVariables.greyBackgroundColor,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: GlobalVariables.selectedColor
+                                            .withOpacity(0.3),
+                                        width: 3,
+                                      ),
+                                      image: profileImage() != null
+                                          ? DecorationImage(
+                                        image: profileImage()!,
+                                        fit: BoxFit.cover,
+                                      )
+                                          : null,
+                                    ),
+                                    child: profileImage() == null
+                                        ? Icon(
+                                      Icons.person,
+                                      size: 40,
+                                      color: GlobalVariables.selectedColor,
+                                    )
+                                        : null,
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: GlobalVariables.selectedColor,
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: const Icon(
+                                      Icons.camera_alt,
+                                      size: 18,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                if (profileImage() != null)
+                                  Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          newPhoto = null;
+                                          removePhoto = true;
+                                        });
                                       },
                                       child: Container(
+                                        padding: const EdgeInsets.all(6),
                                         decoration: BoxDecoration(
+                                          color: Colors.red,
                                           shape: BoxShape.circle,
                                           boxShadow: [
                                             BoxShadow(
-                                              color: GlobalVariables.selectedColor
-                                                  .withOpacity(0.2),
-                                              blurRadius: 20,
-                                              offset: const Offset(0, 8),
-                                            ),
-                                          ],
-                                        ),
-                                        child: CircleAvatar(
-                                          radius: 60,
-                                          backgroundColor: GlobalVariables
-                                              .selectedColor
-                                              .withOpacity(0.15),
-                                          backgroundImage: profileImage(),
-                                          child: profileImage() == null
-                                              ? const Icon(Icons.person, size: 40)
-                                              : null,
-                                        ),
-                                      ),
-                                    ),
-                                    if (profileImage() != null)
-                                      Positioned(
-                                        top: 4,
-                                        right: 4,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              newPhoto = null;
-                                              removePhoto = true;
-                                            });
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.all(6),
-                                            decoration: BoxDecoration(
-                                              color: Colors.red,
-                                              shape: BoxShape.circle,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(0.2),
-                                                  blurRadius: 8,
-                                                ),
-                                              ],
-                                            ),
-                                            child: const Icon(
-                                              Icons.close,
-                                              size: 18,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    Positioned(
-                                      bottom: 0,
-                                      right: 0,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          color: GlobalVariables.selectedColor,
-                                          shape: BoxShape.circle,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: GlobalVariables.selectedColor
-                                                  .withOpacity(0.3),
+                                              color: Colors.black.withOpacity(0.2),
                                               blurRadius: 8,
                                               offset: const Offset(0, 2),
                                             ),
                                           ],
                                         ),
                                         child: const Icon(
-                                          Icons.camera_alt,
-                                          size: 20,
+                                          Icons.close,
+                                          size: 16,
                                           color: Colors.white,
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  'Tap to change photo',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 14,
-                                    color: Colors.grey.shade600,
                                   ),
-                                ),
                               ],
                             ),
                           ),
@@ -268,7 +251,7 @@ class _TeacherProfileUpdateScreenState
                           const SizedBox(height: 32),
 
                           _sectionTitle('Basic Information'),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 16),
                           _label('City'),
                           CustomTextField(
                             controller: cityCtrl,
@@ -286,7 +269,7 @@ class _TeacherProfileUpdateScreenState
 
                           _gap(),
                           _sectionTitle('Professional Details'),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 16),
                           _label('Subjects'),
                           _chipInput(
                             items: subjects,
@@ -370,7 +353,7 @@ class _TeacherProfileUpdateScreenState
 
                           _gap(),
                           _sectionTitle('Availability & Salary'),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 16),
                           _label('Availability'),
                           CustomTextField(
                             controller: availabilityCtrl,
@@ -405,7 +388,35 @@ class _TeacherProfileUpdateScreenState
 
                           _gap(),
                           _sectionTitle('Documents & Media'),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 16),
+
+                          _label('Profile Photo'),
+                          _filePickerBox(
+                            icon: Icons.person,
+                            label: (teacher.photo?.url != null || newPhoto != null) && !removePhoto
+                                ? 'Profile photo uploaded'
+                                : 'Upload profile photo',
+                            uploaded: (teacher.photo?.url != null || newPhoto != null) && !removePhoto,
+                            onTap: () async {
+                              final files = await pickImages(type: FileType.image);
+                              if (files.isNotEmpty) {
+                                setState(() {
+                                  newPhoto = files.first;
+                                  removePhoto = false;
+                                });
+                              }
+                            },
+                            onRemove: (teacher.photo?.url != null || newPhoto != null)
+                                ? () {
+                              setState(() {
+                                newPhoto = null;
+                                removePhoto = true;
+                              });
+                            }
+                                : null,
+                          ),
+
+                          _gap(),
                           _label('Demo Video'),
                           _filePickerBox(
                             icon: Icons.play_circle_fill,
@@ -558,31 +569,21 @@ class _TeacherProfileUpdateScreenState
     );
   }
 
-  Widget _sectionTitle(String text) => Padding(
-    padding: const EdgeInsets.only(top: 8),
-    child: Text(
-      text,
-      style: GoogleFonts.inter(
-        fontSize: 18,
-        fontWeight: FontWeight.w700,
-        color: Colors.black87,
-      ),
-    ),
-  );
+  Widget _sectionTitle(String text) => PrimaryText(text: text, size: 18);
 
   Widget _label(String text) => Padding(
     padding: const EdgeInsets.only(bottom: 8),
     child: Text(
       text,
-      style: GoogleFonts.inter(
+      style: const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w600,
-        color: Colors.grey.shade700,
+        color: Colors.black87,
       ),
     ),
   );
 
-  Widget _gap() => const SizedBox(height: 20);
+  Widget _gap() => const SizedBox(height: 16);
 
   Widget _filePickerBox({
     required IconData icon,
