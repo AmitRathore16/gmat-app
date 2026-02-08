@@ -118,71 +118,140 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
                         return GestureDetector(
                           onTap: () {},
                           child: Container(
-                            padding: EdgeInsets.all(16 * scale),
+                            padding: EdgeInsets.all(20 * scale),
                             decoration: BoxDecoration(
-                              color: GlobalVariables.selectedColor.withOpacity(
-                                0.08,
+                              gradient: LinearGradient(
+                                colors: [
+                                  GlobalVariables.selectedColor.withOpacity(0.15),
+                                  GlobalVariables.selectedColor.withOpacity(0.05),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
                               ),
-                              borderRadius: BorderRadius.circular(18),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: GlobalVariables.selectedColor.withOpacity(0.3),
+                                width: 1.5,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: GlobalVariables.selectedColor.withOpacity(0.1),
+                                  blurRadius: 15,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const PrimaryText(
-                                      text: 'Credit Balance',
-                                      size: 16,
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: GlobalVariables.selectedColor.withOpacity(0.15),
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: Icon(
+                                            Icons.account_balance_wallet,
+                                            size: 20,
+                                            color: GlobalVariables.selectedColor,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          'Credit Balance',
+                                          style: GoogleFonts.inter(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     GestureDetector(
                                       onTap: () {},
-                                      child: Text(
-                                        'Top up',
-                                        style: TextStyle(
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 6,
+                                        ),
+                                        decoration: BoxDecoration(
                                           color: GlobalVariables.selectedColor,
-                                          fontWeight: FontWeight.bold,
+                                          borderRadius: BorderRadius.circular(20),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: GlobalVariables.selectedColor.withOpacity(0.3),
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Text(
+                                          'Top up',
+                                          style: GoogleFonts.inter(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 12,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
 
-                                const SizedBox(height: 12),
+                                const SizedBox(height: 16),
 
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    PrimaryText(
-                                      text: '$credits',
-                                      size: 32 * scale,
+                                    Text(
+                                      '$credits',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 38 * scale,
+                                        fontWeight: FontWeight.w800,
+                                        color: GlobalVariables.selectedColor,
+                                      ),
                                     ),
-                                    const SizedBox(width: 6),
-                                    const SecondaryText(
-                                      text: 'credits available',
-                                      size: 14,
+                                    const SizedBox(width: 8),
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 6),
+                                      child: Text(
+                                        'credits available',
+                                        style: GoogleFonts.inter(
+                                          fontSize: 14,
+                                          color: Colors.grey.shade700,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
 
-                                const SizedBox(height: 12),
+                                const SizedBox(height: 14),
 
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: LinearProgressIndicator(
-                                    value: progress,
-                                    minHeight: 8,
-                                    backgroundColor:
-                                        GlobalVariables.greyBackgroundColor,
-                                    color: GlobalVariables.selectedColor,
-                                  ),
+                                Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: LinearProgressIndicator(
+                                        value: progress,
+                                        minHeight: 10,
+                                        backgroundColor: Colors.white.withOpacity(0.5),
+                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                          GlobalVariables.selectedColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
                           ),
-                        );
-                      },
+                        );                      },
                     ),
 
                     const SizedBox(height: 24),
@@ -381,25 +450,57 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
   }
 
   Widget _statCard(
-    double scale, {
-    required String title,
-    required String value,
-    required VoidCallback onTap,
-  }) {
+      double scale, {
+        required String title,
+        required String value,
+        required VoidCallback onTap,
+      }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(16 * scale),
+        padding: EdgeInsets.all(18 * scale),
         decoration: BoxDecoration(
-          color: GlobalVariables.greyBackgroundColor,
-          borderRadius: BorderRadius.circular(16),
+          gradient: LinearGradient(
+            colors: [
+              GlobalVariables.selectedColor.withOpacity(0.08),
+              GlobalVariables.selectedColor.withOpacity(0.02),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: GlobalVariables.selectedColor.withOpacity(0.2),
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: GlobalVariables.selectedColor.withOpacity(0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            PrimaryText(text: value, size: 28 * scale),
-            const SizedBox(height: 6),
-            SecondaryText(text: title, size: 14),
+            Text(
+              value,
+              style: GoogleFonts.inter(
+                fontSize: 32 * scale,
+                fontWeight: FontWeight.w700,
+                color: GlobalVariables.selectedColor,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey.shade700,
+              ),
+            ),
           ],
         ),
       ),
@@ -414,17 +515,46 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: GlobalVariables.greyBackgroundColor,
-          borderRadius: BorderRadius.circular(30),
+          gradient: LinearGradient(
+            colors: [
+              GlobalVariables.selectedColor.withOpacity(0.08),
+              GlobalVariables.selectedColor.withOpacity(0.02),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: GlobalVariables.selectedColor.withOpacity(0.2),
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 18),
-            const SizedBox(width: 8),
-            Text(text),
+            Icon(
+              icon,
+              size: 20,
+              color: GlobalVariables.selectedColor,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              text,
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: GlobalVariables.selectedColor,
+              ),
+            ),
           ],
         ),
       ),
@@ -432,18 +562,57 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
   }
 
   Widget _emptyState(double scale) {
-    return Column(
-      children: const [
-        SizedBox(height: 24),
-        Icon(Icons.check_circle_outline, size: 48, color: Colors.grey),
-        SizedBox(height: 12),
-        Center(
-          child: Text(
-            'You are all caught up!',
-            style: TextStyle(color: Colors.grey),
-          ),
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            GlobalVariables.greyBackgroundColor.withOpacity(0.5),
+            Colors.white,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
-      ],
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.grey.shade300,
+          width: 1.5,
+        ),
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.green.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.check_circle_outline,
+              size: 48,
+              color: Colors.green.shade600,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'You are all caught up!',
+            style: GoogleFonts.inter(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade700,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'No new applications at the moment',
+            style: GoogleFonts.inter(
+              fontSize: 13,
+              color: Colors.grey.shade600,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

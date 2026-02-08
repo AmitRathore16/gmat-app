@@ -43,29 +43,70 @@ class InstituteProfileScreen extends StatelessWidget {
               Center(
                 child: Column(
                   children: [
-                    CircleAvatar(
-                      radius: 42,
-                      backgroundColor: GlobalVariables.selectedColor
-                          .withOpacity(0.2),
-                      backgroundImage: hasLogo
-                          ? NetworkImage(institute.logo!)
-                          : null,
-                      child: !hasLogo
-                          ? const Icon(
-                        Icons.school,
-                        size: 32,
-                        color: Colors.black54,
-                      )
-                          : null,
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: GlobalVariables.selectedColor.withOpacity(0.3),
+                            blurRadius: 20,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+                      ),
+                      child: CircleAvatar(
+                        radius: 52,
+                        backgroundColor: GlobalVariables.selectedColor
+                            .withOpacity(0.15),
+                        backgroundImage: hasLogo
+                            ? NetworkImage(institute.logo!)
+                            : null,
+                        child: !hasLogo
+                            ? Icon(
+                          Icons.school,
+                          size: 42,
+                          color: GlobalVariables.selectedColor,
+                        )
+                            : null,
+                      ),
                     ),
-                    const SizedBox(height: 12),
-                    PrimaryText(text: institute.institutionName, size: 20),
-                    const SizedBox(height: 4),
-                    SecondaryText(text: institute.institutionType, size: 14),
+                    const SizedBox(height: 16),
+                    Text(
+                      institute.institutionName,
+                      style: GoogleFonts.inter(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black87,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            GlobalVariables.selectedColor.withOpacity(0.15),
+                            GlobalVariables.selectedColor.withOpacity(0.05),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        institute.institutionType,
+                        style: GoogleFonts.inter(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: GlobalVariables.selectedColor,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
-
               const SizedBox(height: 32),
 
               /// ───────── Info Card ─────────
@@ -318,27 +359,73 @@ class InstituteProfileScreen extends StatelessWidget {
     IconData? icon,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 14),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: GlobalVariables.greyBackgroundColor,
+        gradient: LinearGradient(
+          colors: [
+            Colors.white,
+            GlobalVariables.greyBackgroundColor.withOpacity(0.5),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: GlobalVariables.selectedColor.withOpacity(0.1),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (icon != null)
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: Icon(icon, size: 18, color: Colors.grey),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    GlobalVariables.selectedColor.withOpacity(0.15),
+                    GlobalVariables.selectedColor.withOpacity(0.05),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                icon,
+                size: 20,
+                color: GlobalVariables.selectedColor,
+              ),
             ),
+          if (icon != null) const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SecondaryText(text: title, size: 12),
-                const SizedBox(height: 4),
-                PrimaryText(text: value, size: 14),
+                Text(
+                  title,
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  value,
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
               ],
             ),
           ),
@@ -349,22 +436,53 @@ class InstituteProfileScreen extends StatelessWidget {
 
   Widget _statBox({required String title, required String value}) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: GlobalVariables.greyBackgroundColor,
-        borderRadius: BorderRadius.circular(16),
+        gradient: LinearGradient(
+          colors: [
+            GlobalVariables.selectedColor.withOpacity(0.15),
+            GlobalVariables.selectedColor.withOpacity(0.05),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color: GlobalVariables.selectedColor.withOpacity(0.25),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: GlobalVariables.selectedColor.withOpacity(0.1),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          PrimaryText(text: value, size: 22),
-          const SizedBox(height: 6),
-          SecondaryText(text: title, size: 13),
+          Text(
+            value,
+            style: GoogleFonts.inter(
+              fontSize: 28,
+              fontWeight: FontWeight.w800,
+              color: GlobalVariables.selectedColor,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            title,
+            style: GoogleFonts.inter(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey.shade700,
+            ),
+          ),
         ],
       ),
     );
   }
-
   Widget _actionTile({
     required String text,
     required IconData icon,
@@ -375,25 +493,67 @@ class InstituteProfileScreen extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
         decoration: BoxDecoration(
-          color: GlobalVariables.greyBackgroundColor,
+          gradient: LinearGradient(
+            colors: isDanger
+                ? [
+              Colors.red.withOpacity(0.08),
+              Colors.red.withOpacity(0.02),
+            ]
+                : [
+              GlobalVariables.greyBackgroundColor.withOpacity(0.8),
+              Colors.white,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: isDanger
+                ? Colors.red.withOpacity(0.2)
+                : GlobalVariables.selectedColor.withOpacity(0.1),
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Row(
           children: [
-            Icon(icon, color: isDanger ? Colors.red : Colors.black, size: 20),
-            const SizedBox(width: 12),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: isDanger
+                    ? Colors.red.withOpacity(0.12)
+                    : GlobalVariables.selectedColor.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                icon,
+                color: isDanger ? Colors.red : GlobalVariables.selectedColor,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 14),
             Expanded(
               child: Text(
                 text,
-                style: TextStyle(
-                  color: isDanger ? Colors.red : Colors.black,
-                  fontWeight: FontWeight.w500,
+                style: GoogleFonts.inter(
+                  color: isDanger ? Colors.red : Colors.black87,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
                 ),
               ),
             ),
-            const Icon(Icons.chevron_right),
+            Icon(
+              Icons.chevron_right,
+              color: isDanger ? Colors.red : Colors.grey.shade600,
+            ),
           ],
         ),
       ),

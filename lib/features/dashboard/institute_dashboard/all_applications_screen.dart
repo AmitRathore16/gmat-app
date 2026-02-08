@@ -13,12 +13,10 @@ class AllApplicationsScreen extends StatefulWidget {
   });
 
   @override
-  State<AllApplicationsScreen> createState() =>
-      _AllApplicationsScreenState();
+  State<AllApplicationsScreen> createState() => _AllApplicationsScreenState();
 }
 
-class _AllApplicationsScreenState
-    extends State<AllApplicationsScreen> {
+class _AllApplicationsScreenState extends State<AllApplicationsScreen> {
   @override
   void initState() {
     super.initState();
@@ -42,16 +40,34 @@ class _AllApplicationsScreenState
       if (diff.inHours < 24) return '${diff.inHours} hr ago';
       return '${diff.inDays} days ago';
     }
-    return Scaffold(
 
+    return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
-        title: PrimaryText(text: 'All Applications', size: 25),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Column(
+          children: [
+            const PrimaryText(text: 'Applications', size: 20),
+            const SizedBox(height: 2),
+            Text(
+              widget.jobTitle,
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.grey.shade600,
+                fontWeight: FontWeight.normal,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.chevron_left, color: Colors.black, size: 40),
+          icon: const Icon(Icons.chevron_left, color: Colors.black, size: 36),
         ),
       ),
       body: Consumer<JobApplicationProvider>(
@@ -61,8 +77,34 @@ class _AllApplicationsScreenState
           }
 
           if (provider.applications.isEmpty) {
-            return const Center(
-              child: Text('No applications yet'),
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.inbox_outlined,
+                    size: 80,
+                    color: Colors.grey.shade300,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No applications yet',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Applications will appear here',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey.shade500,
+                    ),
+                  ),
+                ],
+              ),
             );
           }
 
@@ -72,30 +114,32 @@ class _AllApplicationsScreenState
             itemBuilder: (context, index) {
               final app = provider.applications[index];
 
-              return RecentApplicationCard(
-                onTap: () {
-                  print('NAV tutorUserId: ${app.tutorUserId}');
-                  if (app.tutorUserId.isEmpty) {
-                    showSnackBar(context, 'Tutor profile unavailable');
-                    return;
-                  }
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => TutorApplicationScreen(
-                        teacherName: app.tutorName,
-                        tutorUserId: app.tutorUserId,
-                        applicationId: app.id,
-                        currentStatus: app.status,
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: RecentApplicationCard(
+                  onTap: () {
+                    print('NAV tutorUserId: ${app.tutorUserId}');
+                    if (app.tutorUserId.isEmpty) {
+                      showSnackBar(context, 'Tutor profile unavailable');
+                      return;
+                    }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => TutorApplicationScreen(
+                          teacherName: app.tutorName,
+                          tutorUserId: app.tutorUserId,
+                          applicationId: app.id,
+                          currentStatus: app.status,
+                        ),
                       ),
-                    ),
-                  );
-
-                },
-                photo: app.tutorPhoto,
-                name: app.tutorName,
-                role: app.jobTitle,
-                time: timeAgo(app.createdAt),
+                    );
+                  },
+                  photo: app.tutorPhoto,
+                  name: app.tutorName,
+                  role: app.jobTitle,
+                  time: timeAgo(app.createdAt),
+                ),
               );
             },
           );

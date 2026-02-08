@@ -1,10 +1,11 @@
 import 'package:get_me_a_tutor/import_export.dart';
+
 class TutorApplicationScreen extends StatefulWidget {
   static const String routeName = '/tutorApplication';
   final String tutorUserId;
   final String applicationId;
   final String currentStatus;
-final String teacherName;
+  final String teacherName;
   const TutorApplicationScreen({
     super.key,
     required this.teacherName,
@@ -36,26 +37,20 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
     });
   }
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: GlobalVariables.backgroundColor,
-
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const PrimaryText(text: 'Tutor Profile', size: 22),
+        title: const PrimaryText(text: 'Tutor Application', size: 20),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.chevron_left, size: 34, color: Colors.black),
+          icon: const Icon(Icons.chevron_left, size: 36, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
       ),
-
       body: Consumer<TeacherProvider>(
         builder: (context, provider, _) {
           if (provider.isLoading) {
@@ -68,137 +63,159 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
           }
 
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _headerCard(teacher, widget.teacherName),
-
-                const SizedBox(height: 24),
-
-                _sectionWrapper(
-                  children: [
-                    _infoCard(
-                      icon: Icons.info_outline,
-                      color: Colors.blue,
-                      title: 'Bio',
-                      value: teacher.bio ?? 'No bio provided',
-                    ),
-
-                    const SizedBox(height: 12),
-
-                    _doubleInfoRow(
-                      left: _smallCard(
-                        Icons.badge,
-                        Colors.orange,
-                        'Experience',
-                        '${teacher.experienceYears} yrs',
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _sectionWrapper(
+                        children: [
+                          _infoCard(
+                            icon: Icons.info_outline,
+                            color: Colors.blue,
+                            title: 'Bio',
+                            value: teacher.bio ?? 'No bio provided',
+                          ),
+                          const SizedBox(height: 12),
+                          _doubleInfoRow(
+                            left: _smallCard(
+                              Icons.badge,
+                              Colors.orange,
+                              'Experience',
+                              '${teacher.experienceYears} yrs',
+                            ),
+                            right: _smallCard(
+                              Icons.schedule,
+                              Colors.green,
+                              'Availability',
+                              teacher.availability ?? 'Not specified',
+                            ),
+                          ),
+                          if (teacher.expectedSalary != null) ...[
+                            const SizedBox(height: 12),
+                            _infoCard(
+                              icon: Icons.currency_rupee,
+                              color: Colors.purple,
+                              title: 'Expected Salary',
+                              value:
+                              '₹${teacher.expectedSalary!.min} - ₹${teacher.expectedSalary!.max}',
+                            ),
+                          ],
+                        ],
                       ),
-                      right: _smallCard(
-                        Icons.schedule,
-                        Colors.green,
-                        'Availability',
-                        teacher.availability ?? 'Not specified',
+                      const SizedBox(height: 20),
+                      _sectionWrapper(
+                        title: 'Teaching Details',
+                        children: [
+                          _chipSection('Subjects', teacher.subjects),
+                          _chipSection(
+                            'Classes',
+                            teacher.classes.map((e) => e.toString()).toList(),
+                          ),
+                          _chipSection('Languages', teacher.languages),
+                        ],
                       ),
-                    ),
-
-                    if (teacher.expectedSalary != null) ...[
-                      const SizedBox(height: 12),
-                      _infoCard(
-                        icon: Icons.currency_rupee,
-                        color: Colors.purple,
-                        title: 'Expected Salary',
-                        value:
-                        '₹${teacher.expectedSalary!.min} - ₹${teacher.expectedSalary!.max}',
+                      const SizedBox(height: 20),
+                      _sectionWrapper(
+                        title: 'Resources',
+                        children: [
+                          if (teacher.resume?.url != null &&
+                              teacher.resume!.url!.isNotEmpty)
+                            _resourceTile(
+                              icon: Icons.picture_as_pdf,
+                              color: Colors.red,
+                              title: 'Resume',
+                              actionText: 'View',
+                              onTap: () async {
+                                final uri = Uri.parse(teacher.resume!.url!);
+                                if (await canLaunchUrl(uri)) {
+                                  await launchUrl(
+                                    uri,
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                } else {
+                                  showSnackBar(context, 'Unable to open resume');
+                                }
+                              },
+                            ),
+                          if (teacher.resume?.url != null &&
+                              teacher.resume!.url!.isNotEmpty)
+                            const SizedBox(height: 12),
+                          if (teacher.demoVideoUrl != null &&
+                              teacher.demoVideoUrl!.isNotEmpty)
+                            _resourceTile(
+                              icon: Icons.play_circle_fill,
+                              color: Colors.blue,
+                              title: 'Demo Video',
+                              actionText: 'Watch',
+                              onTap: () async {
+                                final uri = Uri.parse(teacher.demoVideoUrl!);
+                                if (await canLaunchUrl(uri)) {
+                                  await launchUrl(
+                                    uri,
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                } else {
+                                  showSnackBar(context, 'Unable to open video');
+                                }
+                              },
+                            ),
+                          if ((teacher.resume?.url == null ||
+                              teacher.resume!.url!.isEmpty) &&
+                              (teacher.demoVideoUrl == null ||
+                                  teacher.demoVideoUrl!.isEmpty))
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: GlobalVariables.greyBackgroundColor,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: const Text(
+                                'No resources uploaded',
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
+                      const SizedBox(height: 100),
                     ],
-                  ],
+                  ),
                 ),
-
-                const SizedBox(height: 24),
-
-                _sectionWrapper(
-                  title: 'Teaching Details',
-                  children: [
-                    _chipSection('Subjects', teacher.subjects),
-                    _chipSection(
-                      'Classes',
-                      teacher.classes.map((e) => e.toString()).toList(),
-                    ),
-                    _chipSection('Languages', teacher.languages),
-                  ],
-                ),
-                const SizedBox(height: 24),
-
-                _sectionWrapper(
-                  title: 'Resources',
-                  children: [
-                    // 📄 Resume
-                    if (teacher.resume?.url != null &&
-                        teacher.resume!.url!.isNotEmpty)
-                      _resourceTile(
-                        icon: Icons.picture_as_pdf,
-                        color: Colors.red,
-                        title: 'Resume',
-                        actionText: 'View',
-                        onTap: () async {
-                          final uri = Uri.parse(teacher.resume!.url!);
-                          if (await canLaunchUrl(uri)) {
-                            await launchUrl(
-                              uri,
-                              mode: LaunchMode.externalApplication,
-                            );
-                          } else {
-                            showSnackBar(context, 'Unable to open resume');
-                          }
-                        },
-                      ),
-
-                    if (teacher.resume?.url != null &&
-                        teacher.resume!.url!.isNotEmpty)
-                      const SizedBox(height: 12),
-
-                    // 🎥 Demo Video
-                    if (teacher.demoVideoUrl != null &&
-                        teacher.demoVideoUrl!.isNotEmpty)
-                      _resourceTile(
-                        icon: Icons.play_circle_fill,
-                        color: Colors.blue,
-                        title: 'Demo Video',
-                        actionText: 'Watch',
-                        onTap: () async {
-                          final uri = Uri.parse(teacher.demoVideoUrl!);
-                          if (await canLaunchUrl(uri)) {
-                            await launchUrl(
-                              uri,
-                              mode: LaunchMode.externalApplication,
-                            );
-                          } else {
-                            showSnackBar(context, 'Unable to open video');
-                          }
-                        },
-                      ),
-                  ],
-                ),
-
-                const SizedBox(height: 120),
               ],
             ),
           );
         },
       ),
-
-      /// ───────── UPDATE STATUS BUTTON ─────────
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 22),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
         child: ElevatedButton(
           onPressed: _openStatusSheet,
           style: ElevatedButton.styleFrom(
             backgroundColor: GlobalVariables.selectedColor,
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(12),
             ),
+            elevation: 0,
           ),
           child: const Text(
             'Update Application Status',
@@ -213,62 +230,57 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
     );
   }
 
-  // ───────────────────────── UI PARTS ─────────────────────────
-
   Widget _headerCard(TeacherModel teacher, String teacherName) {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: GlobalVariables.selectedColor.withOpacity(0.08),
       ),
       child: Column(
         children: [
-          // Profile Picture - Centered
-          CircleAvatar(
-            radius: 55,
-            backgroundColor: GlobalVariables.selectedColor.withOpacity(0.15),
-            backgroundImage:
-            teacher.photo?.url != null && teacher.photo!.url!.isNotEmpty
-                ? NetworkImage(teacher.photo!.url!)
-                : null,
-            child: teacher.photo?.url == null
-                ? Icon(
-              Icons.person,
-              size: 52,
-              color: GlobalVariables.selectedColor.withOpacity(0.6),
-            )
-                : null,
-          ),
-
-          const SizedBox(height: 16),
-
-          // Name with label
-          Column(
-            children: [
-
-              Text(
-                teacherName ?? 'Name not provided',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-                textAlign: TextAlign.center,
+          Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: GlobalVariables.selectedColor,
+                width: 3,
               ),
-            ],
+              boxShadow: [
+                BoxShadow(
+                  color: GlobalVariables.selectedColor.withOpacity(0.3),
+                  blurRadius: 20,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: CircleAvatar(
+              radius: 56,
+              backgroundColor: Colors.white,
+              backgroundImage:
+              teacher.photo?.url != null && teacher.photo!.url!.isNotEmpty
+                  ? NetworkImage(teacher.photo!.url!)
+                  : null,
+              child: teacher.photo?.url == null
+                  ? Icon(
+                Icons.person,
+                size: 52,
+                color: GlobalVariables.selectedColor.withOpacity(0.6),
+              )
+                  : null,
+            ),
           ),
-
-          const SizedBox(height: 12),
-
-          // City with icon and label
+          const SizedBox(height: 16),
+          Text(
+            teacherName ?? 'Name not provided',
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -288,10 +300,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
               ),
             ],
           ),
-
           const SizedBox(height: 16),
-
-          // Status chip - centered
           _statusChip(_currentStatus),
         ],
       ),
@@ -307,15 +316,8 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: GlobalVariables.greyBackgroundColor,
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         children: [
@@ -367,15 +369,8 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: GlobalVariables.greyBackgroundColor,
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -385,7 +380,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
           Text(
             value,
             style: const TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
@@ -394,7 +389,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
           Text(
             title,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 11,
               color: Colors.grey.shade600,
               fontWeight: FontWeight.w500,
             ),
@@ -413,7 +408,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
         Text(
           title,
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: 15,
             fontWeight: FontWeight.bold,
             color: Colors.black87,
           ),
@@ -425,14 +420,13 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
           children: values
               .map(
                 (v) => Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 16, vertical: 10),
+              padding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
                 color: GlobalVariables.selectedColor.withOpacity(0.12),
-                borderRadius: BorderRadius.circular(22),
+                borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: GlobalVariables.selectedColor.withOpacity(0.2),
-                  width: 1,
+                  color: GlobalVariables.selectedColor.withOpacity(0.3),
                 ),
               ),
               child: Text(
@@ -480,12 +474,12 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
         color: color.withOpacity(0.15),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: color.withOpacity(0.3),
+          color: color.withOpacity(0.4),
           width: 1.5,
         ),
       ),
@@ -509,14 +503,11 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: GlobalVariables.greyBackgroundColor,
+          width: 2,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -538,8 +529,6 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
     );
   }
 
-  // ───────────────────────── STATUS BOTTOM SHEET ─────────────────────────
-
   void _openStatusSheet() {
     _selectedStatus = _currentStatus;
     showModalBottomSheet(
@@ -555,7 +544,6 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Drag handle
                   Container(
                     width: 40,
                     height: 4,
@@ -564,9 +552,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
-
                   const SizedBox(height: 20),
-
                   const Text(
                     'Update Status',
                     style: TextStyle(
@@ -575,9 +561,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
                       color: Colors.black87,
                     ),
                   ),
-
                   const SizedBox(height: 8),
-
                   Text(
                     'Select the application status',
                     style: TextStyle(
@@ -585,11 +569,11 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
                       color: Colors.grey.shade600,
                     ),
                   ),
-
                   const SizedBox(height: 24),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    alignment: WrapAlignment.center,
                     children: ['shortlisted', 'rejected', 'selected']
                         .map(
                           (s) => ChoiceChip(
@@ -627,9 +611,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
                     )
                         .toList(),
                   ),
-
                   const SizedBox(height: 32),
-
                   Row(
                     children: [
                       Expanded(
@@ -641,7 +623,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
                             elevation: 0,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
+                              borderRadius: BorderRadius.circular(12),
                             ),
                           ),
                           child: const Text(
@@ -663,7 +645,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
                             elevation: 0,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
+                              borderRadius: BorderRadius.circular(12),
                             ),
                           ),
                           child: const Text(
@@ -677,7 +659,6 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 8),
                 ],
               ),
@@ -687,6 +668,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
       },
     );
   }
+
   Future<void> _updateStatus() async {
     final success =
     await Provider.of<JobApplicationProvider>(context, listen: false)
@@ -698,11 +680,11 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
 
     if (success) {
       setState(() {
-        _currentStatus = _selectedStatus; // ✅ update UI
+        _currentStatus = _selectedStatus;
       });
 
       showSnackBar(context, 'Status updated');
-      Navigator.pop(context); // close bottom sheet only
+      Navigator.pop(context);
       Navigator.pop(context);
     }
   }
@@ -714,46 +696,45 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
     required String actionText,
     required VoidCallback onTap,
   }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          _iconBubble(icon, color),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: GlobalVariables.greyBackgroundColor,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: [
+            _iconBubble(icon, color),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
               ),
             ),
-          ),
-          TextButton(
-            onPressed: onTap,
-            child: Text(
+            Text(
               actionText,
               style: TextStyle(
                 color: GlobalVariables.selectedColor,
                 fontWeight: FontWeight.bold,
+                fontSize: 14,
               ),
             ),
-          ),
-        ],
+            const SizedBox(width: 4),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 14,
+              color: GlobalVariables.selectedColor,
+            ),
+          ],
+        ),
       ),
     );
   }
-
 }

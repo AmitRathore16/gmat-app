@@ -33,10 +33,28 @@ class JobCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: GlobalVariables.greyBackgroundColor,
-          borderRadius: BorderRadius.circular(18),
+          gradient: LinearGradient(
+            colors: [
+              Colors.white,
+              GlobalVariables.greyBackgroundColor.withOpacity(0.5),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: GlobalVariables.selectedColor.withOpacity(0.15),
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 15,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,94 +62,116 @@ class JobCard extends StatelessWidget {
             // ───────── HEADER ─────────
             Row(
               children: [
-                const Icon(Icons.work_outline, size: 20),
-                const SizedBox(width: 10),
-
-                Expanded(
-                  child: RichText(
-                    text: TextSpan(
-                      style: DefaultTextStyle.of(context).style,
-                      children: [
-                        const TextSpan(
-                          text: 'Role: ',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        TextSpan(
-                          text: job.title,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: GlobalVariables.selectedColor.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    Icons.work_outline,
+                    size: 22,
+                    color: GlobalVariables.selectedColor,
                   ),
                 ),
-
-
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        job.title,
+                        style: GoogleFonts.inter(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'Role',
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 Container(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
-                    color: statusColor().withOpacity(0.12),
+                    gradient: LinearGradient(
+                      colors: [
+                        statusColor().withOpacity(0.2),
+                        statusColor().withOpacity(0.1),
+                      ],
+                    ),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     job.status.toUpperCase(),
-                    style: TextStyle(
+                    style: GoogleFonts.inter(
                       fontSize: 11,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w700,
                       color: statusColor(),
                     ),
                   ),
                 ),
               ],
             ),
-
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
 
             // ───────── SUBJECTS ─────────
             if (job.subjects.isNotEmpty) ...[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Subjects:',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey,
+              Text(
+                'Subjects',
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey.shade700,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: job.subjects
+                    .map(
+                      (s) => Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 7,
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          GlobalVariables.selectedColor.withOpacity(0.12),
+                          GlobalVariables.selectedColor.withOpacity(0.05),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: GlobalVariables.selectedColor.withOpacity(0.2),
+                        width: 1,
+                      ),
+                    ),
+                    child: Text(
+                      s,
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: GlobalVariables.selectedColor,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 6),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
-                    children: job.subjects
-                        .map(
-                          (s) => Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 5),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          s,
-                          style: const TextStyle(fontSize: 11),
-                        ),
-                      ),
-                    )
-                        .toList(),
-                  ),
-                ],
+                )
+                    .toList(),
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 16),
             ],
 
             // ───────── GRID ROW 1 ─────────
@@ -149,13 +189,11 @@ class JobCard extends StatelessWidget {
                   child: _infoTile(
                     icon: Icons.work_history_outlined,
                     label: 'Job Type',
-                    value:
-                    job.jobType.replaceAll('-', ' ').toUpperCase(),
+                    value: job.jobType.replaceAll('-', ' ').toUpperCase(),
                   ),
                 ),
               ],
             ),
-
             const SizedBox(height: 12),
 
             // ───────── GRID ROW 2 ─────────
@@ -197,23 +235,43 @@ class JobCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: Colors.grey),
+          Icon(
+            icon,
+            size: 18,
+            color: GlobalVariables.selectedColor,
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SecondaryText(text: label, size: 11),
+                Text(
+                  label,
+                  style: GoogleFonts.inter(
+                    fontSize: 10,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
                 const SizedBox(height: 2),
                 Text(
                   value,
-                  style: const TextStyle(
+                  style: GoogleFonts.inter(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
+                    color: Colors.black87,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

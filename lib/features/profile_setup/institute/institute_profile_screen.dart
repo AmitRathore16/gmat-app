@@ -96,9 +96,9 @@ class _InstituteProfileCreateScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: GlobalVariables.backgroundColor,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: currentStep > 0
             ? IconButton(
@@ -109,25 +109,52 @@ class _InstituteProfileCreateScreenState
       ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              _progressBar(),
-              const SizedBox(height: 24),
-              Expanded(child: _buildStep()),
-              Consumer<InstituteProfileProvider>(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _progressBar(),
+                  const SizedBox(height: 24),
+                  _stepTitle(),
+                  const SizedBox(height: 8),
+                  _stepSubtitle(),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: _buildStep(),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, -2),
+                  ),
+                ],
+              ),
+              child: Consumer<InstituteProfileProvider>(
                 builder: (context, provider, _) {
                   return provider.isLoading
                       ? const Loader()
                       : CustomButton(
-                    text: currentStep == 3 ? 'Finish' : 'Continue',
+                    text: currentStep == 3 ? 'Finish Setup' : 'Continue',
                     onTap: onContinue,
                   );
                 },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -139,18 +166,38 @@ class _InstituteProfileCreateScreenState
         4,
             (index) => Expanded(
           child: Container(
-            height: 4,
+            height: 6,
             margin: const EdgeInsets.symmetric(horizontal: 4),
             decoration: BoxDecoration(
               color: index <= currentStep
                   ? GlobalVariables.selectedColor
-                  : Colors.grey.shade300,
-              borderRadius: BorderRadius.circular(4),
+                  : GlobalVariables.greyBackgroundColor,
+              borderRadius: BorderRadius.circular(3),
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _stepTitle() {
+    final titles = [
+      'Institution Details',
+      'Contact Information',
+      'Location',
+      'Media & Branding',
+    ];
+    return PrimaryText(text: titles[currentStep], size: 26);
+  }
+
+  Widget _stepSubtitle() {
+    final subtitles = [
+      'Tell us about your institution',
+      'How can people reach you?',
+      'Where are you located?',
+      'Add logo and gallery images',
+    ];
+    return SecondaryText(text: subtitles[currentStep], size: 14);
   }
 
   Widget _buildStep() {
@@ -175,8 +222,7 @@ class _InstituteProfileCreateScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const PrimaryText(text: 'Institution Details', size: 22),
-          const SizedBox(height: 24),
+          const SizedBox(height: 8),
           CustomTextField(
             controller: institutionNameCtrl,
             hintText: 'Institution Name',
@@ -195,7 +241,7 @@ class _InstituteProfileCreateScreenState
           CustomTextField(
             controller: aboutCtrl,
             hintText: 'About Institution',
-            maxLines: 4,
+            maxLines: 5,
           ),
         ],
       ),
@@ -209,8 +255,7 @@ class _InstituteProfileCreateScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const PrimaryText(text: 'Contact Information', size: 22),
-          const SizedBox(height: 24),
+          const SizedBox(height: 8),
           CustomTextField(
             readonly: true,
             controller: emailCtrl,
@@ -227,7 +272,7 @@ class _InstituteProfileCreateScreenState
           const SizedBox(height: 16),
           CustomTextField(
             controller: websiteCtrl,
-            hintText: 'Website',
+            hintText: 'Website (Optional)',
             prefixIcon: Icons.language,
           ),
         ],
@@ -242,30 +287,45 @@ class _InstituteProfileCreateScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const PrimaryText(text: 'Address', size: 22),
-          const SizedBox(height: 24),
-          CustomTextField(controller: streetCtrl, hintText: 'Street'),
+          const SizedBox(height: 8),
+          CustomTextField(
+            controller: streetCtrl,
+            hintText: 'Street Address',
+            prefixIcon: Icons.location_on,
+          ),
           const SizedBox(height: 16),
-          CustomTextField(controller: cityCtrl, hintText: 'City'),
+          Row(
+            children: [
+              Expanded(
+                child: CustomTextField(controller: cityCtrl, hintText: 'City'),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: CustomTextField(controller: stateCtrl, hintText: 'State'),
+              ),
+            ],
+          ),
           const SizedBox(height: 16),
-          CustomTextField(controller: stateCtrl, hintText: 'State'),
-          const SizedBox(height: 16),
-          CustomTextField(controller: pincodeCtrl, hintText: 'Pincode'),
+          CustomTextField(
+            controller: pincodeCtrl,
+            hintText: 'Pincode',
+            keyboardType: TextInputType.number,
+          ),
         ],
       ),
     );
   }
 
-  // STEP 4 – ONLY REQUIRED CHANGES HERE
+  // STEP 4
   Widget _stepMedia() {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const PrimaryText(text: 'Media', size: 22),
-          const SizedBox(height: 24),
-
-          GestureDetector(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 8),
+        const PrimaryText(text: 'Institution Logo', size: 16),
+        const SizedBox(height: 12),
+        Center(
+          child: GestureDetector(
             onTap: () async {
               final files = await pickImages(type: FileType.image);
               if (files.isNotEmpty) {
@@ -273,11 +333,15 @@ class _InstituteProfileCreateScreenState
               }
             },
             child: Container(
-              height: 120,
-              width: 120,
+              height: 140,
+              width: 140,
               decoration: BoxDecoration(
-                color: const Color(0xFFF5F5F5),
-                borderRadius: BorderRadius.circular(16),
+                color: GlobalVariables.greyBackgroundColor,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: GlobalVariables.selectedColor.withOpacity(0.3),
+                  width: 2,
+                ),
                 image: logo != null
                     ? DecorationImage(
                   image: FileImage(logo!),
@@ -286,58 +350,97 @@ class _InstituteProfileCreateScreenState
                     : null,
               ),
               child: logo == null
-                  ? Icon(Icons.camera_alt,
-                  size: 32,
-                  color: GlobalVariables.secondaryTextColor)
+                  ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.add_photo_alternate,
+                    size: 40,
+                    color: GlobalVariables.selectedColor,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Upload Logo',
+                    style: TextStyle(
+                      color: GlobalVariables.selectedColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              )
                   : null,
             ),
           ),
-
-          const SizedBox(height: 32),
-          const PrimaryText(text: 'Gallery Images', size: 16),
-          const SizedBox(height: 12),
-
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            children: [
-              ...galleryImages.asMap().entries.map((entry) {
-                final index = entry.key;
-                final img = entry.value;
-                return Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.file(
-                        img,
-                        height: 80,
-                        width: 80,
-                        fit: BoxFit.cover,
-                      ),
+        ),
+        const SizedBox(height: 32),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const PrimaryText(text: 'Gallery Images', size: 16),
+            Text(
+              '${galleryImages.length}/$maxGalleryImages',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Add photos to showcase your institution',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 13,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: [
+            ...galleryImages.asMap().entries.map((entry) {
+              final index = entry.key;
+              final img = entry.value;
+              return Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.file(
+                      img,
+                      height: 90,
+                      width: 90,
+                      fit: BoxFit.cover,
                     ),
-                    Positioned(
-                      top: 4,
-                      right: 4,
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() => galleryImages.removeAt(index));
-                        },
-                        child: const CircleAvatar(
-                          radius: 10,
-                          backgroundColor: Colors.black54,
-                          child: Icon(Icons.close,
-                              size: 14, color: Colors.white),
+                  ),
+                  Positioned(
+                    top: 4,
+                    right: 4,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() => galleryImages.removeAt(index));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.7),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          size: 16,
+                          color: Colors.white,
                         ),
                       ),
                     ),
-                  ],
-                );
-              }),
-
+                  ),
+                ],
+              );
+            }),
+            if (galleryImages.length < maxGalleryImages)
               GestureDetector(
                 onTap: () async {
-                  final remaining =
-                      maxGalleryImages - galleryImages.length;
+                  final remaining = maxGalleryImages - galleryImages.length;
 
                   if (remaining <= 0) {
                     _showLimitDialog(context);
@@ -346,8 +449,9 @@ class _InstituteProfileCreateScreenState
 
                   final images = await pickImages(
                     type: FileType.image,
-                    max: remaining, // 👈 THIS enables multiple selection
-                  );                  if (images.isEmpty) return;
+                    max: remaining,
+                  );
+                  if (images.isEmpty) return;
 
                   if (images.length > remaining) {
                     _showLimitDialog(context);
@@ -358,27 +462,28 @@ class _InstituteProfileCreateScreenState
                   });
                 },
                 child: Container(
-                  height: 80,
-                  width: 80,
+                  height: 90,
+                  width: 90,
                   decoration: BoxDecoration(
-                    color: galleryImages.length >= maxGalleryImages
-                        ? Colors.grey.shade300
-                        : const Color(0xFFF5F5F5),
+                    color: GlobalVariables.greyBackgroundColor,
                     borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: GlobalVariables.selectedColor.withOpacity(0.3),
+                      width: 2,
+                      style: BorderStyle.solid,
+                    ),
                   ),
                   child: Icon(
                     Icons.add,
-                    size: 28,
-                    color: galleryImages.length >= maxGalleryImages
-                        ? Colors.grey
-                        : GlobalVariables.secondaryTextColor,
+                    size: 32,
+                    color: GlobalVariables.selectedColor,
                   ),
                 ),
               ),
-            ],
-          ),
-        ],
-      ),
+          ],
+        ),
+        const SizedBox(height: 32),
+      ],
     );
   }
 
@@ -386,9 +491,13 @@ class _InstituteProfileCreateScreenState
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Limit reached'),
-        content:
-        const Text('Only 10 images can be selected in the gallery.'),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: const Text('Limit Reached'),
+        content: Text(
+          'You can only upload up to $maxGalleryImages images in the gallery.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

@@ -25,64 +25,84 @@ class _TutorDiscoveryScreenState extends State<TutorDiscoveryScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16),
-            child: TextField(
-              controller: searchCtrl,
-              onChanged: (v) {
-                context.read<TutorSearchProvider>().search(
-                  context,
-                  query: v,
-                );
-                setState(() {}); // 🔑 needed to toggle clear icon
-              },
-              cursorColor: GlobalVariables.secondaryTextColor,
-              decoration: InputDecoration(
-                hintText: 'Search tutors by subject, bio...',
-                hintStyle: TextStyle(
-                  color: GlobalVariables.secondaryTextColor,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: GlobalVariables.selectedColor.withOpacity(0.2),
+                  width: 1.5,
                 ),
-                filled: true,
-                fillColor: const Color(0xFFF5F5F5),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: GlobalVariables.secondaryTextColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: GlobalVariables.selectedColor.withOpacity(0.08),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: TextField(
+                controller: searchCtrl,
+                onChanged: (v) {
+                  context.read<TutorSearchProvider>().search(
+                    context,
+                    query: v,
+                  );
+                  setState(() {}); // 🔑 needed to toggle clear icon
+                },
+                cursorColor: GlobalVariables.selectedColor,
+                style: GoogleFonts.inter(
+                  fontSize: 15,
+                  color: Colors.black87,
                 ),
+                decoration: InputDecoration(
+                  hintText: 'Search tutors by subject, bio...',
+                  hintStyle: GoogleFonts.inter(
+                    color: Colors.grey.shade500,
+                    fontSize: 14,
+                  ),
+                  filled: true,
+                  fillColor: Colors.transparent,
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: GlobalVariables.selectedColor,
+                    size: 24,
+                  ),
 
-                // ✅ CLEAR ICON
-                suffixIcon: searchCtrl.text.isNotEmpty
-                    ? IconButton(
-                  icon: const Icon(Icons.close),
-                  color: GlobalVariables.secondaryTextColor,
-                  onPressed: () {
-                    searchCtrl.clear();
-                    context.read<TutorSearchProvider>().clear();
-                    FocusScope.of(context).unfocus();
-                    setState(() {});
-                  },
-                )
-                    : null,
+                  // ✅ CLEAR ICON
+                  suffixIcon: searchCtrl.text.isNotEmpty
+                      ? IconButton(
+                    icon: const Icon(Icons.close),
+                    color: Colors.grey.shade500,
+                    onPressed: () {
+                      searchCtrl.clear();
+                      context.read<TutorSearchProvider>().clear();
+                      FocusScope.of(context).unfocus();
+                      setState(() {});
+                    },
+                  )
+                      : null,
 
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 16,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 16,
+                  ),
                 ),
               ),
             ),
-
-
           ),
-
           Expanded(
             child: Consumer<TutorSearchProvider>(
               builder: (context, provider, _) {
