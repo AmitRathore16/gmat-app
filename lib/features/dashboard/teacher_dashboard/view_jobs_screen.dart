@@ -44,11 +44,11 @@ class _TutorViewJobsScreenState extends State<TutorViewJobsScreen> {
         backgroundColor: GlobalVariables.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.chevron_left, size: 28, color: Colors.black),
+          icon: const Icon(Icons.chevron_left, size: 32, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: const PrimaryText(text: 'Available Jobs', size: 18),
+        title: const PrimaryText(text: 'Available Jobs', size: 20),
       ),
       body: Consumer<JobProvider>(
         builder: (context, provider, _) {
@@ -56,7 +56,6 @@ class _TutorViewJobsScreenState extends State<TutorViewJobsScreen> {
             return const Center(child: Loader());
           }
 
-          // 🔍 filter jobs
           final filteredJobs = provider.tutorJobs.where((job) {
             if (_query.isEmpty) return true;
 
@@ -72,34 +71,40 @@ class _TutorViewJobsScreenState extends State<TutorViewJobsScreen> {
           }).toList();
 
           return GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-            },
+            onTap: () => FocusScope.of(context).unfocus(),
             child: Column(
               children: [
-                /// ───────── Search Bar ─────────
+                // Search Bar
                 Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: 16 * scale,
-                    vertical: 8,
+                    vertical: 12,
                   ),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: GlobalVariables.selectedColor.withOpacity(0.1),
+                        width: 1.5,
+                      ),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.04),
-                          blurRadius: 10,
+                          blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
                       ],
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.search, color: Colors.grey),
-                        const SizedBox(width: 8),
+                        Icon(
+                          Icons.search,
+                          color: GlobalVariables.selectedColor,
+                          size: 22,
+                        ),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: TextField(
                             controller: _searchCtrl,
@@ -116,10 +121,10 @@ class _TutorViewJobsScreenState extends State<TutorViewJobsScreen> {
                               _searchCtrl.clear();
                               setState(() => _query = '');
                             },
-                            child: const Icon(
+                            child: Icon(
                               Icons.close,
-                              size: 18,
-                              color: Colors.grey,
+                              size: 20,
+                              color: Colors.grey.shade600,
                             ),
                           ),
                       ],
@@ -127,37 +132,91 @@ class _TutorViewJobsScreenState extends State<TutorViewJobsScreen> {
                   ),
                 ),
 
-                /// ───────── Job List ─────────
+                // Job List
                 Expanded(
                   child: filteredJobs.isEmpty
-                      ? const Center(
-                          child: SecondaryText(
-                            text: 'No jobs match your search',
-                            size: 16,
+                      ? Center(
+                    child: Container(
+                      margin: const EdgeInsets.all(32),
+                      padding: const EdgeInsets.all(32),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            GlobalVariables.greyBackgroundColor.withOpacity(0.5),
+                            Colors.white,
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: Colors.grey.shade300,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.orange.withOpacity(0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.search_off,
+                              size: 48,
+                              color: Colors.orange,
+                            ),
                           ),
-                        )
-                      : ListView.builder(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 16 * scale,
-                            vertical: 12,
+                          const SizedBox(height: 16),
+                          Text(
+                            'No jobs match your search',
+                            style: GoogleFonts.inter(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey.shade700,
+                            ),
                           ),
-                          itemCount: filteredJobs.length,
-                          itemBuilder: (context, index) {
-                            return JobPostingCard(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => TeacherJobDescriptionScreen(
-                                      job: filteredJobs[index],
-                                    ),
-                                  ),
-                                );
-                              },
-                              job: filteredJobs[index],
+                          const SizedBox(height: 8),
+                          Text(
+                            'Try adjusting your search criteria',
+                            style: GoogleFonts.inter(
+                              fontSize: 14,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                      : RefreshIndicator(
+                    onRefresh: () async {
+                      await provider.fetchTutorJobs(context);
+                    },
+                    child: ListView.builder(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16 * scale,
+                        vertical: 12,
+                      ),
+                      itemCount: filteredJobs.length,
+                      itemBuilder: (context, index) {
+                        return JobPostingCard(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => TeacherJobDescriptionScreen(
+                                  job: filteredJobs[index],
+                                ),
+                              ),
                             );
                           },
-                        ),
+                          job: filteredJobs[index],
+                        );
+                      },
+                    ),
+                  ),
                 ),
               ],
             ),

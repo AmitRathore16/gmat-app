@@ -24,19 +24,24 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: GlobalVariables.backgroundColor,
 
-      /// ───────── AppBar ─────────
       appBar: AppBar(
         backgroundColor: GlobalVariables.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.chevron_left, size: 28, color: Colors.black),
+          icon: const Icon(Icons.chevron_left, size: 32, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: const PrimaryText(text: 'Job Details', size: 18),
+        title: Text(
+          'Job Details',
+          style: GoogleFonts.inter(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            color: Colors.black87,
+          ),
+        ),
       ),
 
-      /// ───────── Body ─────────
       body: Consumer<TeacherProvider>(
         builder: (context, teacherProvider, _) {
           final credits = teacherProvider.teacher?.credits ?? 0;
@@ -48,59 +53,92 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
               children: [
                 const SizedBox(height: 22),
 
-                /// ───────── Job Title ─────────
-                PrimaryText(
-                  text: job.title,
-                  size: 28 * scale,
+                // Job Title
+                Text(
+                  job.title,
+                  style: GoogleFonts.inter(
+                    fontSize: 28 * scale,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.black87,
+                    height: 1.2,
+                  ),
                 ),
 
-                const SizedBox(height: 10),
+                const SizedBox(height: 12),
 
                 Row(
                   children: [
-                    const Icon(Icons.access_time,
-                        size: 16, color: Colors.grey),
+                    Icon(
+                      Icons.access_time,
+                      size: 16,
+                      color: Colors.grey.shade600,
+                    ),
                     const SizedBox(width: 6),
-                    SecondaryText(
-                      text: 'Posted ${timeAgo(job.createdAt)}',
-                      size: 13,
+                    Text(
+                      'Posted ${timeAgo(job.createdAt)}',
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        color: Colors.grey.shade600,
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
 
-                SecondaryText(
-                  text: 'Posted by: ${job.postedByRole}',
-                  size: 13,
+                const SizedBox(height: 8),
+
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        GlobalVariables.selectedColor.withOpacity(0.12),
+                        GlobalVariables.selectedColor.withOpacity(0.05),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    'Posted by: ${job.postedByRole}',
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      color: GlobalVariables.selectedColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
+
                 const SizedBox(height: 28),
 
-                /// ───────── Salary + Mode Cards ─────────
+                // Salary + Mode Cards
                 Row(
                   children: [
-                    _infoCard(
-                      icon: Icons.currency_rupee,
-                      title: 'Salary',
-                      value: job.salary != null
-                          ? '₹${job.salary}'
-                          : 'Not specified',
-                      bg: const Color(0xFFEAF3FF),
-                      iconColor: const Color(0xFF3B82F6),
+                    Expanded(
+                      child: _infoCard(
+                        icon: Icons.currency_rupee,
+                        title: 'Salary',
+                        value: job.salary != null
+                            ? '₹${job.salary}'
+                            : 'Not specified',
+                        bg: const Color(0xFFEAF3FF),
+                        iconColor: const Color(0xFF3B82F6),
+                      ),
                     ),
                     const SizedBox(width: 14),
-                    _infoCard(
-                      icon: Icons.work_outline,
-                      title: 'Job Type',
-                      value: job.jobType,
-                      bg: const Color(0xFFF5F5F5),
-                      iconColor: Colors.black,
+                    Expanded(
+                      child: _infoCard(
+                        icon: Icons.work_outline,
+                        title: 'Job Type',
+                        value: job.jobType,
+                        bg: const Color(0xFFF5F5F5),
+                        iconColor: Colors.black87,
+                      ),
                     ),
                   ],
                 ),
 
                 const SizedBox(height: 28),
 
-                /// ───────── Location + Class Range ─────────
+                // Location + Class Range
                 _detailTile(
                   icon: Icons.location_on,
                   title: 'Location',
@@ -120,7 +158,7 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
                   const SizedBox(height: 16),
                   _detailTile(
                     icon: Icons.event,
-                    title: 'Deadline',
+                    title: 'Application Deadline',
                     value:
                     '${job.deadline!.day}/${job.deadline!.month}/${job.deadline!.year}',
                   ),
@@ -128,8 +166,15 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
 
                 const SizedBox(height: 28),
 
-                /// ───────── Subjects ─────────
-                const PrimaryText(text: 'Subjects', size: 18),
+                // Subjects
+                Text(
+                  'Subjects',
+                  style: GoogleFonts.inter(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black87,
+                  ),
+                ),
                 const SizedBox(height: 12),
 
                 Wrap(
@@ -138,16 +183,25 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
                   children: job.subjects.map((subject) {
                     return Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 8,
+                        horizontal: 16,
+                        vertical: 10,
                       ),
                       decoration: BoxDecoration(
-                        color: GlobalVariables.selectedColor.withOpacity(0.12),
+                        gradient: LinearGradient(
+                          colors: [
+                            GlobalVariables.selectedColor.withOpacity(0.15),
+                            GlobalVariables.selectedColor.withOpacity(0.08),
+                          ],
+                        ),
                         borderRadius: BorderRadius.circular(22),
+                        border: Border.all(
+                          color: GlobalVariables.selectedColor.withOpacity(0.3),
+                          width: 1.5,
+                        ),
                       ),
                       child: Text(
                         subject,
-                        style: TextStyle(
+                        style: GoogleFonts.inter(
                           color: GlobalVariables.selectedColor,
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -159,30 +213,46 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
 
                 const SizedBox(height: 28),
 
-                /// ───────── Description ─────────
-                /// ───────── Description ─────────
-                const PrimaryText(text: 'Job Description', size: 18),
+                // Description
+                Text(
+                  'Job Description',
+                  style: GoogleFonts.inter(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black87,
+                  ),
+                ),
                 const SizedBox(height: 12),
 
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: GlobalVariables.greyBackgroundColor,
+                    gradient: LinearGradient(
+                      colors: [
+                        GlobalVariables.greyBackgroundColor.withOpacity(0.5),
+                        Colors.white,
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                     borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.grey.shade200,
+                      width: 1.5,
+                    ),
                   ),
                   child: Text(
                     job.description?.isNotEmpty == true
                         ? job.description!
                         : 'No description provided.',
-                    style: const TextStyle(
+                    style: GoogleFonts.inter(
                       fontSize: 14,
-                      height: 1.6, // 👈 makes long text readable
+                      height: 1.6,
                       color: Colors.black87,
                     ),
                   ),
                 ),
-
 
                 const SizedBox(height: 140),
               ],
@@ -191,19 +261,19 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
         },
       ),
 
-      /// ───────── Bottom Apply Section ─────────
+      // Bottom Apply Section
       bottomNavigationBar: Consumer<TeacherProvider>(
         builder: (context, teacherProvider, _) {
           final credits = teacherProvider.teacher?.credits ?? 0;
 
           return Container(
-            padding: const EdgeInsets.fromLTRB(16, 14, 16, 22),
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.08),
-                  blurRadius: 14,
+                  blurRadius: 16,
                   offset: const Offset(0, -6),
                 ),
               ],
@@ -211,51 +281,68 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                /// Credits Row
-                /// Credits Row
+                // Credits Row
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
-                        const Icon(
-                          Icons.account_balance_wallet,
-                          size: 18,
-                          color: Colors.grey,
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade50,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            Icons.account_balance_wallet,
+                            size: 18,
+                            color: Colors.blue.shade600,
+                          ),
                         ),
-                        const SizedBox(width: 8),
-                        SecondaryText(
-                          text: 'Balance: $credits Credits',
-                          size: 13,
+                        const SizedBox(width: 10),
+                        Text(
+                          'Balance: $credits Credits',
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey.shade700,
+                          ),
                         ),
                       ],
                     ),
-
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
+                        horizontal: 14,
+                        vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: GlobalVariables.selectedColor.withOpacity(0.12),
+                        gradient: LinearGradient(
+                          colors: [
+                            GlobalVariables.selectedColor.withOpacity(0.15),
+                            GlobalVariables.selectedColor.withOpacity(0.08),
+                          ],
+                        ),
                         borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: GlobalVariables.selectedColor.withOpacity(0.3),
+                          width: 1.5,
+                        ),
                       ),
                       child: Text(
                         'Cost: 5 Credits',
-                        style: TextStyle(
+                        style: GoogleFonts.inter(
                           color: GlobalVariables.selectedColor,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
                         ),
                       ),
                     ),
                   ],
                 ),
 
+                const SizedBox(height: 16),
 
-                const SizedBox(height: 14),
-
-                /// Apply Button
+                // Apply Button
                 SizedBox(
                   width: double.infinity,
                   height: 56,
@@ -266,12 +353,15 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
                       final teacher = teacherProvider.teacher;
                       final credits = teacher?.credits ?? 0;
 
-                      // ❌ Not enough credits
+                      // Not enough credits
                       if (credits < 5) {
                         showDialog(
                           context: context,
                           barrierDismissible: false,
                           builder: (_) => AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                             title: const Text('Not enough credits'),
                             content: const Text(
                               'Applying to a job costs 5 credits. Please buy credits to continue.',
@@ -292,12 +382,16 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
                         );
                         return;
                       }
-// ❌ Profile is private
+
+                      // Profile is private
                       if (teacher?.isPublic == false) {
                         showDialog(
                           context: context,
                           barrierDismissible: false,
                           builder: (_) => AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                             title: const Text('Profile is Private'),
                             content: const Text(
                               'Please make your profile public to start applying for jobs.',
@@ -313,9 +407,10 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
                         return;
                       }
 
-                      // ✅ Apply to job
-                      final provider =
-                      Provider.of<JobApplicationProvider>(context, listen: false);
+                      // Apply to job
+                      final provider = Provider.of<JobApplicationProvider>(
+                          context,
+                          listen: false);
 
                       final success = await provider.applyToJob(
                         context: context,
@@ -325,11 +420,11 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
                       if (success) {
                         final auth =
                         Provider.of<AuthProvider>(context, listen: false);
-                        // 🔄 refresh teacher data (credits -5, jobsApplied +1)
+                        // Refresh teacher data (credits -5, jobsApplied +1)
                         await Provider.of<TeacherProvider>(
                           context,
                           listen: false,
-                        ).fetchTeacherProfile(context,auth.userId!);
+                        ).fetchTeacherProfile(context, auth.userId!);
 
                         showSnackBar(context, 'Applied successfully');
                         Navigator.pop(context);
@@ -340,15 +435,27 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18),
                       ),
-                      elevation: 0,
+                      elevation: 2,
+                      shadowColor: GlobalVariables.selectedColor.withOpacity(0.3),
                     ),
-                    child: const Text(
-                      'Apply using credits',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.check_circle_outline,
+                          color: Colors.white,
+                          size: 22,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Apply using credits',
+                          style: GoogleFonts.inter(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -360,8 +467,7 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
     );
   }
 
-  // ───────── Reusable Widgets ─────────
-
+  // Reusable Widgets
   Widget _infoCard({
     required IconData icon,
     required String title,
@@ -369,23 +475,53 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
     required Color bg,
     required Color iconColor,
   }) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(18),
-        decoration: BoxDecoration(
-          color: bg,
-          borderRadius: BorderRadius.circular(22),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, size: 26, color: iconColor),
-            const SizedBox(height: 14),
-            PrimaryText(text: value, size: 22),
-            const SizedBox(height: 6),
-            SecondaryText(text: title, size: 14),
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            bg.withOpacity(0.5),
+            bg.withOpacity(0.2),
           ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: iconColor.withOpacity(0.2),
+          width: 1.5,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: bg,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, size: 24, color: iconColor),
+          ),
+          const SizedBox(height: 14),
+          Text(
+            value,
+            style: GoogleFonts.inter(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: iconColor,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            title,
+            style: GoogleFonts.inter(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey.shade600,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -396,22 +532,60 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
     required String value,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(
+          colors: [
+            Colors.white,
+            GlobalVariables.greyBackgroundColor.withOpacity(0.3),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color: Colors.grey.shade200,
+          width: 1.5,
+        ),
       ),
       child: Row(
         children: [
-          Icon(icon, size: 22, color: Colors.grey),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: GlobalVariables.selectedColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              icon,
+              size: 20,
+              color: GlobalVariables.selectedColor,
+            ),
+          ),
           const SizedBox(width: 14),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SecondaryText(text: title, size: 12),
-              const SizedBox(height: 4),
-              PrimaryText(text: value, size: 14),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: GoogleFonts.inter(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

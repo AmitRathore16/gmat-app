@@ -29,33 +29,58 @@ class TeacherProfileScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 20),
 
-              /// ───────── Header ─────────
+              // Header with Profile Photo
               Center(
                 child: Column(
                   children: [
-                    PrimaryText(
-                      text: 'Your Profile',
-                      size: 20,
+                    Text(
+                      'Your Profile',
+                      style: GoogleFonts.inter(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: GlobalVariables.selectedColor.withOpacity(0.2),
+                            blurRadius: 20,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+                      ),
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundColor: GlobalVariables.selectedColor.withOpacity(0.15),
+                        backgroundImage: (teacher.photo?.url != null &&
+                            teacher.photo!.url!.isNotEmpty)
+                            ? NetworkImage(teacher.photo!.url!)
+                            : null,
+                        child: (teacher.photo?.url == null || teacher.photo!.url!.isEmpty)
+                            ? const Icon(Icons.person, size: 42, color: Colors.grey)
+                            : null,
+                      ),
                     ),
                     const SizedBox(height: 12),
-
-                    CircleAvatar(
-                      radius: 42,
-                      backgroundColor: GlobalVariables.selectedColor.withOpacity(0.2),
-                      backgroundImage: (teacher.photo?.url != null &&
-                          teacher.photo!.url!.isNotEmpty)
-                          ? NetworkImage(teacher.photo!.url!)
-                          : null,
-                      child: (teacher.photo?.url == null)
-                          ? const Icon(Icons.person, size: 36)
-                          : null,
+                    Text(
+                      name,
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
                     ),
-
-
                     const SizedBox(height: 4),
-                    SecondaryText(
-                      text: name ?? 'Name not provided',
-                      size: 14,
+                    Text(
+                      teacher.city ?? 'No city provided',
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        color: Colors.grey.shade600,
+                      ),
                     ),
                   ],
                 ),
@@ -63,24 +88,21 @@ class TeacherProfileScreen extends StatelessWidget {
 
               const SizedBox(height: 32),
 
-              /// ───────── Bio ─────────
-              _infoCard(
-                title: 'City',
-                value: teacher.city ?? 'No city provided',
-              ),
+              // Bio Card
               _infoCard(
                 title: 'Bio',
                 value: teacher.bio ?? 'No bio provided',
+                icon: Icons.info_outline,
               ),
 
-              /// ───────── Experience ─────────
+              // Experience Card
               _infoCard(
                 title: 'Experience',
                 value: '${teacher.experienceYears} years',
                 icon: Icons.badge,
               ),
 
-              /// ───────── Availability ─────────
+              // Availability Card
               if (teacher.availability != null)
                 _infoCard(
                   title: 'Availability',
@@ -88,36 +110,35 @@ class TeacherProfileScreen extends StatelessWidget {
                   icon: Icons.schedule,
                 ),
 
-              /// ───────── Expected Salary ─────────
+              // Expected Salary Card
               if (teacher.expectedSalary != null)
                 _infoCard(
                   title: 'Expected Salary',
-                  value:
-                  '₹${teacher.expectedSalary!.min} - ₹${teacher.expectedSalary!.max}',
+                  value: '₹${teacher.expectedSalary!.min} - ₹${teacher.expectedSalary!.max}',
                   icon: Icons.currency_rupee,
                 ),
 
               const SizedBox(height: 20),
 
-              /// ───────── Subjects ─────────
+              // Subjects Section
               _chipSection(
                 title: 'Subjects',
                 values: teacher.subjects,
               ),
 
-              /// ───────── Classes ─────────
+              // Classes Section
               _chipSection(
                 title: 'Classes',
                 values: teacher.classes.map((e) => e.toString()).toList(),
               ),
 
-              /// ───────── Languages ─────────
+              // Languages Section
               _chipSection(
                 title: 'Languages',
                 values: teacher.languages,
               ),
 
-              /// ───────── Tags ─────────
+              // Tags Section
               if (teacher.tags.isNotEmpty)
                 _chipSection(
                   title: 'Tags',
@@ -126,13 +147,15 @@ class TeacherProfileScreen extends StatelessWidget {
 
               const SizedBox(height: 28),
 
-              /// ───────── Stats ─────────
+              // Stats Cards
               Row(
                 children: [
                   Expanded(
                     child: _statBox(
                       title: 'Credits',
                       value: teacher.credits.toString(),
+                      icon: Icons.account_balance_wallet,
+                      color: Colors.blue,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -140,6 +163,8 @@ class TeacherProfileScreen extends StatelessWidget {
                     child: _statBox(
                       title: 'Jobs Applied',
                       value: teacher.jobsApplied.toString(),
+                      icon: Icons.work,
+                      color: Colors.orange,
                     ),
                   ),
                 ],
@@ -153,6 +178,8 @@ class TeacherProfileScreen extends StatelessWidget {
                     child: _statBox(
                       title: 'Exams Passed',
                       value: teacher.examsPassed.toString(),
+                      icon: Icons.verified,
+                      color: Colors.green,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -160,6 +187,8 @@ class TeacherProfileScreen extends StatelessWidget {
                     child: _statBox(
                       title: 'Rating',
                       value: teacher.rating.toString(),
+                      icon: Icons.star,
+                      color: Colors.purple,
                     ),
                   ),
                 ],
@@ -167,11 +196,12 @@ class TeacherProfileScreen extends StatelessWidget {
 
               const SizedBox(height: 32),
 
-              /// ───────── Resume ─────────
+              // Documents Section
               if (teacher.resume?.url != null && teacher.resume!.url!.isNotEmpty)
                 _actionTile(
                   text: 'View Resume',
                   icon: Icons.picture_as_pdf,
+                  iconColor: Colors.red,
                   onTap: () {
                     final url = teacher.resume!.url!;
                     launchUrl(
@@ -187,16 +217,11 @@ class TeacherProfileScreen extends StatelessWidget {
                   icon: Icons.picture_as_pdf,
                 ),
 
-
-              /// ───────── Demo Video ─────────
               if (teacher.demoVideoUrl != null && teacher.demoVideoUrl!.isNotEmpty)
-                ListTile(
-                  leading:
-                  const Icon(Icons.play_circle_fill, color: Colors.red),
-                  title: const Text(
-                    'Watch Demo Video',
-                    style: TextStyle(color: Colors.black),
-                  ),
+                _actionTile(
+                  text: 'Watch Demo Video',
+                  icon: Icons.play_circle_fill,
+                  iconColor: Colors.red,
                   onTap: () async {
                     final uri = Uri.parse(teacher.demoVideoUrl!);
                     if (await canLaunchUrl(uri)) {
@@ -216,10 +241,9 @@ class TeacherProfileScreen extends StatelessWidget {
                   icon: Icons.play_circle_fill,
                 ),
 
-
               const SizedBox(height: 24),
 
-              /// ───────── Actions ─────────
+              // Edit Profile Button
               CustomButton(
                 text: 'Edit Profile',
                 onTap: () {
@@ -234,19 +258,25 @@ class TeacherProfileScreen extends StatelessWidget {
 
               const SizedBox(height: 16),
 
+              // Action Tiles
               _actionTile(
                 text: 'Reset Password',
                 icon: Icons.lock_reset,
+                iconColor: GlobalVariables.selectedColor,
                 onTap: () => _showResetPasswordDialog(context),
               ),
 
               _actionTile(
                 text: 'Logout',
                 icon: Icons.logout,
+                iconColor: Colors.orange,
                 onTap: () {
                   showDialog(
                     context: context,
                     builder: (_) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                       title: const Text('Logout'),
                       content: const Text('Are you sure you want to logout?'),
                       actions: [
@@ -257,12 +287,10 @@ class TeacherProfileScreen extends StatelessWidget {
                         TextButton(
                           onPressed: () async {
                             Navigator.pop(context);
-
                             final authProvider =
                             Provider.of<AuthProvider>(context, listen: false);
                             await authProvider.logout(context: context);
                             provider.clearTeacher();
-
                             Navigator.pushNamedAndRemoveUntil(
                               context,
                               HomeScreenNew.routeName,
@@ -280,20 +308,23 @@ class TeacherProfileScreen extends StatelessWidget {
                 },
               ),
 
-
               _actionTile(
                 text: 'Delete Account',
                 icon: Icons.delete_forever,
+                iconColor: Colors.red,
                 isDanger: true,
                 onTap: () {
                   showDialog(
                     context: context,
                     barrierDismissible: false,
                     builder: (_) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                       title: const Text('Delete Account'),
                       content: const Text(
-                        'This will permanently delete your account and log you out.\n\n'
-                            'This action cannot be undone.\n\nAre you sure?',
+                          'This will permanently delete your account and log you out.'
+                          'This action cannot be undone.Are you sure?',
                       ),
                       actions: [
                         TextButton(
@@ -303,13 +334,10 @@ class TeacherProfileScreen extends StatelessWidget {
                         TextButton(
                           onPressed: () async {
                             Navigator.pop(context);
-
                             final authProvider =
                             Provider.of<AuthProvider>(context, listen: false);
-
                             final success =
                             await authProvider.deleteAccount(context: context);
-
                             if (success) {
                               provider.clearTeacher();
                               Navigator.pushNamedAndRemoveUntil(
@@ -330,7 +358,6 @@ class TeacherProfileScreen extends StatelessWidget {
                 },
               ),
 
-
               const SizedBox(height: 100),
             ],
           ),
@@ -339,8 +366,7 @@ class TeacherProfileScreen extends StatelessWidget {
     );
   }
 
-  // ───────── Helpers ─────────
-
+  // Helper Widgets
   Widget _chipSection({
     required String title,
     required List<String> values,
@@ -349,24 +375,40 @@ class TeacherProfileScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        PrimaryText(text: title, size: 18),
-        const SizedBox(height: 10),
+        Text(
+          title,
+          style: GoogleFonts.inter(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 12),
         Wrap(
           spacing: 10,
           runSpacing: 10,
           children: values.map((v) {
             return Container(
-              padding:
-              const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
-                color: GlobalVariables.selectedColor.withOpacity(0.12),
+                gradient: LinearGradient(
+                  colors: [
+                    GlobalVariables.selectedColor.withOpacity(0.15),
+                    GlobalVariables.selectedColor.withOpacity(0.08),
+                  ],
+                ),
                 borderRadius: BorderRadius.circular(22),
+                border: Border.all(
+                  color: GlobalVariables.selectedColor.withOpacity(0.3),
+                  width: 1.5,
+                ),
               ),
               child: Text(
                 v,
-                style: TextStyle(
+                style: GoogleFonts.inter(
                   color: GlobalVariables.selectedColor,
                   fontWeight: FontWeight.w600,
+                  fontSize: 14,
                 ),
               ),
             );
@@ -384,25 +426,59 @@ class TeacherProfileScreen extends StatelessWidget {
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: GlobalVariables.greyBackgroundColor,
+        gradient: LinearGradient(
+          colors: [
+            GlobalVariables.greyBackgroundColor.withOpacity(0.5),
+            Colors.white,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.grey.shade200,
+          width: 1.5,
+        ),
       ),
       child: Row(
         children: [
           if (icon != null)
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: Icon(icon, size: 18, color: Colors.grey),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: GlobalVariables.selectedColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                icon,
+                size: 20,
+                color: GlobalVariables.selectedColor,
+              ),
             ),
+          if (icon != null) const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SecondaryText(text: title, size: 12),
-                const SizedBox(height: 4),
-                PrimaryText(text: value, size: 14),
+                Text(
+                  title,
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  value,
+                  style: GoogleFonts.inter(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
               ],
             ),
           ),
@@ -411,19 +487,51 @@ class TeacherProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _statBox({required String title, required String value}) {
+  Widget _statBox({
+    required String title,
+    required String value,
+    required IconData icon,
+    required Color color,
+  }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: GlobalVariables.greyBackgroundColor,
+        gradient: LinearGradient(
+          colors: [
+            color.withOpacity(0.1),
+            color.withOpacity(0.05),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: color.withOpacity(0.3),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          PrimaryText(text: value, size: 22),
-          const SizedBox(height: 6),
-          SecondaryText(text: title, size: 13),
+          Icon(icon, size: 24, color: color),
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: GoogleFonts.inter(
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              color: color,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            style: GoogleFonts.inter(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey.shade700,
+            ),
+          ),
         ],
       ),
     );
@@ -432,6 +540,7 @@ class TeacherProfileScreen extends StatelessWidget {
   Widget _actionTile({
     required String text,
     required IconData icon,
+    required Color iconColor,
     required VoidCallback onTap,
     bool isDanger = false,
   }) {
@@ -439,25 +548,51 @@ class TeacherProfileScreen extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
         decoration: BoxDecoration(
-          color: GlobalVariables.greyBackgroundColor,
-          borderRadius: BorderRadius.circular(14),
+          gradient: LinearGradient(
+            colors: [
+              (isDanger ? Colors.red : iconColor).withOpacity(0.05),
+              Colors.white,
+            ],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: (isDanger ? Colors.red : iconColor).withOpacity(0.2),
+            width: 1.5,
+          ),
         ),
         child: Row(
           children: [
-            Icon(icon, color: isDanger ? Colors.red : Colors.black),
-            const SizedBox(width: 12),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: (isDanger ? Colors.red : iconColor).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                icon,
+                color: isDanger ? Colors.red : iconColor,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 14),
             Expanded(
               child: Text(
                 text,
-                style: TextStyle(
-                  color: isDanger ? Colors.red : Colors.black,
-                  fontWeight: FontWeight.w500,
+                style: GoogleFonts.inter(
+                  color: isDanger ? Colors.red : Colors.black87,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
                 ),
               ),
             ),
-            const Icon(Icons.chevron_right),
+            Icon(
+              Icons.chevron_right,
+              color: Colors.grey.shade400,
+            ),
           ],
         ),
       ),
@@ -471,21 +606,22 @@ class TeacherProfileScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
         title: const Text('Reset Password'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: tokenCtrl,
-              decoration:
-              const InputDecoration(labelText: 'Reset Token'),
+              decoration: const InputDecoration(labelText: 'Reset Token'),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: passwordCtrl,
               obscureText: true,
-              decoration:
-              const InputDecoration(labelText: 'New Password'),
+              decoration: const InputDecoration(labelText: 'New Password'),
             ),
           ],
         ),
@@ -498,14 +634,12 @@ class TeacherProfileScreen extends StatelessWidget {
             onPressed: () async {
               final authProvider =
               Provider.of<AuthProvider>(context, listen: false);
-
               await authProvider.resetPassword(
                 context: context,
                 email: authProvider.email!,
                 token: tokenCtrl.text.trim(),
                 newPassword: passwordCtrl.text.trim(),
               );
-
               Navigator.pop(context);
             },
             child: const Text('Reset'),

@@ -17,15 +17,26 @@ class JobPostingCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 14),
-        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: Colors.white,
+          gradient: LinearGradient(
+            colors: [
+              Colors.white,
+              GlobalVariables.selectedColor.withOpacity(0.02),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: GlobalVariables.selectedColor.withOpacity(0.15),
+            width: 1.5,
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
-              blurRadius: 14,
+              blurRadius: 16,
               offset: const Offset(0, 6),
             ),
           ],
@@ -33,111 +44,194 @@ class JobPostingCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// ───── Header (Icon + Title + Salary) ─────
+            // Header (Icon + Title + Salary)
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: 42,
-                  width: 42,
+                  height: 48,
+                  width: 48,
                   decoration: BoxDecoration(
-                    color: GlobalVariables.selectedColor.withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(12),
+                    gradient: LinearGradient(
+                      colors: [
+                        GlobalVariables.selectedColor.withOpacity(0.15),
+                        GlobalVariables.selectedColor.withOpacity(0.08),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: GlobalVariables.selectedColor.withOpacity(0.3),
+                      width: 1.5,
+                    ),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.school,
-                    size: 22,
+                    size: 24,
                     color: GlobalVariables.selectedColor,
                   ),
                 ),
-                const SizedBox(width: 12),
-
+                const SizedBox(width: 14),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      PrimaryText(
-                        text: job.title,
-                        size: 16,
+                      Text(
+                        job.title,
+                        style: GoogleFonts.inter(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black87,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       if (job.classRange != null)
-                        SecondaryText(
-                          text: 'Class ${job.classRange}',
-                          size: 13,
+                        Text(
+                          'Class ${job.classRange}',
+                          style: GoogleFonts.inter(
+                            fontSize: 13,
+                            color: Colors.grey.shade600,
+                          ),
                         ),
                     ],
                   ),
                 ),
-
                 if (job.salary != null)
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '₹${job.salary}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.green.shade50,
+                          Colors.green.shade100.withOpacity(0.3),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: Colors.green.shade200,
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Text(
+                      '₹${job.salary}',
+                      style: GoogleFonts.inter(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.green.shade700,
+                      ),
                     ),
                   ),
               ],
             ),
 
-            const SizedBox(height: 10),
-            SecondaryText(
-              text: 'Posted by: ${job.postedByRole}',
-              size: 13,
-            ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 12),
 
-            /// ───── Tags (Subjects + JobType) ─────
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: GlobalVariables.selectedColor.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                'Posted by: ${job.postedByRole}',
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  color: GlobalVariables.selectedColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Tags (Subjects + JobType)
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: [
                 ...job.subjects.map(
-                      (s) => _chip(
-                    text: s,
-                    bg: GlobalVariables.selectedColor.withOpacity(0.12),
-                    fg: GlobalVariables.selectedColor,
+                      (s) => Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          GlobalVariables.selectedColor.withOpacity(0.12),
+                          GlobalVariables.selectedColor.withOpacity(0.05),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: GlobalVariables.selectedColor.withOpacity(0.3),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Text(
+                      s,
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        color: GlobalVariables.selectedColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
-                _chip(
-                  text: job.jobType,
-                  bg: GlobalVariables.greyBackgroundColor,
-                  fg: Colors.black87,
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: GlobalVariables.greyBackgroundColor,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.grey.shade300,
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Text(
+                    job.jobType,
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ],
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 18),
 
-            /// ───── Divider ─────
+            // Divider
             Divider(
-              color: Colors.grey.withOpacity(0.15),
+              color: Colors.grey.withOpacity(0.2),
               height: 1,
+              thickness: 1,
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 14),
 
-            /// ───── Footer ─────
+            // Footer
             Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.location_on_outlined,
-                  size: 16,
-                  color: Colors.grey,
+                  size: 18,
+                  color: Colors.grey.shade600,
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(width: 6),
                 Expanded(
-                  child: SecondaryText(
-                    text: job.location ?? 'Location not specified',
-                    size: 13,
+                  child: Text(
+                    job.location ?? 'Location not specified',
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      color: Colors.grey.shade600,
+                    ),
                   ),
                 ),
                 TextButton(
@@ -147,12 +241,16 @@ class JobPostingCard extends StatelessWidget {
 
                     final teacher = teacherProvider.teacher;
                     final credits = teacher?.credits ?? 0;
-                    // ❌ Not enough credits
+
+                    // Not enough credits
                     if (credits < 5) {
                       showDialog(
                         context: context,
                         barrierDismissible: false,
                         builder: (_) => AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                           title: const Text('Not enough credits'),
                           content: const Text(
                             'Applying to a job costs 5 credits. Please buy credits to continue.',
@@ -173,12 +271,16 @@ class JobPostingCard extends StatelessWidget {
                       );
                       return;
                     }
-// ❌ Profile is private
+
+                    // Profile is private
                     if (teacher?.isPublic == false) {
                       showDialog(
                         context: context,
                         barrierDismissible: false,
                         builder: (_) => AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                           title: const Text('Profile is Private'),
                           content: const Text(
                             'Please make your profile public to start applying for jobs.',
@@ -194,7 +296,7 @@ class JobPostingCard extends StatelessWidget {
                       return;
                     }
 
-                    // ✅ Apply to job
+                    // Apply to job
                     final provider =
                     Provider.of<JobApplicationProvider>(context, listen: false);
 
@@ -206,22 +308,31 @@ class JobPostingCard extends StatelessWidget {
                     if (success) {
                       final auth =
                       Provider.of<AuthProvider>(context, listen: false);
-                      // 🔄 refresh teacher data (credits -5, jobsApplied +1)
+                      // Refresh teacher data (credits -5, jobsApplied +1)
                       await Provider.of<TeacherProvider>(
                         context,
                         listen: false,
-                      ).fetchTeacherProfile(context,auth.userId!);
+                      ).fetchTeacherProfile(context, auth.userId!);
 
                       showSnackBar(context, 'Applied successfully');
                       Navigator.pop(context);
                     }
                   },
-
+                  style: TextButton.styleFrom(
+                    backgroundColor: GlobalVariables.selectedColor,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                   child: Text(
                     'Apply',
-                    style: TextStyle(
-                      color: GlobalVariables.selectedColor,
-                      fontWeight: FontWeight.bold,
+                    style: GoogleFonts.inter(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
                       fontSize: 14,
                     ),
                   ),
@@ -229,28 +340,6 @@ class JobPostingCard extends StatelessWidget {
               ],
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _chip({
-    required String text,
-    required Color bg,
-    required Color fg,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 12,
-          color: fg,
-          fontWeight: FontWeight.w500,
         ),
       ),
     );

@@ -76,13 +76,13 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
       );
 
       if (success) {
-        showSnackBar(context, "Profile created sucessfully");
+        showSnackBar(context, "Profile created successfully");
         context.read<AuthProvider>().setHasTeacherProfile(true);
 
         Navigator.pushNamedAndRemoveUntil(
           context,
           TeacherDashboard.routeName,
-          (route) => false,
+              (route) => false,
         );
       }
     }
@@ -91,58 +91,83 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: GlobalVariables.backgroundColor,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: currentStep > 0
             ? IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.black),
-                onPressed: () => setState(() => currentStep--),
-              )
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => setState(() => currentStep--),
+        )
             : null,
       ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              _stepIndicator(),
-              const SizedBox(height: 24),
-              Expanded(child: SingleChildScrollView(child: _buildStep())),
-              Consumer<TeacherProfileProvider>(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _progressBar(),
+                  const SizedBox(height: 24),
+                  _stepTitle(),
+                  const SizedBox(height: 8),
+                  _stepSubtitle(),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: _buildStep(),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, -2),
+                  ),
+                ],
+              ),
+              child: Consumer<TeacherProfileProvider>(
                 builder: (context, provider, _) {
                   return provider.isLoading
                       ? const Loader()
                       : CustomButton(
-                          text: currentStep == 3 ? 'Finish' : 'Continue',
-                          onTap: onContinue,
-                        );
+                    text: currentStep == 3 ? 'Finish Setup' : 'Continue',
+                    onTap: onContinue,
+                  );
                 },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  // ───────────────────────── UI HELPERS ─────────────────────────
-
-  Widget _stepIndicator() {
+  Widget _progressBar() {
     return Row(
       children: List.generate(
         4,
-        (index) => Expanded(
+            (index) => Expanded(
           child: Container(
-            height: 4,
+            height: 6,
             margin: const EdgeInsets.symmetric(horizontal: 4),
             decoration: BoxDecoration(
               color: index <= currentStep
                   ? GlobalVariables.selectedColor
-                  : Colors.grey.shade300,
-              borderRadius: BorderRadius.circular(4),
+                  : GlobalVariables.greyBackgroundColor,
+              borderRadius: BorderRadius.circular(3),
             ),
           ),
         ),
@@ -150,18 +175,24 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
     );
   }
 
-  Widget _header(String title, String subtitle) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SecondaryText(text: 'Step ${currentStep + 1} of 4', size: 14),
-        const SizedBox(height: 8),
-        PrimaryText(text: title, size: 26),
-        const SizedBox(height: 8),
-        SecondaryText(text: subtitle, size: 14),
-        const SizedBox(height: 24),
-      ],
-    );
+  Widget _stepTitle() {
+    final titles = [
+      'Teacher Profile',
+      'Professional Details',
+      'Availability & Pricing',
+      'Media & Documents',
+    ];
+    return PrimaryText(text: titles[currentStep], size: 26);
+  }
+
+  Widget _stepSubtitle() {
+    final subtitles = [
+      'Tell us about yourself',
+      'Share your expertise and qualifications',
+      'Set your teaching preferences',
+      'Upload supporting documents',
+    ];
+    return SecondaryText(text: subtitles[currentStep], size: 14);
   }
 
   Widget _buildStep() {
@@ -179,77 +210,86 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
     }
   }
 
-  // ───────────────────────── STEP 1 ─────────────────────────
-
+  // STEP 1 - Basic Info
   Widget _stepBasic() {
     return Form(
       key: _step1Key,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _header('Teacher Profile', 'Tell students a bit about yourself.'),
+          const SizedBox(height: 8),
           CustomTextField(
             controller: bioCtrl,
             hintText: 'Short bio',
+            prefixIcon: Icons.person_outline,
             maxLines: 4,
           ),
           const SizedBox(height: 16),
-          CustomTextField(controller: cityCtrl, hintText: 'City'),
+          CustomTextField(
+            controller: cityCtrl,
+            hintText: 'City',
+            prefixIcon: Icons.location_city,
+          ),
         ],
       ),
     );
   }
 
-  // ───────────────────────── STEP 2 ─────────────────────────
-
+  // STEP 2 - Professional
   Widget _stepProfessional() {
     return Form(
       key: _step2Key,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _header(
-            'Professional Details',
-            'Tell us about your expertise to match you with the right students.',
-          ),
-
+          const SizedBox(height: 8),
           CustomTextField(
             controller: qualificationCtrl,
             hintText: 'Highest Qualification',
+            prefixIcon: Icons.school,
           ),
           const SizedBox(height: 24),
-
           const PrimaryText(text: 'Subjects You Teach', size: 16),
           const SizedBox(height: 12),
           _chipInput(
             items: subjects,
             controller: subjectInputCtrl,
             hint: 'Add subject',
+            title: 'Add Subject',
+            placeholder: 'e.g. Mathematics',
             onAdd: (val) => setState(() => subjects.add(val)),
             onRemove: (val) => setState(() => subjects.remove(val)),
           ),
           const SizedBox(height: 24),
-
           const PrimaryText(text: 'Languages You Teach', size: 16),
           const SizedBox(height: 12),
           _chipInput(
             items: languages,
             controller: languageInputCtrl,
             hint: 'Add language',
+            title: 'Add Language',
+            placeholder: 'e.g. English',
             onAdd: (val) => setState(() => languages.add(val)),
             onRemove: (val) => setState(() => languages.remove(val)),
           ),
           const SizedBox(height: 24),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const PrimaryText(text: 'Years of Experience', size: 16),
-              Text(
-                '${experienceYears.toInt()} Years',
-                style: TextStyle(
-                  color: GlobalVariables.selectedColor,
-                  fontWeight: FontWeight.bold,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  color: GlobalVariables.selectedColor.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '${experienceYears.toInt()} Years',
+                  style: TextStyle(
+                    color: GlobalVariables.selectedColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
                 ),
               ),
             ],
@@ -259,9 +299,9 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
             min: 0,
             max: 40,
             divisions: 40,
+            activeColor: GlobalVariables.selectedColor,
             onChanged: (v) => setState(() => experienceYears = v),
           ),
-
           const SizedBox(height: 24),
           const PrimaryText(text: 'Teaching Mode', size: 16),
           const SizedBox(height: 8),
@@ -271,40 +311,43 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
     );
   }
 
-  // ───────────────────────── STEP 3 ─────────────────────────
-
+  // STEP 3 - Availability
   Widget _stepAvailability() {
     return Form(
       key: _step3Key,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _header('Availability & Pricing', 'Set your teaching preferences.'),
-
+          const SizedBox(height: 8),
           const PrimaryText(text: 'Classes You Teach', size: 16),
           const SizedBox(height: 12),
           _chipInput(
             items: classes.map((e) => e.toString()).toList(),
             controller: classInputCtrl,
             hint: 'Add class',
+            title: 'Add Class',
+            placeholder: 'e.g. 10',
             onAdd: (val) => setState(() => classes.add(int.tryParse(val) ?? 0)),
             onRemove: (val) =>
                 setState(() => classes.remove(int.tryParse(val))),
           ),
-
           const SizedBox(height: 16),
           CustomTextField(
             controller: availabilityCtrl,
             hintText: 'Availability (e.g. Weekends)',
+            prefixIcon: Icons.calendar_today,
           ),
-
           const SizedBox(height: 16),
+          const PrimaryText(text: 'Expected Salary Range', size: 16),
+          const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
                 child: CustomTextField(
                   controller: salaryMinCtrl,
                   hintText: 'Min Salary',
+                  prefixIcon: Icons.currency_rupee,
+                  keyboardType: TextInputType.number,
                 ),
               ),
               const SizedBox(width: 12),
@@ -312,79 +355,172 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
                 child: CustomTextField(
                   controller: salaryMaxCtrl,
                   hintText: 'Max Salary',
+                  prefixIcon: Icons.currency_rupee,
+                  keyboardType: TextInputType.number,
                 ),
               ),
             ],
           ),
-
-          SwitchListTile(
-            value: isPublic,
-            onChanged: (v) => setState(() => isPublic = v),
-            title: const Text('Make profile public',style: TextStyle(color: Colors.black),),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  GlobalVariables.selectedColor.withOpacity(0.08),
+                  GlobalVariables.selectedColor.withOpacity(0.02),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: GlobalVariables.selectedColor.withOpacity(0.2),
+                width: 1.5,
+              ),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const PrimaryText(text: 'Make profile public', size: 16),
+                      const SizedBox(height: 4),
+                      SecondaryText(
+                        text: 'Allow institutions to find your profile',
+                        size: 13,
+                      ),
+                    ],
+                  ),
+                ),
+                Switch(
+                  value: isPublic,
+                  onChanged: (v) => setState(() => isPublic = v),
+                  activeColor: GlobalVariables.selectedColor,
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  // ───────────────────────── STEP 4 ─────────────────────────
-
+  // STEP 4 - Media
   Widget _stepMedia() {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _header('Media', 'Upload supporting documents and profile photo.'),
-
-          const SizedBox(height: 24),
-          const PrimaryText(text: 'Demo Video', size: 16),
-          const SizedBox(height: 8),
-          _filePickerBox(
-            file: demoVideo,
-            icon: Icons.play_circle_fill,
-            onTap: () async {
-              final files = await pickImages(type: FileType.custom,allowedExtensions: ['mp4','mkv','webm','3gp','mov','avi','flv','mpeg','mpg','wmv','m4v']);
-              if (files.isNotEmpty) {
-                setState(() => demoVideo = files.first);
-              }
-            },
-          ),
-
-          const SizedBox(height: 24),
-
-          const PrimaryText(text: 'Resume', size: 16),
-          const SizedBox(height: 8),
-          _filePickerBox(
-            file: resume,
-            icon: Icons.picture_as_pdf,
-            onTap: () async {
-              final files = await pickImages(type:FileType.custom,allowedExtensions: ['pdf']);
-              if (files.isNotEmpty) setState(() => resume = files.first);
-            },
-          ),
-
-          const SizedBox(height: 24),
-          const PrimaryText(text: 'Profile Photo', size: 16),
-          const SizedBox(height: 8),
-          _filePickerBox(
-            file: photo,
-            icon: Icons.camera_alt,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 8),
+        const PrimaryText(text: 'Profile Photo', size: 16),
+        const SizedBox(height: 12),
+        Center(
+          child: GestureDetector(
             onTap: () async {
               final files = await pickImages(type: FileType.image);
-              if (files.isNotEmpty) setState(() => photo = files.first);
+              if (files.isNotEmpty) {
+                setState(() => photo = files.first);
+              }
             },
+            child: Container(
+              height: 140,
+              width: 140,
+              decoration: BoxDecoration(
+                color: GlobalVariables.greyBackgroundColor,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: GlobalVariables.selectedColor.withOpacity(0.3),
+                  width: 2,
+                ),
+                image: photo != null
+                    ? DecorationImage(
+                  image: FileImage(photo!),
+                  fit: BoxFit.cover,
+                )
+                    : null,
+              ),
+              child: photo == null
+                  ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.add_photo_alternate,
+                    size: 40,
+                    color: GlobalVariables.selectedColor,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Upload Photo',
+                    style: TextStyle(
+                      color: GlobalVariables.selectedColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              )
+                  : null,
+            ),
           ),
-        ],
-      ),
+        ),
+        const SizedBox(height: 32),
+        const PrimaryText(text: 'Demo Video', size: 16),
+        const SizedBox(height: 4),
+        Text(
+          'Showcase your teaching style',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 13,
+          ),
+        ),
+        const SizedBox(height: 12),
+        _filePickerBox(
+          file: demoVideo,
+          icon: Icons.play_circle_fill,
+          label: demoVideo != null ? 'Video uploaded' : 'Upload demo video',
+          onTap: () async {
+            final files = await pickImages(
+              type: FileType.custom,
+              allowedExtensions: ['mp4', 'mkv', 'webm', '3gp', 'mov', 'avi', 'flv', 'mpeg', 'mpg', 'wmv', 'm4v'],
+            );
+            if (files.isNotEmpty) {
+              setState(() => demoVideo = files.first);
+            }
+          },
+        ),
+        const SizedBox(height: 24),
+        const PrimaryText(text: 'Resume', size: 16),
+        const SizedBox(height: 4),
+        Text(
+          'Upload your professional resume (PDF)',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 13,
+          ),
+        ),
+        const SizedBox(height: 12),
+        _filePickerBox(
+          file: resume,
+          icon: Icons.picture_as_pdf,
+          label: resume != null ? 'Resume uploaded' : 'Upload resume',
+          onTap: () async {
+            final files = await pickImages(
+              type: FileType.custom,
+              allowedExtensions: ['pdf'],
+            );
+            if (files.isNotEmpty) setState(() => resume = files.first);
+          },
+        ),
+        const SizedBox(height: 32),
+      ],
     );
   }
 
-  // ───────────────────────── SMALL WIDGETS ─────────────────────────
-
+  // Helper Widgets
   Widget _chipInput({
     required List<String> items,
     required TextEditingController controller,
     required String hint,
+    required String title,
+    required String placeholder,
     required Function(String) onAdd,
     required Function(String) onRemove,
   }) {
@@ -393,10 +529,33 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
       runSpacing: 8,
       children: [
         ...items.map(
-          (e) => Chip(
-            label: Text(e,style: TextStyle(color: Colors.black),),
-            deleteIcon: const Icon(Icons.close, size: 18,color: Colors.black,),
-            onDeleted: () => onRemove(e),
+              (e) => Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              color: GlobalVariables.selectedColor.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(22),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  e,
+                  style: TextStyle(
+                    color: GlobalVariables.selectedColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                GestureDetector(
+                  onTap: () => onRemove(e),
+                  child: Icon(
+                    Icons.close,
+                    size: 16,
+                    color: GlobalVariables.selectedColor,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         GestureDetector(
@@ -404,9 +563,67 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
             showDialog(
               context: context,
               builder: (_) => AlertDialog(
-                title: Text(hint),
-                content: TextField(controller: controller),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                title: Text(
+                  title,
+                  style: GoogleFonts.inter(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+                    TextField(
+                      controller: controller,
+                      autofocus: true,
+                      style: GoogleFonts.inter(
+                        fontSize: 15,
+                        color: Colors.black87,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: placeholder,
+                        hintStyle: GoogleFonts.inter(
+                          fontSize: 15,
+                          color: Colors.grey.shade500,
+                        ),
+                        filled: true,
+                        fillColor: GlobalVariables.greyBackgroundColor,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: GlobalVariables.selectedColor,
+                            width: 2,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(
+                      'Cancel',
+                      style: GoogleFonts.inter(
+                        color: Colors.grey.shade700,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
                   TextButton(
                     onPressed: () {
                       if (controller.text.isNotEmpty) {
@@ -415,7 +632,13 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
                       }
                       Navigator.pop(context);
                     },
-                    child: const Text('Add'),
+                    child: Text(
+                      'Add',
+                      style: GoogleFonts.inter(
+                        color: GlobalVariables.selectedColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -424,15 +647,28 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
-              border: Border.all(color: GlobalVariables.selectedColor),
+              border: Border.all(
+                color: GlobalVariables.selectedColor,
+                width: 1.5,
+              ),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: const Row(
+            child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.add, size: 16),
-                SizedBox(width: 6),
-                Text('Add'),
+                Icon(
+                  Icons.add,
+                  size: 16,
+                  color: GlobalVariables.selectedColor,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  'Add',
+                  style: TextStyle(
+                    color: GlobalVariables.selectedColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ],
             ),
           ),
@@ -451,10 +687,15 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
       ),
       child: Row(
         children: [
-          const Icon(Icons.laptop),
+          const Icon(Icons.laptop, color: Colors.grey),
           const SizedBox(width: 12),
-          Expanded(child: Text(text)),
-          const Icon(Icons.lock),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(color: Colors.black87),
+            ),
+          ),
+          const Icon(Icons.lock, color: Colors.grey),
         ],
       ),
     );
@@ -463,20 +704,61 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
   Widget _filePickerBox({
     required File? file,
     required IconData icon,
+    required String label,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 100,
-        width: 100,
+        padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: const Color(0xFFF5F5F5),
-          borderRadius: BorderRadius.circular(12),
+          color: file != null
+              ? GlobalVariables.selectedColor.withOpacity(0.08)
+              : GlobalVariables.greyBackgroundColor,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: file != null
+                ? GlobalVariables.selectedColor.withOpacity(0.3)
+                : Colors.grey.shade300,
+            width: 1.5,
+          ),
         ),
-        child: file == null
-            ? Icon(icon, color: GlobalVariables.secondaryTextColor)
-            : const Icon(Icons.check_circle, color: Colors.green),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: file != null
+                    ? GlobalVariables.selectedColor.withOpacity(0.15)
+                    : Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                file != null ? Icons.check_circle : icon,
+                color: file != null
+                    ? GlobalVariables.selectedColor
+                    : Colors.grey.shade600,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: file != null ? GlobalVariables.selectedColor : Colors.grey.shade700,
+                  fontWeight: file != null ? FontWeight.w600 : FontWeight.w500,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            Icon(
+              Icons.upload_file,
+              color: Colors.grey.shade500,
+              size: 20,
+            ),
+          ],
+        ),
       ),
     );
   }

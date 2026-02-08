@@ -32,12 +32,23 @@ class AppliedJobCard extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          gradient: LinearGradient(
+            colors: [
+              Colors.white,
+              color.withOpacity(0.02),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: color.withOpacity(0.2),
+            width: 1.5,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 12,
+              color: color.withOpacity(0.08),
+              blurRadius: 16,
               offset: const Offset(0, 4),
             ),
           ],
@@ -47,11 +58,11 @@ class AppliedJobCard extends StatelessWidget {
           children: [
             // Header with gradient background
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    color.withOpacity(0.1),
+                    color.withOpacity(0.12),
                     color.withOpacity(0.05),
                   ],
                   begin: Alignment.topLeft,
@@ -72,14 +83,14 @@ class AppliedJobCard extends StatelessWidget {
                       children: [
                         Text(
                           app.title,
-                          style: const TextStyle(
+                          style: GoogleFonts.inter(
                             fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1A1A1A),
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black87,
                             height: 1.3,
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 10),
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 12,
@@ -87,7 +98,7 @@ class AppliedJobCard extends StatelessWidget {
                           ),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(10),
                             border: Border.all(
                               color: color.withOpacity(0.3),
                               width: 1.5,
@@ -105,7 +116,7 @@ class AppliedJobCard extends StatelessWidget {
                               Flexible(
                                 child: Text(
                                   app.subjects.join(', '),
-                                  style: TextStyle(
+                                  style: GoogleFonts.inter(
                                     color: color,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 13,
@@ -122,11 +133,16 @@ class AppliedJobCard extends StatelessWidget {
                   const SizedBox(width: 12),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 8,
+                      horizontal: 16,
+                      vertical: 10,
                     ),
                     decoration: BoxDecoration(
-                      color: color,
+                      gradient: LinearGradient(
+                        colors: [
+                          color,
+                          color.withOpacity(0.8),
+                        ],
+                      ),
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
@@ -138,9 +154,9 @@ class AppliedJobCard extends StatelessWidget {
                     ),
                     child: Text(
                       app.status.toUpperCase(),
-                      style: const TextStyle(
+                      style: GoogleFonts.inter(
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w700,
                         fontSize: 12,
                         letterSpacing: 0.5,
                       ),
@@ -154,12 +170,12 @@ class AppliedJobCard extends StatelessWidget {
             Divider(
               height: 1,
               thickness: 1,
-              color: Colors.grey.shade200,
+              color: color.withOpacity(0.1),
             ),
 
             // Details section
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(18),
               child: Column(
                 children: [
                   // Location and Job Type
@@ -169,12 +185,21 @@ class AppliedJobCard extends StatelessWidget {
                         Expanded(
                           child: Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 10,
+                              horizontal: 14,
+                              vertical: 12,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF5F5F5),
-                              borderRadius: BorderRadius.circular(10),
+                              gradient: LinearGradient(
+                                colors: [
+                                  GlobalVariables.greyBackgroundColor.withOpacity(0.5),
+                                  Colors.white,
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Colors.grey.shade200,
+                                width: 1.5,
+                              ),
                             ),
                             child: Row(
                               children: [
@@ -187,7 +212,7 @@ class AppliedJobCard extends StatelessWidget {
                                 Expanded(
                                   child: Text(
                                     app.location!,
-                                    style: TextStyle(
+                                    style: GoogleFonts.inter(
                                       fontSize: 14,
                                       color: Colors.grey.shade800,
                                       fontWeight: FontWeight.w500,
@@ -204,12 +229,21 @@ class AppliedJobCard extends StatelessWidget {
                       Expanded(
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 10,
+                            horizontal: 14,
+                            vertical: 12,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF5F5F5),
-                            borderRadius: BorderRadius.circular(10),
+                            gradient: LinearGradient(
+                              colors: [
+                                GlobalVariables.greyBackgroundColor.withOpacity(0.5),
+                                Colors.white,
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: Colors.grey.shade200,
+                              width: 1.5,
+                            ),
                           ),
                           child: Row(
                             children: [
@@ -222,7 +256,7 @@ class AppliedJobCard extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   app.jobType,
-                                  style: TextStyle(
+                                  style: GoogleFonts.inter(
                                     fontSize: 14,
                                     color: Colors.grey.shade800,
                                     fontWeight: FontWeight.w500,
@@ -239,12 +273,12 @@ class AppliedJobCard extends StatelessWidget {
 
                   // Salary section
                   if (app.salary != null) ...[
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 14),
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
+                        horizontal: 18,
+                        vertical: 14,
                       ),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -253,19 +287,19 @@ class AppliedJobCard extends StatelessWidget {
                             Colors.green.shade100.withOpacity(0.3),
                           ],
                         ),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(14),
                         border: Border.all(
                           color: Colors.green.shade200,
-                          width: 1,
+                          width: 1.5,
                         ),
                       ),
                       child: Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               color: Colors.green.shade100,
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                             child: Icon(
                               Icons.currency_rupee_rounded,
@@ -273,22 +307,22 @@ class AppliedJobCard extends StatelessWidget {
                               color: Colors.green.shade700,
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 14),
                           Text(
                             '₹${app.salary}',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                            style: GoogleFonts.inter(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
                               color: Colors.green.shade800,
                             ),
                           ),
                           const Spacer(),
                           Text(
                             'Salary',
-                            style: TextStyle(
+                            style: GoogleFonts.inter(
                               fontSize: 13,
                               color: Colors.green.shade700,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
