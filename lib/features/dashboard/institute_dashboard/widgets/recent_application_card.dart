@@ -24,56 +24,36 @@ class RecentApplicationCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.white,
-              GlobalVariables.greyBackgroundColor.withOpacity(0.3),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(16),
+          color: GlobalVariables.surfaceColor,
+          borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius),
           border: Border.all(
-            color: GlobalVariables.greyBackgroundColor,
-            width: 1.5,
+            color: Colors.grey.shade200,
+            width: 1.2,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: GlobalVariables.selectedColor.withOpacity(0.08),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          boxShadow: GlobalVariables.subtleShadow,
         ),
         child: Row(
           children: [
             Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: GlobalVariables.selectedColor.withOpacity(0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
               ),
               child: CircleAvatar(
-                radius: 28,
-                backgroundColor: GlobalVariables.selectedColor.withOpacity(0.12),
+                radius: 26,
+                backgroundColor: GlobalVariables.primarySoft,
                 backgroundImage: photo != null && photo!.isNotEmpty
                     ? NetworkImage(photo!)
                     : null,
                 child: (photo == null || photo!.isEmpty)
                     ? Icon(
-                  Icons.person_outline,
-                  color: GlobalVariables.selectedColor,
-                  size: 28,
+                  Icons.person_rounded,
+                  color: GlobalVariables.primaryColor,
+                  size: 26,
                 )
                     : null,
               ),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,44 +61,64 @@ class RecentApplicationCard extends StatelessWidget {
                   Text(
                     name,
                     style: GoogleFonts.inter(
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w700,
                       fontSize: 15,
-                      color: Colors.black87,
+                      color: GlobalVariables.primaryTextColor,
                     ),
                   ),
                   const SizedBox(height: 5),
-                  Text(
-                    'Applied for $role',
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
-                      color: Colors.grey.shade600,
-                    ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.work_outline_rounded,
+                        size: 14,
+                        color: Colors.grey.shade500,
+                      ),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          'Applied for $role',
+                          style: GoogleFonts.inter(
+                            fontSize: 13,
+                            color: GlobalVariables.secondaryTextColor,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 6,
+              ),
+              decoration: BoxDecoration(
+                color: GlobalVariables.primarySoft,
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.access_time_rounded,
+                    size: 12,
+                    color: GlobalVariables.primaryColor,
                   ),
-                  decoration: BoxDecoration(
-                    color: GlobalVariables.selectedColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
+                  const SizedBox(width: 4),
+                  Text(
                     time,
                     style: GoogleFonts.inter(
                       fontSize: 11,
-                      color: GlobalVariables.selectedColor,
-                      fontWeight: FontWeight.w500,
+                      color: GlobalVariables.primaryColor,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),

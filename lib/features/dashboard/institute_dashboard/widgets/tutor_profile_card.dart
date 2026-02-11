@@ -14,160 +14,187 @@ class TutorProfileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.white,
-            GlobalVariables.greyBackgroundColor.withOpacity(0.4),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
+        color: GlobalVariables.surfaceColor,
+        borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius + 6),
         border: Border.all(
-          color: GlobalVariables.selectedColor.withOpacity(0.15),
-          width: 1.5,
+          color: Colors.grey.shade200,
+          width: 1.2,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 15,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: GlobalVariables.softCardShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      GlobalVariables.selectedColor.withOpacity(0.15),
-                      GlobalVariables.selectedColor.withOpacity(0.08),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  Icons.person_outline,
-                  color: GlobalVariables.selectedColor,
-                  size: 24,
-                ),
+          // Header Section
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: GlobalVariables.backgroundColor,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(GlobalVariables.defaultRadius + 6),
+                topRight: Radius.circular(GlobalVariables.defaultRadius + 6),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  'Tutor Profile',
-                  style: GoogleFonts.inter(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.verified,
-                      size: 14,
-                      color: Colors.green.shade700,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${tutor.experienceYears} yrs',
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.green.shade700,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            tutor.bio,
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              color: Colors.grey.shade700,
-              height: 1.5,
             ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 14),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: tutor.subjects
-                .map(
-                  (s) => Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 7,
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: GlobalVariables.primarySoft,
+                    borderRadius:
+                        BorderRadius.circular(GlobalVariables.smallRadius),
+                  ),
+                  child: const Icon(
+                    Icons.person_rounded,
+                    color: Colors.black87,
+                    size: 32,
+                  ),
                 ),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      GlobalVariables.selectedColor.withOpacity(0.12),
-                      GlobalVariables.selectedColor.withOpacity(0.05),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Professional Tutor',
+                        style: GoogleFonts.inter(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: GlobalVariables.primaryTextColor,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.star_rounded,
+                            size: 16,
+                            color: Colors.amber.shade600,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '4.8',
+                            style: GoogleFonts.inter(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: GlobalVariables.primaryTextColor,
+                            ),
+                          ),
+                          Text(
+                            ' (124 reviews)',
+                            style: GoogleFonts.inter(
+                              fontSize: 12,
+                              color: GlobalVariables.secondaryTextColor,
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: GlobalVariables.selectedColor.withOpacity(0.2),
-                    width: 1,
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: GlobalVariables.successColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.verified_rounded,
+                        size: 14,
+                        color: GlobalVariables.successColor,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        '${tutor.experienceYears} yrs',
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: GlobalVariables.successColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                child: Text(
-                  s,
+              ],
+            ),
+          ),
+
+          // Content Section
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Bio
+                Text(
+                  tutor.bio,
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    color: GlobalVariables.secondaryTextColor,
+                    height: 1.6,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+
+                const SizedBox(height: 16),
+
+                // Subjects
+                Text(
+                  'Subjects',
                   style: GoogleFonts.inter(
                     fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: GlobalVariables.selectedColor,
+                    fontWeight: FontWeight.w700,
+                    color: GlobalVariables.secondaryTextColor,
+                    letterSpacing: 0.5,
                   ),
                 ),
-              ),
-            )
-                .toList(),
-          ),
-          const SizedBox(height: 14),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: onViewProfile,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: GlobalVariables.selectedColor,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: tutor.subjects
+                      .map(
+                        (s) => Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: GlobalVariables.primarySoft,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: GlobalVariables.primaryColor.withOpacity(0.35),
+                          width: 1.2,
+                        ),
+                      ),
+                      child: Text(
+                        s,
+                        style: GoogleFonts.inter(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: GlobalVariables.primaryColor,
+                        ),
+                      ),
+                    ),
+                  )
+                      .toList(),
                 ),
-                elevation: 0,
-              ),
-              child: Text(
-                'View Full Profile',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+
+                const SizedBox(height: 20),
+
+                // View Profile Button
+                CustomButton(
+                  text: 'View Full Profile',
+                  onTap: onViewProfile,
                 ),
-              ),
+              ],
             ),
           ),
         ],

@@ -41,23 +41,50 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
         child: _currentIndex == 0
             ? _dashboard(scale)
             : _currentIndex == 1
-            ? const Center(child: Text('Jobs Screen'))
-            : _currentIndex == 2
-            ? const Center(child: Text('Exams Screen'))
-            : TeacherProfileScreen(name: auth.name ?? 'No name provided'),
+                ? const Center(child: Text('Jobs Screen'))
+                : _currentIndex == 2
+                    ? const Center(child: Text('Exams Screen'))
+                    : TeacherProfileScreen(
+                        name: auth.name ?? 'No name provided',
+                      ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (i) => setState(() => _currentIndex = i),
-        selectedItemColor: GlobalVariables.selectedColor,
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.work), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.school), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
-        ],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: GlobalVariables.surfaceColor,
+          boxShadow: GlobalVariables.subtleShadow,
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (i) => setState(() => _currentIndex = i),
+          selectedItemColor: GlobalVariables.primaryColor,
+          unselectedItemColor: Colors.grey.shade400,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: GlobalVariables.surfaceColor,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.dashboard_outlined),
+              activeIcon: Icon(Icons.dashboard),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.work_outline),
+              activeIcon: Icon(Icons.work),
+              label: 'Jobs',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.school_outlined),
+              activeIcon: Icon(Icons.school),
+              label: 'Exams',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              activeIcon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -91,7 +118,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                 const SizedBox(height: 16),
                 _topHeader(scale, t, authProvider),
                 const SizedBox(height: 24),
-                PrimaryText(text: 'Dashboard', size: 28 * scale),
+                PrimaryText(text: 'Dashboard', size: 26 * scale),
                 const SizedBox(height: 4),
                 const SecondaryText(
                   text: "Here's what's happening today.",
@@ -143,26 +170,9 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                 Container(
                   padding: EdgeInsets.all(20 * scale),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        GlobalVariables.selectedColor.withOpacity(0.15),
-                        GlobalVariables.selectedColor.withOpacity(0.05),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: GlobalVariables.selectedColor.withOpacity(0.3),
-                      width: 1.5,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: GlobalVariables.selectedColor.withOpacity(0.1),
-                        blurRadius: 15,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
+                    color: GlobalVariables.primaryColor.withOpacity(0.96),
+                    borderRadius: BorderRadius.circular(22),
+                    boxShadow: GlobalVariables.softCardShadow,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,22 +185,22 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                               Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: GlobalVariables.selectedColor.withOpacity(0.15),
+                                  color: Colors.white.withOpacity(0.16),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Icon(
-                                  Icons.account_balance_wallet,
+                                child: const Icon(
+                                  Icons.account_balance_wallet_rounded,
                                   size: 20,
-                                  color: GlobalVariables.selectedColor,
+                                  color: Colors.white,
                                 ),
                               ),
                               const SizedBox(width: 10),
                               Text(
                                 'Credit Balance',
                                 style: GoogleFonts.inter(
-                                  fontSize: 16,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.black87,
+                                  color: Colors.white.withOpacity(0.95),
                                 ),
                               ),
                             ],
@@ -217,27 +227,30 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
+                                horizontal: 14,
+                                vertical: 8,
                               ),
                               decoration: BoxDecoration(
-                                color: GlobalVariables.selectedColor,
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: GlobalVariables.selectedColor.withOpacity(0.3),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.add_circle,
+                                    size: 16,
+                                    color: GlobalVariables.primaryColor,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'Top up',
+                                    style: GoogleFonts.inter(
+                                      color: GlobalVariables.primaryColor,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ],
-                              ),
-                              child: Text(
-                                'Top up',
-                                style: GoogleFonts.inter(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
-                                ),
                               ),
                             ),
                           ),
@@ -250,9 +263,9 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                           Text(
                             '${t.credits ?? 0}',
                             style: GoogleFonts.inter(
-                              fontSize: 38 * scale,
+                              fontSize: 40 * scale,
                               fontWeight: FontWeight.w800,
-                              color: GlobalVariables.selectedColor,
+                              color: Colors.white,
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -262,7 +275,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                               'credits available',
                               style: GoogleFonts.inter(
                                 fontSize: 14,
-                                color: Colors.grey.shade700,
+                                color: Colors.white.withOpacity(0.85),
                               ),
                             ),
                           ),
@@ -273,10 +286,10 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                         borderRadius: BorderRadius.circular(10),
                         child: LinearProgressIndicator(
                           value: ((t.credits ?? 0) / 1000).clamp(0.02, 1),
-                          minHeight: 10,
-                          backgroundColor: Colors.white.withOpacity(0.5),
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            GlobalVariables.selectedColor,
+                          minHeight: 8,
+                          backgroundColor: Colors.white.withOpacity(0.2),
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                            Colors.white,
                           ),
                         ),
                       ),
@@ -334,15 +347,17 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
             Stack(
               children: [
                 CircleAvatar(
-                  radius: 25,
-                  backgroundColor: GlobalVariables.selectedColor.withOpacity(0.2),
-                  backgroundImage: hasPhoto ? NetworkImage(teacher.photo!.url!) : null,
+                  radius: 26,
+                  backgroundColor:
+                      GlobalVariables.primaryColor.withOpacity(0.08),
+                  backgroundImage:
+                      hasPhoto ? NetworkImage(teacher.photo!.url!) : null,
                   child: !hasPhoto
                       ? const Icon(
-                    Icons.person,
-                    size: 32,
-                    color: Colors.black54,
-                  )
+                          Icons.person,
+                          size: 32,
+                          color: Colors.black54,
+                        )
                       : null,
                 ),
                 if (teacher?.isActive == true)
@@ -375,7 +390,8 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
         ),
         IconButton(
           onPressed: () {},
-          icon: const Icon(Icons.notifications, color: Colors.black),
+          icon: const Icon(Icons.notifications_none_rounded,
+              color: Colors.black87),
         ),
       ],
     );
@@ -394,42 +410,29 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
       child: Container(
         padding: EdgeInsets.all(18 * scale),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              GlobalVariables.selectedColor.withOpacity(0.08),
-              GlobalVariables.selectedColor.withOpacity(0.02),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          color: GlobalVariables.surfaceColor,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color: GlobalVariables.selectedColor.withOpacity(0.2),
-            width: 1.5,
+            color: Colors.grey.shade200,
+            width: 1.2,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: GlobalVariables.selectedColor.withOpacity(0.08),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          boxShadow: GlobalVariables.subtleShadow,
         ),
         child: fullWidth
             ? Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: GlobalVariables.selectedColor.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(12),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: GlobalVariables.primarySoft,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  icon,
+                  size: 24,
+                  color: GlobalVariables.primaryColor,
+                ),
               ),
-              child: Icon(
-                icon,
-                size: 24,
-                color: GlobalVariables.selectedColor,
-              ),
-            ),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
@@ -440,7 +443,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                     style: GoogleFonts.inter(
                       fontSize: 28 * scale,
                       fontWeight: FontWeight.w700,
-                      color: GlobalVariables.selectedColor,
+                      color: GlobalVariables.primaryTextColor,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -449,7 +452,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                     style: GoogleFonts.inter(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
-                      color: Colors.grey.shade700,
+                      color: GlobalVariables.secondaryTextColor,
                     ),
                   ),
                 ],
@@ -468,7 +471,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
             Icon(
               icon,
               size: 24,
-              color: GlobalVariables.selectedColor,
+              color: GlobalVariables.primaryColor,
             ),
             const SizedBox(height: 12),
             Text(
@@ -476,7 +479,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
               style: GoogleFonts.inter(
                 fontSize: 28 * scale,
                 fontWeight: FontWeight.w700,
-                color: GlobalVariables.selectedColor,
+                color: GlobalVariables.primaryTextColor,
               ),
             ),
             const SizedBox(height: 4),
@@ -485,7 +488,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
               style: GoogleFonts.inter(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
-                color: Colors.grey.shade700,
+                color: GlobalVariables.secondaryTextColor,
               ),
             ),
           ],
@@ -504,26 +507,13 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              GlobalVariables.selectedColor.withOpacity(0.08),
-              GlobalVariables.selectedColor.withOpacity(0.02),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          color: GlobalVariables.surfaceColor,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: GlobalVariables.selectedColor.withOpacity(0.2),
-            width: 1.5,
+            color: Colors.grey.shade200,
+            width: 1.2,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          boxShadow: GlobalVariables.subtleShadow,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -531,7 +521,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
             Icon(
               icon,
               size: 20,
-              color: GlobalVariables.selectedColor,
+              color: GlobalVariables.primaryColor,
             ),
             const SizedBox(width: 10),
             Text(
@@ -539,7 +529,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
               style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: GlobalVariables.selectedColor,
+                color: GlobalVariables.primaryTextColor,
               ),
             ),
           ],

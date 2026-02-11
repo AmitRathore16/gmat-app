@@ -80,7 +80,21 @@ class _ParentProfileCreateScreenState extends State<ParentProfileCreateScreen> {
         elevation: 0,
         leading: currentStep > 0
             ? IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: const Icon(Icons.arrow_back_rounded, color: Colors.black87, size: 20),
+          ),
           onPressed: () => setState(() => currentStep--),
         )
             : null,
@@ -89,11 +103,45 @@ class _ParentProfileCreateScreenState extends State<ParentProfileCreateScreen> {
         onTap: () => FocusScope.of(context).unfocus(),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+            // Header Section with Progress
+            Container(
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 28),
+              decoration: BoxDecoration(
+                color: GlobalVariables.surfaceColor,
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(32),
+                  bottomRight: Radius.circular(32),
+                ),
+                boxShadow: GlobalVariables.softCardShadow,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Step Indicator
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'STEP ${currentStep + 1}',
+                        style: GoogleFonts.inter(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: GlobalVariables.primaryColor,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                      Text(
+                        ' OF 2',
+                        style: GoogleFonts.inter(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey.shade400,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
                   _progressBar(),
                   const SizedBox(height: 24),
                   _stepTitle(),
@@ -102,22 +150,25 @@ class _ParentProfileCreateScreenState extends State<ParentProfileCreateScreen> {
                 ],
               ),
             ),
+
             const SizedBox(height: 24),
+
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: _buildStep(),
               ),
             ),
+
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, -2),
+                    color: Colors.black.withOpacity(0.08),
+                    blurRadius: 15,
+                    offset: const Offset(0, -5),
                   ),
                 ],
               ),
@@ -126,7 +177,7 @@ class _ParentProfileCreateScreenState extends State<ParentProfileCreateScreen> {
                   return provider.isLoading
                       ? const Loader()
                       : CustomButton(
-                    text: currentStep == 1 ? 'Finish Setup' : 'Continue',
+                    text: currentStep == 1 ? '✓  Complete Setup' : 'Continue  →',
                     onTap: onContinue,
                   );
                 },
@@ -144,30 +195,13 @@ class _ParentProfileCreateScreenState extends State<ParentProfileCreateScreen> {
         2,
             (index) => Expanded(
           child: Container(
-            height: 6,
+            height: 5,
             margin: const EdgeInsets.symmetric(horizontal: 4),
             decoration: BoxDecoration(
-              gradient: index <= currentStep
-                  ? LinearGradient(
-                colors: [
-                  GlobalVariables.selectedColor,
-                  GlobalVariables.selectedColor.withOpacity(0.7),
-                ],
-              )
-                  : null,
-              color: index > currentStep
-                  ? GlobalVariables.greyBackgroundColor
-                  : null,
+              color: index <= currentStep
+                  ? GlobalVariables.primaryColor
+                  : Colors.grey.shade200,
               borderRadius: BorderRadius.circular(3),
-              boxShadow: index <= currentStep
-                  ? [
-                BoxShadow(
-                  color: GlobalVariables.selectedColor.withOpacity(0.3),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ]
-                  : null,
             ),
           ),
         ),
@@ -177,29 +211,31 @@ class _ParentProfileCreateScreenState extends State<ParentProfileCreateScreen> {
 
   Widget _stepTitle() {
     final titles = [
-      'Parent Details',
-      'Address Information',
+      'Personal Information',
+      'Location Details',
     ];
     return Text(
       titles[currentStep],
       style: GoogleFonts.inter(
-        fontSize: 26,
-        fontWeight: FontWeight.w700,
-        color: Colors.black87,
+        fontSize: 28,
+        fontWeight: FontWeight.w800,
+        color: GlobalVariables.primaryTextColor,
+        height: 1.2,
       ),
     );
   }
 
   Widget _stepSubtitle() {
     final subtitles = [
-      'Tell us about yourself',
+      'Let us know who you are',
       'Where are you located?',
     ];
     return Text(
       subtitles[currentStep],
       style: GoogleFonts.inter(
         fontSize: 14,
-        color: Colors.grey.shade600,
+        color: GlobalVariables.secondaryTextColor,
+        fontWeight: FontWeight.w500,
       ),
     );
   }
@@ -216,48 +252,73 @@ class _ParentProfileCreateScreenState extends State<ParentProfileCreateScreen> {
             // Profile Icon
             Center(
               child: Container(
-                margin: const EdgeInsets.only(bottom: 24),
+                margin: const EdgeInsets.only(bottom: 32),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: GlobalVariables.selectedColor.withOpacity(0.2),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
+                  color: GlobalVariables.primaryColor.withOpacity(0.08),
                 ),
                 child: CircleAvatar(
-                  radius: 48,
-                  backgroundColor: GlobalVariables.selectedColor.withOpacity(0.15),
-                  child: Icon(
-                    Icons.person,
-                    size: 40,
-                    color: GlobalVariables.selectedColor,
+                  radius: 56,
+                  backgroundColor: Colors.white,
+                  child: const Icon(
+                    Icons.person_rounded,
+                    size: 52,
+                    color: Colors.black87,
                   ),
                 ),
               ),
             ),
 
+            Text(
+              'Full Name',
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: GlobalVariables.primaryTextColor,
+              ),
+            ),
+            const SizedBox(height: 8),
             CustomTextField(
               controller: nameCtrl,
-              hintText: 'Parent Name',
-              prefixIcon: Icons.person,
+              hintText: 'Enter your full name',
+              prefixIcon: Icons.person_outline_rounded,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
+
+            Text(
+              'Email Address',
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: GlobalVariables.primaryTextColor,
+              ),
+            ),
+            const SizedBox(height: 8),
             CustomTextField(
               controller: emailCtrl,
               readonly: true,
               hintText: 'Email',
-              prefixIcon: Icons.email,
+              prefixIcon: Icons.email_outlined,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
+
+            Text(
+              'Phone Number',
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: GlobalVariables.primaryTextColor,
+              ),
+            ),
+            const SizedBox(height: 8),
             CustomTextField(
               controller: phoneCtrl,
               readonly: true,
               hintText: 'Phone',
-              prefixIcon: Icons.phone,
+              prefixIcon: Icons.phone_outlined,
             ),
+
+            const SizedBox(height: 20),
           ],
         ),
       );
@@ -273,64 +334,106 @@ class _ParentProfileCreateScreenState extends State<ParentProfileCreateScreen> {
           // Location Icon
           Center(
             child: Container(
-              margin: const EdgeInsets.only(bottom: 24),
-              padding: const EdgeInsets.all(20),
+              margin: const EdgeInsets.only(bottom: 32),
+              padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    GlobalVariables.selectedColor.withOpacity(0.15),
-                    GlobalVariables.selectedColor.withOpacity(0.05),
-                  ],
-                ),
+                color: GlobalVariables.primarySoft,
                 shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: GlobalVariables.selectedColor.withOpacity(0.2),
-                    blurRadius: 20,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
+                border: Border.all(
+                  color: GlobalVariables.primaryColor.withOpacity(0.3),
+                  width: 3,
+                ),
               ),
               child: Icon(
-                Icons.location_on,
-                size: 48,
-                color: GlobalVariables.selectedColor,
+                Icons.location_on_rounded,
+                size: 56,
+                color: GlobalVariables.primaryColor,
               ),
             ),
           ),
 
+          Text(
+            'Street Address',
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: GlobalVariables.primaryTextColor,
+            ),
+          ),
+          const SizedBox(height: 8),
           CustomTextField(
             controller: streetCtrl,
-            hintText: 'Street Address',
-            prefixIcon: Icons.home,
+            hintText: 'Enter street address',
+            prefixIcon: Icons.home_outlined,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
+
           Row(
             children: [
               Expanded(
-                child: CustomTextField(
-                  controller: cityCtrl,
-                  hintText: 'City',
-                  prefixIcon: Icons.location_city,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'City',
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: GlobalVariables.primaryTextColor,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    CustomTextField(
+                      controller: cityCtrl,
+                      hintText: 'City',
+                      prefixIcon: Icons.location_city_outlined,
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: CustomTextField(
-                  controller: stateCtrl,
-                  hintText: 'State',
-                  prefixIcon: Icons.map,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'State',
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: GlobalVariables.primaryTextColor,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    CustomTextField(
+                      controller: stateCtrl,
+                      hintText: 'State',
+                      prefixIcon: Icons.map_outlined,
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
+
+          Text(
+            'Pincode',
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: GlobalVariables.primaryTextColor,
+            ),
+          ),
+          const SizedBox(height: 8),
           CustomTextField(
             controller: pincodeCtrl,
-            hintText: 'Pincode',
-            prefixIcon: Icons.pin_drop,
+            hintText: 'Enter pincode',
+            prefixIcon: Icons.pin_drop_outlined,
             keyboardType: TextInputType.number,
           ),
+
+          const SizedBox(height: 20),
         ],
       ),
     );

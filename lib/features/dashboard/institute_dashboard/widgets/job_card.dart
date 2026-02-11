@@ -35,26 +35,13 @@ class JobCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.white,
-              GlobalVariables.greyBackgroundColor.withOpacity(0.5),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(20),
+          color: GlobalVariables.surfaceColor,
+          borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius),
           border: Border.all(
-            color: GlobalVariables.selectedColor.withOpacity(0.15),
-            width: 1.5,
+            color: Colors.grey.shade200,
+            width: 1.2,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 15,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          boxShadow: GlobalVariables.subtleShadow,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,22 +220,15 @@ class JobCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: GlobalVariables.backgroundColor,
+        borderRadius: BorderRadius.circular(GlobalVariables.smallRadius),
       ),
       child: Row(
         children: [
           Icon(
             icon,
             size: 18,
-            color: GlobalVariables.selectedColor,
+            color: GlobalVariables.primaryColor,
           ),
           const SizedBox(width: 8),
           Expanded(
@@ -259,7 +239,7 @@ class JobCard extends StatelessWidget {
                   label,
                   style: GoogleFonts.inter(
                     fontSize: 10,
-                    color: Colors.grey.shade600,
+                    color: GlobalVariables.secondaryTextColor,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -268,7 +248,7 @@ class JobCard extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: GlobalVariables.primaryTextColor,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
