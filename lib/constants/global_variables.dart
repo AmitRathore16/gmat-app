@@ -9,5 +9,6 @@ class GlobalVariables{
   static const String baseUrl2 = 'http://10.0.2.2:5001';
   static const String baseUrl = 'http://localhost:5001';
   static const String baseUrl1 = 'https://getmeatutor.onrender.com';
+  static const String razorpayKeyId = 'rzp_test_RoFhlvQ5GI48tx';
 
 }
