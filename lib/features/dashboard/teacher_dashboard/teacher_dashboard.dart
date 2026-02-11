@@ -196,7 +196,25 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                             ],
                           ),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/wallet',
+                                arguments: {
+                                  'currentCredits': t.credits ?? 0,
+                                  'userId': authProvider.userId,
+                                  'userRole': 'teacher',
+                                },
+                              ).then((value) {
+                                // Refresh profile after payment
+                                if (value == true) {
+                                  teacherProvider.fetchTeacherProfile(
+                                    context,
+                                    authProvider.userId!,
+                                  );
+                                }
+                              });
+                            },
                             child: Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 12,

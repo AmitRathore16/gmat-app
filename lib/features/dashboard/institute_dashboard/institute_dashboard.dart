@@ -116,7 +116,24 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
                             : rawProgress.clamp(0.0, 1.0);
 
                         return GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            final auth = context.read<AuthProvider>();
+                            Navigator.pushNamed(
+                              context,
+                              '/wallet',
+                              arguments: {
+                                'currentCredits': credits,
+                                'userId': auth.userId,
+                                'userRole': 'institute',
+                              },
+                            ).then((value) {
+                              if (value == true) {
+                                context
+                                    .read<InstituteProvider>()
+                                    .fetchMyInstitute(context, silent: true);
+                              }
+                            });
+                          },
                           child: Container(
                             padding: EdgeInsets.all(20 * scale),
                             decoration: BoxDecoration(
@@ -174,7 +191,25 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
                                       ],
                                     ),
                                     GestureDetector(
-                                      onTap: () {},
+                                      onTap: () {
+                                        final auth = context.read<AuthProvider>();
+                                        Navigator.pushNamed(
+                                          context,
+                                          '/wallet',
+                                          arguments: {
+                                            'currentCredits': credits,
+                                            'userId': auth.userId,
+                                            'userRole': 'institute',
+                                          },
+                                        ).then((value) {
+                                          // Refresh profile after payment
+                                          if (value == true) {
+                                            context
+                                                .read<InstituteProvider>()
+                                                .fetchMyInstitute(context, silent: true);
+                                          }
+                                        });
+                                      },
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 12,

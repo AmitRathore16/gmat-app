@@ -124,7 +124,25 @@ class _ParentDashboardState extends State<ParentDashboard> {
                             : (credits / maxCredits).clamp(0.0, 1.0);
 
                         return GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            final auth = context.read<AuthProvider>();
+                            Navigator.pushNamed(
+                              context,
+                              '/wallet',
+                              arguments: {
+                                'currentCredits': credits,
+                                'userId': auth.userId,
+                                'userRole': 'parent',
+                              },
+                            ).then((value) {
+                              // Refresh profile after payment
+                              if (value == true) {
+                                context
+                                    .read<ParentProfileProvider>()
+                                    .fetchMyParentProfile(context);
+                              }
+                            });
+                          },
                           child: Container(
                             padding: EdgeInsets.all(20 * scale),
                             decoration: BoxDecoration(
@@ -182,7 +200,24 @@ class _ParentDashboardState extends State<ParentDashboard> {
                                       ],
                                     ),
                                     GestureDetector(
-                                      onTap: () {},
+                                      onTap: () {
+                                        final auth = context.read<AuthProvider>();
+                                        Navigator.pushNamed(
+                                          context,
+                                          '/wallet',
+                                          arguments: {
+                                            'currentCredits': credits,
+                                            'userId': auth.userId,
+                                            'userRole': 'parent',
+                                          },
+                                        ).then((value) {
+                                          if (value == true) {
+                                            context
+                                                .read<ParentProfileProvider>()
+                                                .fetchMyParentProfile(context);
+                                          }
+                                        });
+                                      },
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 12,

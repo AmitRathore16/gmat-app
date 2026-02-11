@@ -1,6 +1,17 @@
+import 'package:get_me_a_tutor/features/payment/wallet_screen.dart';
 import 'package:get_me_a_tutor/import_export.dart';
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
+    case WalletScreen.routeName:
+      final args = routeSettings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => WalletScreen(
+          currentCredits: args['currentCredits'],
+          userId: args['userId'],
+          userRole: args['userRole'],
+        ),
+      );
     case SelectRoleScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
