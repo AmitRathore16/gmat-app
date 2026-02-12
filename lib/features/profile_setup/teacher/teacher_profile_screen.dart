@@ -97,7 +97,7 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
         elevation: 0,
         leading: currentStep > 0
             ? IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
           onPressed: () => setState(() => currentStep--),
         )
             : null,
@@ -221,14 +221,14 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
           CustomTextField(
             controller: bioCtrl,
             hintText: 'Short bio',
-            prefixIcon: Icons.person_outline,
+            prefixIcon: Icons.person_outline_rounded,
             maxLines: 4,
           ),
           const SizedBox(height: 16),
           CustomTextField(
             controller: cityCtrl,
             hintText: 'City',
-            prefixIcon: Icons.location_city,
+            prefixIcon: Icons.location_city_rounded,
           ),
         ],
       ),
@@ -246,7 +246,7 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
           CustomTextField(
             controller: qualificationCtrl,
             hintText: 'Highest Qualification',
-            prefixIcon: Icons.school,
+            prefixIcon: Icons.school_rounded,
           ),
           const SizedBox(height: 24),
           const PrimaryText(text: 'Subjects You Teach', size: 16),
@@ -287,7 +287,7 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
                   '${experienceYears.toInt()} Years',
                   style: TextStyle(
                     color: GlobalVariables.selectedColor,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w700,
                     fontSize: 14,
                   ),
                 ),
@@ -335,7 +335,7 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
           CustomTextField(
             controller: availabilityCtrl,
             hintText: 'Availability (e.g. Weekends)',
-            prefixIcon: Icons.calendar_today,
+            prefixIcon: Icons.calendar_today_rounded,
           ),
           const SizedBox(height: 16),
           const PrimaryText(text: 'Expected Salary Range', size: 16),
@@ -346,7 +346,7 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
                 child: CustomTextField(
                   controller: salaryMinCtrl,
                   hintText: 'Min Salary',
-                  prefixIcon: Icons.currency_rupee,
+                  prefixIcon: Icons.currency_rupee_rounded,
                   keyboardType: TextInputType.number,
                 ),
               ),
@@ -355,7 +355,7 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
                 child: CustomTextField(
                   controller: salaryMaxCtrl,
                   hintText: 'Max Salary',
-                  prefixIcon: Icons.currency_rupee,
+                  prefixIcon: Icons.currency_rupee_rounded,
                   keyboardType: TextInputType.number,
                 ),
               ),
@@ -445,7 +445,7 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
         const SizedBox(height: 12),
         _filePickerBox(
           file: demoVideo,
-          icon: Icons.play_circle_fill,
+          icon: Icons.play_circle_rounded,
           label: demoVideo != null ? 'Video uploaded' : 'Upload demo video',
           onTap: () async {
             final files = await pickImages(
@@ -470,7 +470,7 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
         const SizedBox(height: 12),
         _filePickerBox(
           file: resume,
-          icon: Icons.picture_as_pdf,
+          icon: Icons.picture_as_pdf_rounded,
           label: resume != null ? 'Resume uploaded' : 'Upload resume',
           onTap: () async {
             final files = await pickImages(
@@ -542,7 +542,7 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
                   style: GoogleFonts.inter(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: GlobalVariables.primaryTextColor,
                   ),
                 ),
                 content: Column(
@@ -555,7 +555,7 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
                       autofocus: true,
                       style: GoogleFonts.inter(
                         fontSize: 15,
-                        color: Colors.black87,
+                        color: GlobalVariables.primaryTextColor,
                       ),
                       decoration: InputDecoration(
                         hintText: placeholder,
@@ -658,15 +658,15 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
       ),
       child: Row(
         children: [
-          const Icon(Icons.laptop, color: Colors.grey),
+          const Icon(Icons.laptop_rounded, color: Colors.grey),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(color: Colors.black87),
+              style: const TextStyle(color: GlobalVariables.primaryTextColor),
             ),
           ),
-          const Icon(Icons.lock, color: Colors.grey),
+          const Icon(Icons.lock_rounded, color: Colors.grey),
         ],
       ),
     );
@@ -724,7 +724,7 @@ class _TeacherProfileCreateScreenState extends State<TeacherProfileCreateScreen>
               ),
             ),
             Icon(
-              Icons.upload_file,
+              Icons.upload_file_rounded,
               color: Colors.grey.shade500,
               size: 20,
             ),

@@ -86,7 +86,7 @@ class AppliedJobCard extends StatelessWidget {
                           style: GoogleFonts.inter(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
-                            color: Colors.black87,
+                            color: GlobalVariables.primaryTextColor,
                             height: 1.3,
                           ),
                         ),

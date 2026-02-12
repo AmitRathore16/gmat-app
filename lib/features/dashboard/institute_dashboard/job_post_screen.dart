@@ -8,8 +8,9 @@ class JobPostScreen extends StatefulWidget {
   State<JobPostScreen> createState() => _JobPostScreenState();
 }
 
-class _JobPostScreenState extends State<JobPostScreen> {
+class _JobPostScreenState extends State<JobPostScreen> with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
+  late AnimationController _animController;
 
   // controllers
   final titleCtrl = TextEditingController();
@@ -26,6 +27,28 @@ class _JobPostScreenState extends State<JobPostScreen> {
 
   final jobTypes = ['full-time', 'part-time', 'contract'];
 
+  @override
+  void initState() {
+    super.initState();
+    _animController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _animController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    titleCtrl.dispose();
+    descCtrl.dispose();
+    classRangeCtrl.dispose();
+    salaryCtrl.dispose();
+    locationCtrl.dispose();
+    subjectInputCtrl.dispose();
+    super.dispose();
+  }
+
   Future<void> pickDeadline() async {
     final picked = await showDatePicker(
       context: context,
@@ -35,8 +58,8 @@ class _JobPostScreenState extends State<JobPostScreen> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: GlobalVariables.selectedColor,
+            colorScheme: const ColorScheme.light(
+              primary: Color(0xFF3B82F6),
             ),
           ),
           child: child!,
@@ -156,15 +179,27 @@ class _JobPostScreenState extends State<JobPostScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
-        title: const PrimaryText(text: 'Post a Job', size: 22),
+        title: Text(
+          'Post a Job',
+          style: GoogleFonts.inter(
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+            color: const Color(0xFF0F172A),
+          ),
+        ),
         leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.chevron_left,
-            size: 36,
-            color: Colors.black,
+          onPressed: () => Navigator.pop(context),
+          icon: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF1F5F9),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              size: 18,
+              color: Color(0xFF0F172A),
+            ),
           ),
         ),
         backgroundColor: Colors.white,
@@ -181,124 +216,140 @@ class _JobPostScreenState extends State<JobPostScreen> {
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _sectionLabel('Job Title'),
-                      CustomTextField(
-                        controller: titleCtrl,
-                        hintText: 'e.g. Mathematics Teacher',
-                      ),
-                      const SizedBox(height: 20),
-                      _sectionLabel('Job Description'),
-                      CustomTextField(
-                        controller: descCtrl,
-                        hintText: 'Describe the role and responsibilities...',
-                        maxLines: 5,
-                      ),
-                      const SizedBox(height: 20),
-                      _sectionLabel('Subjects'),
-                      _chipInput(),
-                      const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _sectionLabel('Class Range'),
-                                CustomTextField(
-                                  controller: classRangeCtrl,
-                                  hintText: 'e.g. 6-10',
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _sectionLabel('Salary (₹)'),
-                                CustomTextField(
-                                  controller: salaryCtrl,
-                                  hintText: 'e.g. 25000',
-                                  keyboardType: TextInputType.number,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      _sectionLabel('Location'),
-                      CustomTextField(
-                        controller: locationCtrl,
-                        hintText: 'e.g. New Delhi',
-                      ),
-                      const SizedBox(height: 20),
-                      _sectionLabel('Job Type'),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          _jobTypeChip('full-time', 'Full Time'),
-                          const SizedBox(width: 10),
-                          _jobTypeChip('part-time', 'Part Time'),
-                          const SizedBox(width: 10),
-                          _jobTypeChip('contract', 'Contract'),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      _sectionLabel('Application Deadline'),
-                      const SizedBox(height: 12),
-                      GestureDetector(
-                        onTap: pickDeadline,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 16),
-                          decoration: BoxDecoration(
-                            color: GlobalVariables.greyBackgroundColor,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: GlobalVariables.selectedColor
-                                  .withOpacity(0.2),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
+                  child: FadeTransition(
+                    opacity: _animController,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _sectionLabel('Job Title'),
+                        CustomTextField(
+                          controller: titleCtrl,
+                          hintText: 'e.g. Mathematics Teacher',
+                        ),
+                        const SizedBox(height: 20),
+                        _sectionLabel('Job Description'),
+                        CustomTextField(
+                          controller: descCtrl,
+                          hintText: 'Describe the role and responsibilities...',
+                          maxLines: 5,
+                        ),
+                        const SizedBox(height: 20),
+                        _sectionLabel('Subjects'),
+                        _chipInput(),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(
-                                    Icons.calendar_today,
-                                    color: GlobalVariables.selectedColor,
-                                    size: 20,
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Text(
-                                    deadline == null
-                                        ? 'Select deadline'
-                                        : '${deadline!.day}/${deadline!.month}/${deadline!.year}',
-                                    style: TextStyle(
-                                      color: deadline == null
-                                          ? Colors.grey.shade600
-                                          : Colors.black,
-                                      fontSize: 15,
-                                    ),
+                                  _sectionLabel('Class Range'),
+                                  CustomTextField(
+                                    controller: classRangeCtrl,
+                                    hintText: 'e.g. 6-10',
                                   ),
                                 ],
                               ),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                size: 14,
-                                color: Colors.grey.shade400,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _sectionLabel('Salary (₹)'),
+                                  CustomTextField(
+                                    controller: salaryCtrl,
+                                    hintText: 'e.g. 25000',
+                                    keyboardType: TextInputType.number,
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        _sectionLabel('Location'),
+                        CustomTextField(
+                          controller: locationCtrl,
+                          hintText: 'e.g. New Delhi',
+                        ),
+                        const SizedBox(height: 20),
+                        _sectionLabel('Job Type'),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            _jobTypeChip('full-time', 'Full Time'),
+                            const SizedBox(width: 10),
+                            _jobTypeChip('part-time', 'Part Time'),
+                            const SizedBox(width: 10),
+                            _jobTypeChip('contract', 'Contract'),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        _sectionLabel('Application Deadline'),
+                        const SizedBox(height: 12),
+                        GestureDetector(
+                          onTap: pickDeadline,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 18),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF8FAFC),
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(
+                                color: const Color(0xFFE5E7EB),
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            const Color(0xFF3B82F6).withOpacity(0.15),
+                                            const Color(0xFF3B82F6).withOpacity(0.05),
+                                          ],
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: const Icon(
+                                        Icons.calendar_today_rounded,
+                                        color: Color(0xFF3B82F6),
+                                        size: 18,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Text(
+                                      deadline == null
+                                          ? 'Select deadline'
+                                          : '${deadline!.day}/${deadline!.month}/${deadline!.year}',
+                                      style: GoogleFonts.inter(
+                                        color: deadline == null
+                                            ? const Color(0xFF64748B)
+                                            : const Color(0xFF0F172A),
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  size: 16,
+                                  color: Color(0xFF94A3B8),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 32),
-                    ],
+                        const SizedBox(height: 32),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -308,15 +359,43 @@ class _JobPostScreenState extends State<JobPostScreen> {
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, -2),
+                      color: Colors.black.withOpacity(0.08),
+                      blurRadius: 16,
+                      offset: const Offset(0, -4),
                     ),
                   ],
                 ),
-                child: CustomButton(
-                  text: 'Post Job',
+                child: GestureDetector(
                   onTap: submit,
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color(0xFF3B82F6),
+                          Color(0xFF2563EB),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF3B82F6).withOpacity(0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      'Post Job',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -331,10 +410,10 @@ class _JobPostScreenState extends State<JobPostScreen> {
       padding: const EdgeInsets.only(bottom: 8),
       child: Text(
         text,
-        style: const TextStyle(
+        style: GoogleFonts.inter(
           fontSize: 15,
-          fontWeight: FontWeight.w600,
-          color: Colors.black87,
+          fontWeight: FontWeight.w700,
+          color: const Color(0xFF0F172A),
         ),
       ),
     );
@@ -349,19 +428,19 @@ class _JobPostScreenState extends State<JobPostScreen> {
               (s) => Chip(
             label: Text(
               s,
-              style: const TextStyle(color: Colors.black87),
+              style: const TextStyle(color: Color(0xFF0F172A)),
             ),
-            backgroundColor: GlobalVariables.selectedColor.withOpacity(0.12),
-            deleteIcon: Icon(
+            backgroundColor: const Color(0xFF3B82F6).withOpacity(0.1),
+            deleteIcon: const Icon(
               Icons.close,
-              color: GlobalVariables.selectedColor,
+              color: Color(0xFF3B82F6),
               size: 18,
             ),
             onDeleted: () => setState(() => subjects.remove(s)),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(12),
               side: BorderSide(
-                color: GlobalVariables.selectedColor.withOpacity(0.3),
+                color: const Color(0xFF3B82F6).withOpacity(0.3),
               ),
             ),
           ),
@@ -378,38 +457,37 @@ class _JobPostScreenState extends State<JobPostScreen> {
                   'Add Subject',
                   style: GoogleFonts.inter(
                     fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFF0F172A),
                   ),
                 ),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     TextField(
                       controller: subjectInputCtrl,
                       autofocus: true,
                       style: GoogleFonts.inter(
                         fontSize: 15,
-                        color: Colors.black87,
+                        color: const Color(0xFF0F172A),
                       ),
                       decoration: InputDecoration(
                         hintText: 'e.g. Mathematics',
                         hintStyle: GoogleFonts.inter(
                           fontSize: 15,
-                          color: Colors.grey.shade500,
+                          color: const Color(0xFF64748B),
                         ),
                         filled: true,
-                        fillColor: GlobalVariables.greyBackgroundColor,
+                        fillColor: const Color(0xFFF8FAFC),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: GlobalVariables.selectedColor,
+                          borderSide: const BorderSide(
+                            color: Color(0xFF3B82F6),
                             width: 2,
                           ),
                         ),
@@ -427,8 +505,8 @@ class _JobPostScreenState extends State<JobPostScreen> {
                     child: Text(
                       'Cancel',
                       style: GoogleFonts.inter(
-                        color: Colors.grey.shade700,
-                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF64748B),
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -444,8 +522,8 @@ class _JobPostScreenState extends State<JobPostScreen> {
                     child: Text(
                       'Add',
                       style: GoogleFonts.inter(
-                        color: GlobalVariables.selectedColor,
-                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF3B82F6),
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
@@ -456,26 +534,33 @@ class _JobPostScreenState extends State<JobPostScreen> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
-              color: GlobalVariables.greyBackgroundColor,
-              borderRadius: BorderRadius.circular(20),
+              gradient: LinearGradient(
+                colors: [
+                  const Color(0xFF3B82F6).withOpacity(0.1),
+                  const Color(0xFF3B82F6).withOpacity(0.05),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: GlobalVariables.selectedColor.withOpacity(0.5),
+                color: const Color(0xFF3B82F6).withOpacity(0.4),
+                width: 1.5,
               ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
+                const Icon(
                   Icons.add,
                   size: 16,
-                  color: GlobalVariables.selectedColor,
+                  color: Color(0xFF3B82F6),
                 ),
                 const SizedBox(width: 6),
                 Text(
                   'Add Subject',
-                  style: TextStyle(
-                    color: GlobalVariables.selectedColor,
-                    fontWeight: FontWeight.w600,
+                  style: GoogleFonts.inter(
+                    color: const Color(0xFF3B82F6),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
                   ),
                 ),
               ],
@@ -494,26 +579,33 @@ class _JobPostScreenState extends State<JobPostScreen> {
         onTap: () {
           setState(() => jobType = value);
         },
-        child: Container(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
-            color: selected
-                ? GlobalVariables.selectedColor
-                : GlobalVariables.greyBackgroundColor,
+            gradient: selected
+                ? const LinearGradient(
+              colors: [
+                Color(0xFF3B82F6),
+                Color(0xFF2563EB),
+              ],
+            )
+                : null,
+            color: selected ? null : const Color(0xFFF8FAFC),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: selected
-                  ? GlobalVariables.selectedColor
-                  : Colors.transparent,
-              width: 2,
+                  ? const Color(0xFF3B82F6)
+                  : const Color(0xFFE5E7EB),
+              width: selected ? 2 : 1.5,
             ),
           ),
           child: Center(
             child: Text(
               label,
-              style: TextStyle(
-                color: selected ? Colors.white : Colors.black87,
-                fontWeight: FontWeight.w600,
+              style: GoogleFonts.inter(
+                color: selected ? Colors.white : const Color(0xFF475569),
+                fontWeight: FontWeight.w700,
                 fontSize: 14,
               ),
             ),

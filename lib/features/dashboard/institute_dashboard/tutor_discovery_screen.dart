@@ -35,9 +35,9 @@ class _TutorDiscoveryScreenState extends State<TutorDiscoveryScreen> {
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color:
-                            GlobalVariables.primaryColor.withOpacity(0.08),
+                        GlobalVariables.primaryColor.withOpacity(0.08),
                         borderRadius:
-                            BorderRadius.circular(GlobalVariables.smallRadius),
+                        BorderRadius.circular(GlobalVariables.smallRadius),
                       ),
                       child: Icon(
                         Icons.search_rounded,
@@ -81,10 +81,10 @@ class _TutorDiscoveryScreenState extends State<TutorDiscoveryScreen> {
                     decoration: BoxDecoration(
                       color: GlobalVariables.surfaceColor,
                       borderRadius:
-                          BorderRadius.circular(GlobalVariables.defaultRadius),
+                      BorderRadius.circular(GlobalVariables.defaultRadius),
                       border: Border.all(
                         color:
-                            GlobalVariables.primaryColor.withOpacity(0.18),
+                        GlobalVariables.primaryColor.withOpacity(0.18),
                         width: 1.2,
                       ),
                     ),
@@ -187,14 +187,14 @@ class _TutorDiscoveryScreenState extends State<TutorDiscoveryScreen> {
                           padding: const EdgeInsets.all(24),
                           decoration: BoxDecoration(
                             color:
-                                GlobalVariables.primaryColor.withOpacity(0.08),
+                            GlobalVariables.primaryColor.withOpacity(0.08),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
                             Icons.search_rounded,
                             size: 64,
                             color:
-                                GlobalVariables.primaryColor.withOpacity(0.5),
+                            GlobalVariables.primaryColor.withOpacity(0.5),
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -237,7 +237,7 @@ class _TutorDiscoveryScreenState extends State<TutorDiscoveryScreen> {
                           padding: const EdgeInsets.all(24),
                           decoration: BoxDecoration(
                             color:
-                                GlobalVariables.warningColor.withOpacity(0.1),
+                            GlobalVariables.warningColor.withOpacity(0.1),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(

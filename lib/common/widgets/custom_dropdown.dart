@@ -1,6 +1,6 @@
 import 'package:get_me_a_tutor/import_export.dart';
 
-class CustomDropdown<T> extends StatelessWidget {
+class CustomDropdown<T> extends StatefulWidget {
   final T? value;
   final List<T> items;
   final String hintText;
@@ -21,57 +21,123 @@ class CustomDropdown<T> extends StatelessWidget {
   });
 
   @override
+  State<CustomDropdown<T>> createState() => _CustomDropdownState<T>();
+}
+
+class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
+  bool _isFocused = false;
+
+  @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField<T>(
-      value: value,
-      onChanged: onChanged,
-      validator: validator ??
-              (val) {
-            if (val == null) {
-              return 'Select $hintText';
-            }
-            return null;
-          },
-      icon: Icon(
-        Icons.keyboard_arrow_down_rounded,
-        color: GlobalVariables.secondaryTextColor,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius),
+        boxShadow: _isFocused
+            ? [
+          BoxShadow(
+            color: GlobalVariables.primaryColor.withOpacity(0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 2),
+          ),
+        ]
+            : [],
       ),
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: TextStyle(color: GlobalVariables.secondaryTextColor),
-        filled: true,
-        fillColor: const Color(0xFFF5F5F5),
-        prefixIcon: prefixIcon != null
-            ? Icon(prefixIcon, color: GlobalVariables.secondaryTextColor)
-            : null,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+      child: DropdownButtonFormField<T>(
+        value: widget.value,
+        onChanged: widget.onChanged,
+        validator: widget.validator ??
+                (val) {
+              if (val == null) {
+                return 'Select ${widget.hintText}';
+              }
+              return null;
+            },
+        icon: Icon(
+          Icons.keyboard_arrow_down_rounded,
+          color: _isFocused
+              ? GlobalVariables.primaryColor
+              : GlobalVariables.secondaryTextColor.withOpacity(0.6),
+          size: 22,
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+        dropdownColor: GlobalVariables.surfaceColor,
+        style: GoogleFonts.inter(
+          fontSize: 15,
+          fontWeight: FontWeight.w500,
+          color: GlobalVariables.primaryTextColor,
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
-        contentPadding:
-        const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      ),
-      items: items
-          .map(
-            (item) => DropdownMenuItem<T>(
-          value: item,
-          child: Text(
-            itemLabel(item),
-            style: TextStyle(
-              color: GlobalVariables.primaryTextColor,
+        decoration: InputDecoration(
+          hintText: widget.hintText,
+          hintStyle: GoogleFonts.inter(
+            color: GlobalVariables.secondaryTextColor.withOpacity(0.6),
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
+          filled: true,
+          fillColor: _isFocused
+              ? GlobalVariables.surfaceColor
+              : GlobalVariables.greyBackgroundColor.withOpacity(0.4),
+          prefixIcon: widget.prefixIcon != null
+              ? Padding(
+            padding: const EdgeInsets.only(left: 16, right: 12),
+            child: Icon(
+              widget.prefixIcon,
+              color: _isFocused
+                  ? GlobalVariables.primaryColor
+                  : GlobalVariables.secondaryTextColor.withOpacity(0.5),
+              size: 21,
+            ),
+          )
+              : null,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius),
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius),
+            borderSide: BorderSide(
+              color: GlobalVariables.primaryColor,
+              width: 2,
             ),
           ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius),
+            borderSide: BorderSide.none,
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius),
+            borderSide: BorderSide(
+              color: GlobalVariables.dangerColor.withOpacity(0.6),
+              width: 1.5,
+            ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius),
+            borderSide: BorderSide(
+              color: GlobalVariables.dangerColor,
+              width: 2,
+            ),
+          ),
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: widget.prefixIcon != null ? 0 : 18,
+            vertical: 16,
+          ),
         ),
-      )
-          .toList(),
+        items: widget.items
+            .map(
+              (item) => DropdownMenuItem<T>(
+            value: item,
+            child: Text(
+              widget.itemLabel(item),
+              style: GoogleFonts.inter(
+                color: GlobalVariables.primaryTextColor,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        )
+            .toList(),
+      ),
     );
   }
 }

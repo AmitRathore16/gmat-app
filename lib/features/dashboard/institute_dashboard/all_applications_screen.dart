@@ -16,10 +16,18 @@ class AllApplicationsScreen extends StatefulWidget {
   State<AllApplicationsScreen> createState() => _AllApplicationsScreenState();
 }
 
-class _AllApplicationsScreenState extends State<AllApplicationsScreen> {
+class _AllApplicationsScreenState extends State<AllApplicationsScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _animationController.forward();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<JobApplicationProvider>(
@@ -33,30 +41,43 @@ class _AllApplicationsScreenState extends State<AllApplicationsScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    String timeAgo(DateTime date) {
-      final diff = DateTime.now().difference(date);
-      if (diff.inMinutes < 60) return '${diff.inMinutes} min ago';
-      if (diff.inHours < 24) return '${diff.inHours} hr ago';
-      return '${diff.inDays} days ago';
-    }
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
+  String timeAgo(DateTime date) {
+    final diff = DateTime.now().difference(date);
+    if (diff.inMinutes < 60) return '${diff.inMinutes} min ago';
+    if (diff.inHours < 24) return '${diff.inHours} hr ago';
+    return '${diff.inDays} days ago';
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
         title: Column(
           children: [
-            const PrimaryText(text: 'Applications', size: 20),
+            Text(
+              'Applications',
+              style: GoogleFonts.inter(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF0F172A),
+              ),
+            ),
             const SizedBox(height: 2),
             Text(
               widget.jobTitle,
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 13,
-                color: Colors.grey.shade600,
-                fontWeight: FontWeight.normal,
+                color: const Color(0xFF64748B),
+                fontWeight: FontWeight.w500,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -64,46 +85,76 @@ class _AllApplicationsScreenState extends State<AllApplicationsScreen> {
           ],
         ),
         leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.chevron_left, color: Colors.black, size: 36),
+          onPressed: () => Navigator.pop(context),
+          icon: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF1F5F9),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Color(0xFF0F172A),
+              size: 18,
+            ),
+          ),
         ),
       ),
       body: Consumer<JobApplicationProvider>(
         builder: (context, provider, _) {
           if (provider.isLoading) {
-            return const Loader();
+            return const Center(child: Loader());
           }
 
           if (provider.applications.isEmpty) {
             return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.inbox_outlined,
-                    size: 80,
-                    color: Colors.grey.shade300,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'No applications yet',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey.shade600,
+              child: TweenAnimationBuilder<double>(
+                duration: const Duration(milliseconds: 600),
+                tween: Tween(begin: 0.0, end: 1.0),
+                curve: Curves.easeOut,
+                builder: (context, value, child) {
+                  return Opacity(
+                    opacity: value,
+                    child: Transform.scale(
+                      scale: value,
+                      child: child,
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Applications will appear here',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey.shade500,
+                  );
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(32),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF3B82F6).withOpacity(0.05),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.inbox_outlined,
+                        size: 64,
+                        color: const Color(0xFF3B82F6).withOpacity(0.5),
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 24),
+                    Text(
+                      'No applications yet',
+                      style: GoogleFonts.inter(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF0F172A),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Applications will appear here',
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        color: const Color(0xFF64748B),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           }
@@ -114,11 +165,21 @@ class _AllApplicationsScreenState extends State<AllApplicationsScreen> {
             itemBuilder: (context, index) {
               final app = provider.applications[index];
 
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
+              return TweenAnimationBuilder<double>(
+                duration: Duration(milliseconds: 300 + (index * 50)),
+                tween: Tween(begin: 0.0, end: 1.0),
+                curve: Curves.easeOut,
+                builder: (context, value, child) {
+                  return Opacity(
+                    opacity: value,
+                    child: Transform.translate(
+                      offset: Offset(0, 20 * (1 - value)),
+                      child: child,
+                    ),
+                  );
+                },
                 child: RecentApplicationCard(
                   onTap: () {
-                    print('NAV tutorUserId: ${app.tutorUserId}');
                     if (app.tutorUserId.isEmpty) {
                       showSnackBar(context, 'Tutor profile unavailable');
                       return;

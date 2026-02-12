@@ -63,7 +63,7 @@ class InstituteProfileScreen extends StatelessWidget {
                             : null,
                         child: !hasLogo
                             ? Icon(
-                          Icons.school,
+                          Icons.school_rounded,
                           size: 42,
                           color: GlobalVariables.selectedColor,
                         )
@@ -76,7 +76,7 @@ class InstituteProfileScreen extends StatelessWidget {
                       style: GoogleFonts.inter(
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
-                        color: Colors.black87,
+                        color: GlobalVariables.primaryTextColor,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -118,13 +118,13 @@ class InstituteProfileScreen extends StatelessWidget {
               _infoCard(
                 title: 'Email',
                 value: institute.email ?? 'Not provided',
-                icon: Icons.email,
+                icon: Icons.email_rounded,
               ),
 
               _infoCard(
                 title: 'Phone',
                 value: institute.phone ?? 'Not provided',
-                icon: Icons.phone,
+                icon: Icons.phone_rounded,
               ),
 
               _infoCard(
@@ -171,50 +171,50 @@ class InstituteProfileScreen extends StatelessWidget {
                   final images = provider.institution?.galleryImages ?? [];
 
                   return Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: GlobalVariables.greyBackgroundColor,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: images.isEmpty
-                        ? Column(
-                            children: const [
-                              Icon(
-                                Icons.photo_library_outlined,
-                                size: 40,
-                                color: Colors.grey,
-                              ),
-                              SizedBox(height: 8),
-                              SecondaryText(
-                                text: 'No gallery images uploaded yet',
-                                size: 14,
-                              ),
-                            ],
-                          )
-                        : GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: images.length,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4, // 👈 4 images per row
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        childAspectRatio: 1, // square
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: GlobalVariables.greyBackgroundColor,
+                        borderRadius: BorderRadius.circular(16),
                       ),
-                      itemBuilder: (context, index) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.white,
-                            image: DecorationImage(
-                              image: NetworkImage(images[index]),
-                              fit: BoxFit.cover,
-                            ),
+                      child: images.isEmpty
+                          ? Column(
+                        children: const [
+                          Icon(
+                            Icons.photo_library_outlined,
+                            size: 40,
+                            color: Colors.grey,
                           ),
-                        );
-                      },
-                    )
+                          SizedBox(height: 8),
+                          SecondaryText(
+                            text: 'No gallery images uploaded yet',
+                            size: 14,
+                          ),
+                        ],
+                      )
+                          : GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: images.length,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4, // 👈 4 images per row
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 1, // square
+                        ),
+                        itemBuilder: (context, index) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: Colors.white,
+                              image: DecorationImage(
+                                image: NetworkImage(images[index]),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        },
+                      )
 
                   );
                 },
@@ -268,10 +268,10 @@ class InstituteProfileScreen extends StatelessWidget {
                               listen: false,
                             );
                             final instituteProvider =
-                                Provider.of<InstituteProvider>(
-                                  context,
-                                  listen: false,
-                                );
+                            Provider.of<InstituteProvider>(
+                              context,
+                              listen: false,
+                            );
 
                             await authProvider.logout(context: context);
                             instituteProvider.clearInstitute();
@@ -279,7 +279,7 @@ class InstituteProfileScreen extends StatelessWidget {
                             Navigator.pushNamedAndRemoveUntil(
                               context,
                               HomeScreenNew.routeName,
-                              (route) => false,
+                                  (route) => false,
                             );
                           },
                           child: const Text(
@@ -304,7 +304,7 @@ class InstituteProfileScreen extends StatelessWidget {
                       title: const Text('Delete Account'),
                       content: const Text(
                         'This will permanently delete your institute profile and log you out. '
-                        'This action cannot be undone.\n\nAre you sure?',
+                            'This action cannot be undone.\n\nAre you sure?',
                       ),
                       actions: [
                         TextButton(
@@ -423,7 +423,7 @@ class InstituteProfileScreen extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: GlobalVariables.primaryTextColor,
                   ),
                 ),
               ],

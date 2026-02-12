@@ -71,7 +71,7 @@ class ParentProfileScreen extends StatelessWidget {
                       style: GoogleFonts.inter(
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
-                        color: Colors.black87,
+                        color: GlobalVariables.primaryTextColor,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -109,19 +109,19 @@ class ParentProfileScreen extends StatelessWidget {
               _infoCard(
                 title: 'Email',
                 value: parent.email!,
-                icon: Icons.email,
+                icon: Icons.email_rounded,
               ),
 
               _infoCard(
                 title: 'Phone',
                 value: parent.phone!,
-                icon: Icons.phone,
+                icon: Icons.phone_rounded,
               ),
 
               _infoCard(
                 title: 'City',
                 value: parent.city ?? 'Not provided',
-                icon: Icons.location_city,
+                icon: Icons.location_city_rounded,
               ),
 
               if (parent.address != null)
@@ -248,8 +248,8 @@ class ParentProfileScreen extends StatelessWidget {
                     builder: (_) => AlertDialog(
                       title: const Text('Delete Account'),
                       content: const Text(
-                          'This will permanently delete your parent profile and log you out. '
-                              'This action cannot be undone.Are you sure?',
+                        'This will permanently delete your parent profile and log you out. '
+                            'This action cannot be undone.Are you sure?',
                       ),
                       actions: [
                         TextButton(
@@ -372,7 +372,7 @@ class ParentProfileScreen extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: GlobalVariables.primaryTextColor,
                   ),
                 ),
               ],

@@ -256,7 +256,7 @@ class _TeacherProfileUpdateScreenState
                           CustomTextField(
                             controller: cityCtrl,
                             hintText: 'City',
-                            prefixIcon: Icons.location_city,
+                            prefixIcon: Icons.location_city_rounded,
                           ),
 
                           _gap(),
@@ -358,7 +358,7 @@ class _TeacherProfileUpdateScreenState
                           CustomTextField(
                             controller: availabilityCtrl,
                             hintText: 'Availability',
-                            prefixIcon: Icons.calendar_today,
+                            prefixIcon: Icons.calendar_today_rounded,
                           ),
 
                           _gap(),
@@ -370,7 +370,7 @@ class _TeacherProfileUpdateScreenState
                                 child: CustomTextField(
                                   controller: salaryMinCtrl,
                                   hintText: 'Min',
-                                  prefixIcon: Icons.currency_rupee,
+                                  prefixIcon: Icons.currency_rupee_rounded,
                                   keyboardType: TextInputType.number,
                                 ),
                               ),
@@ -379,7 +379,7 @@ class _TeacherProfileUpdateScreenState
                                 child: CustomTextField(
                                   controller: salaryMaxCtrl,
                                   hintText: 'Max',
-                                  prefixIcon: Icons.currency_rupee,
+                                  prefixIcon: Icons.currency_rupee_rounded,
                                   keyboardType: TextInputType.number,
                                 ),
                               ),
@@ -419,7 +419,7 @@ class _TeacherProfileUpdateScreenState
                           _gap(),
                           _label('Demo Video'),
                           _filePickerBox(
-                            icon: Icons.play_circle_fill,
+                            icon: Icons.play_circle_rounded,
                             label: (teacher.demoVideoUrl != null || newDemoVideo != null) && !removeDemoVideo
                                 ? 'Demo video uploaded'
                                 : 'Upload demo video',
@@ -450,7 +450,7 @@ class _TeacherProfileUpdateScreenState
                           _gap(),
                           _label('Resume (PDF)'),
                           _filePickerBox(
-                            icon: Icons.picture_as_pdf,
+                            icon: Icons.picture_as_pdf_rounded,
                             label: (teacher.resume?.url != null || newResume != null) && !removeResume
                                 ? 'Resume uploaded'
                                 : 'Upload resume',
@@ -507,7 +507,7 @@ class _TeacherProfileUpdateScreenState
                                         style: GoogleFonts.inter(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
-                                          color: Colors.black87,
+                                          color: GlobalVariables.primaryTextColor,
                                         ),
                                       ),
                                       const SizedBox(height: 4),
@@ -578,7 +578,7 @@ class _TeacherProfileUpdateScreenState
       style: const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w600,
-        color: Colors.black87,
+        color: GlobalVariables.primaryTextColor,
       ),
     ),
   );
@@ -652,7 +652,7 @@ class _TeacherProfileUpdateScreenState
               )
             else
               Icon(
-                Icons.upload_file,
+                Icons.upload_file_rounded,
                 color: Colors.grey.shade500,
                 size: 20,
               ),

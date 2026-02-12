@@ -38,11 +38,21 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final scaleFactor = screenWidth / 393;
-    final buttonHeight = (isSmall ? 44 : 56) * scaleFactor.clamp(0.9, 1.1);
+    final buttonHeight = (isSmall ? 48 : 56) * scaleFactor.clamp(0.9, 1.1);
 
-    return SizedBox(
-      width: double.infinity,
+    return Container(
       height: buttonHeight,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius),
+        boxShadow: isOutlined ? [] : [
+          BoxShadow(
+            color: _resolvedBackground.withOpacity(0.2),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       child: ElevatedButton(
         onPressed: onTap,
         style: ElevatedButton.styleFrom(
@@ -54,21 +64,21 @@ class CustomButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius),
             side: isOutlined
                 ? BorderSide(
-                    color: isDestructive
-                        ? GlobalVariables.dangerColor.withOpacity(0.7)
-                        : (backgroundColor ?? GlobalVariables.primaryColor)
-                            .withOpacity(0.9),
-                    width: 1.6,
-                  )
+              color: isDestructive
+                  ? GlobalVariables.dangerColor.withOpacity(0.7)
+                  : (backgroundColor ?? GlobalVariables.primaryColor)
+                  .withOpacity(0.9),
+              width: 1.8,
+            )
                 : BorderSide.none,
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16),
         ),
         child: DefaultTextStyle(
           style: GoogleFonts.inter(
-            fontSize: (isSmall ? 14 : 16) * scaleFactor.clamp(0.9, 1.1),
+            fontSize: (isSmall ? 14 : 15) * scaleFactor.clamp(0.9, 1.1),
             fontWeight: FontWeight.w600,
-            letterSpacing: 0.2,
+            letterSpacing: 0.3,
             color: _resolvedTextColor,
           ),
           child: Text(

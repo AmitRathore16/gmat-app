@@ -24,11 +24,29 @@ class JobDescriptionScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.chevron_left, size: 36, color: Colors.black),
+          icon: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF1F5F9),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              size: 18,
+              color: Color(0xFF0F172A),
+            ),
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: const PrimaryText(text: 'Job Details', size: 20),
+        title: Text(
+          'Job Details',
+          style: GoogleFonts.inter(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            color: const Color(0xFF0F172A),
+          ),
+        ),
       ),
       bottomNavigationBar: _bottomActions(context),
       body: SingleChildScrollView(
@@ -36,35 +54,70 @@ class JobDescriptionScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // HEADER SECTION
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: GlobalVariables.selectedColor.withOpacity(0.08),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  PrimaryText(text: job.title, size: 26),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.access_time,
-                        size: 16,
-                        color: Colors.grey.shade600,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        'Posted ${timeAgo(job.createdAt)}',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
+            TweenAnimationBuilder<double>(
+              duration: const Duration(milliseconds: 500),
+              tween: Tween(begin: 0.0, end: 1.0),
+              curve: Curves.easeOut,
+              builder: (context, value, child) {
+                return Opacity(
+                  opacity: value,
+                  child: Transform.translate(
+                    offset: Offset(0, 20 * (1 - value)),
+                    child: child,
+                  ),
+                );
+              },
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      const Color(0xFF3B82F6).withOpacity(0.08),
+                      const Color(0xFF3B82F6).withOpacity(0.03),
                     ],
                   ),
-                ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      job.title,
+                      style: GoogleFonts.inter(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w800,
+                        color: const Color(0xFF0F172A),
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF3B82F6).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(
+                            Icons.access_time,
+                            size: 14,
+                            color: Color(0xFF3B82F6),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Posted ${timeAgo(job.createdAt)}',
+                          style: GoogleFonts.inter(
+                            fontSize: 13,
+                            color: const Color(0xFF64748B),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
 
@@ -78,21 +131,20 @@ class JobDescriptionScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: _infoCard(
-                          icon: Icons.currency_rupee,
+                          icon: Icons.currency_rupee_rounded,
                           title: 'Salary',
                           value: '₹${job.salary ?? 0}',
-                          color: Colors.green,
+                          color: const Color(0xFF10B981),
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: _infoCard(
-                          icon: Icons.work_outline,
+                          icon: Icons.work_outline_rounded,
                           title: 'Type',
-                          value: job.jobType
-                              .replaceAll('-', ' ')
-                              .toUpperCase(),
-                          color: Colors.blue,
+                          value:
+                          job.jobType.replaceAll('-', ' ').toUpperCase(),
+                          color: const Color(0xFF3B82F6),
                         ),
                       ),
                     ],
@@ -108,7 +160,7 @@ class JobDescriptionScreen extends StatelessWidget {
                   ),
 
                   _detailItem(
-                    icon: Icons.school,
+                    icon: Icons.school_rounded,
                     label: 'Class Range',
                     value: job.classRange ?? 'Not specified',
                   ),
@@ -120,7 +172,7 @@ class JobDescriptionScreen extends StatelessWidget {
                   ),
 
                   _detailItem(
-                    icon: Icons.calendar_today,
+                    icon: Icons.calendar_today_rounded,
                     label: 'Application Deadline',
                     value:
                     '${job.deadline!.day}/${job.deadline!.month}/${job.deadline!.year}',
@@ -129,23 +181,34 @@ class JobDescriptionScreen extends StatelessWidget {
                   const SizedBox(height: 32),
 
                   // DESCRIPTION
-                  const PrimaryText(text: 'Job Description', size: 18),
+                  Text(
+                    'Job Description',
+                    style: GoogleFonts.inter(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF0F172A),
+                    ),
+                  ),
                   const SizedBox(height: 12),
 
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(18),
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: GlobalVariables.greyBackgroundColor,
+                      color: const Color(0xFFF8FAFC),
                       borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: const Color(0xFFE5E7EB),
+                        width: 1,
+                      ),
                     ),
                     child: Text(
                       job.description?.isNotEmpty == true
                           ? job.description!
                           : 'No description provided.',
-                      style: const TextStyle(
+                      style: GoogleFonts.inter(
                         fontSize: 15,
-                        color: Colors.black87,
+                        color: const Color(0xFF475569),
                         height: 1.6,
                       ),
                     ),
@@ -167,41 +230,65 @@ class JobDescriptionScreen extends StatelessWidget {
     required String value,
     required Color color,
   }) {
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: GlobalVariables.greyBackgroundColor,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.15),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: color, size: 22),
+    return TweenAnimationBuilder<double>(
+      duration: const Duration(milliseconds: 600),
+      tween: Tween(begin: 0.0, end: 1.0),
+      curve: Curves.easeOut,
+      builder: (context, animValue, child) {
+        return Opacity(
+          opacity: animValue,
+          child: Transform.scale(
+            scale: animValue,
+            child: child,
           ),
-          const SizedBox(height: 14),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              color.withOpacity(0.1),
+              color.withOpacity(0.03),
+            ],
           ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey.shade600,
-            ),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: color.withOpacity(0.2),
+            width: 1.5,
           ),
-        ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.15),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: color, size: 24),
+            ),
+            const SizedBox(height: 14),
+            Text(
+              value,
+              style: GoogleFonts.inter(
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+                color: const Color(0xFF0F172A),
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              title,
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                color: const Color(0xFF64748B),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -211,47 +298,67 @@ class JobDescriptionScreen extends StatelessWidget {
     required String label,
     required String value,
   }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 18),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: GlobalVariables.greyBackgroundColor,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              icon,
-              size: 20,
-              color: GlobalVariables.selectedColor,
-            ),
+    return TweenAnimationBuilder<double>(
+      duration: const Duration(milliseconds: 500),
+      tween: Tween(begin: 0.0, end: 1.0),
+      curve: Curves.easeOut,
+      builder: (context, animValue, child) {
+        return Opacity(
+          opacity: animValue,
+          child: Transform.translate(
+            offset: Offset(0, 10 * (1 - animValue)),
+            child: child,
           ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade600,
-                  ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 18),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    const Color(0xFF3B82F6).withOpacity(0.1),
+                    const Color(0xFF3B82F6).withOpacity(0.05),
+                  ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
-                ),
-              ],
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Icon(
+                icon,
+                size: 22,
+                color: const Color(0xFF3B82F6),
+              ),
             ),
-          ),
-        ],
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      color: const Color(0xFF64748B),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    value,
+                    style: GoogleFonts.inter(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF0F172A),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -263,47 +370,81 @@ class JobDescriptionScreen extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 16,
+            offset: const Offset(0, -4),
           ),
         ],
       ),
       child: Row(
         children: [
           Expanded(
-            child: CustomButton(
-              text: 'Update Job',
+            child: GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => JobUpdateScreen(
-                      job: job,
-                    ),
+                    builder: (_) => JobUpdateScreen(job: job),
                   ),
                 );
               },
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color(0xFF3B82F6),
+                      Color(0xFF2563EB),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(14),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF3B82F6).withOpacity(0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  'Update Job',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.inter(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ),
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: ElevatedButton(
-              onPressed: () => _confirmClose(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red.shade50,
-                foregroundColor: Colors.red,
-                elevation: 0,
+            child: GestureDetector(
+              onTap: () => _confirmClose(context),
+              child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      const Color(0xFFEF4444).withOpacity(0.1),
+                      const Color(0xFFEF4444).withOpacity(0.05),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: const Color(0xFFEF4444).withOpacity(0.3),
+                    width: 1.5,
+                  ),
                 ),
-              ),
-              child: const Text(
-                'Close Job',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
+                child: Text(
+                  'Close Job',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.inter(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFFEF4444),
+                  ),
                 ),
               ),
             ),

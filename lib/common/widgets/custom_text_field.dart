@@ -35,7 +35,18 @@ class _CustomTextFieldState extends State<CustomTextField> {
       onFocusChange: (hasFocus) {
         setState(() => _isFocused = hasFocus);
       },
-      child: TextFormField(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius),
+          boxShadow: _isFocused ? [
+            BoxShadow(
+              color: GlobalVariables.primaryColor.withOpacity(0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 2),
+            ),
+          ] : [],
+        ),
+        child: TextFormField(
           keyboardType: widget.keyboardType,
           controller: widget.controller,
           readOnly: widget.readonly,
@@ -45,17 +56,21 @@ class _CustomTextFieldState extends State<CustomTextField> {
             fontSize: 15,
             fontWeight: FontWeight.w500,
             color: GlobalVariables.primaryTextColor,
+            height: 1.4,
           ),
           decoration: InputDecoration(
             hintText: widget.hintText,
             hintStyle: GoogleFonts.inter(
-              color: Colors.grey.shade500,
+              color: GlobalVariables.secondaryTextColor.withOpacity(0.6),
               fontSize: 14,
               fontWeight: FontWeight.w400,
             ),
             filled: true,
-            fillColor:
-                widget.readonly ? Colors.grey.shade100 : GlobalVariables.surfaceColor,
+            fillColor: widget.readonly
+                ? GlobalVariables.greyBackgroundColor.withOpacity(0.5)
+                : _isFocused
+                ? GlobalVariables.surfaceColor
+                : GlobalVariables.greyBackgroundColor.withOpacity(0.4),
             prefixIcon: widget.prefixIcon != null
                 ? Padding(
               padding: const EdgeInsets.only(left: 16, right: 12),
@@ -63,17 +78,19 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 widget.prefixIcon,
                 color: _isFocused
                     ? GlobalVariables.primaryColor
-                    : Colors.grey.shade500,
-                size: 22,
+                    : GlobalVariables.secondaryTextColor.withOpacity(0.5),
+                size: 21,
               ),
             )
                 : null,
             suffixIcon: widget.isPassword
                 ? IconButton(
               icon: Icon(
-                _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                color: Colors.grey.shade600,
-                size: 22,
+                _obscureText
+                    ? Icons.visibility_off_outlined
+                    : Icons.visibility_outlined,
+                color: GlobalVariables.secondaryTextColor.withOpacity(0.6),
+                size: 21,
               ),
               onPressed: () {
                 setState(() {
@@ -85,51 +102,53 @@ class _CustomTextFieldState extends State<CustomTextField> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius),
               borderSide: BorderSide(
-                color: Colors.grey.shade300,
-                width: 1.2,
+                color: GlobalVariables.greyBackgroundColor,
+                width: 1,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius),
               borderSide: BorderSide(
                 color: GlobalVariables.primaryColor,
-                width: 1.8,
+                width: 2,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius),
               borderSide: BorderSide(
-                color: Colors.grey.shade300,
-                width: 1.2,
+                color: Colors.transparent,
+                width: 1,
               ),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius),
               borderSide: BorderSide(
-                color: GlobalVariables.dangerColor,
-                width: 1.4,
+                color: GlobalVariables.dangerColor.withOpacity(0.6),
+                width: 1.5,
               ),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius),
               borderSide: BorderSide(
                 color: GlobalVariables.dangerColor,
-                width: 1.8,
+                width: 2,
               ),
             ),
             contentPadding: EdgeInsets.symmetric(
-              horizontal: widget.prefixIcon != null ? 0 : 16,
+              horizontal: widget.prefixIcon != null ? 0 : 18,
               vertical: 16,
             ),
           ),
-          validator: widget.validator ?? (val) {
-            if (val == null || val.isEmpty) {
-              return 'Enter your ${widget.hintText}';
-            }
-            return null;
-          },
+          validator: widget.validator ??
+                  (val) {
+                if (val == null || val.isEmpty) {
+                  return 'Enter your ${widget.hintText}';
+                }
+                return null;
+              },
           maxLines: widget.maxLines,
         ),
+      ),
     );
   }
 }

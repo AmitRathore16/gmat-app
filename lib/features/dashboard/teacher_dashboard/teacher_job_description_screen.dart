@@ -37,7 +37,7 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
           style: GoogleFonts.inter(
             fontSize: 20,
             fontWeight: FontWeight.w700,
-            color: Colors.black87,
+            color: GlobalVariables.primaryTextColor,
           ),
         ),
       ),
@@ -59,7 +59,7 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 28 * scale,
                     fontWeight: FontWeight.w800,
-                    color: Colors.black87,
+                    color: GlobalVariables.primaryTextColor,
                     height: 1.2,
                   ),
                 ),
@@ -114,7 +114,7 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _infoCard(
-                        icon: Icons.currency_rupee,
+                        icon: Icons.currency_rupee_rounded,
                         title: 'Salary',
                         value: job.salary != null
                             ? '₹${job.salary}'
@@ -126,7 +126,7 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
                     const SizedBox(width: 14),
                     Expanded(
                       child: _infoCard(
-                        icon: Icons.work_outline,
+                        icon: Icons.work_outline_rounded,
                         title: 'Job Type',
                         value: job.jobType,
                         bg: const Color(0xFFF5F5F5),
@@ -148,7 +148,7 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
                 if (job.classRange != null) ...[
                   const SizedBox(height: 16),
                   _detailTile(
-                    icon: Icons.school,
+                    icon: Icons.school_rounded,
                     title: 'Class Range',
                     value: job.classRange!,
                   ),
@@ -172,7 +172,7 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
-                    color: Colors.black87,
+                    color: GlobalVariables.primaryTextColor,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -219,7 +219,7 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
-                    color: Colors.black87,
+                    color: GlobalVariables.primaryTextColor,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -249,7 +249,7 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
                     style: GoogleFonts.inter(
                       fontSize: 14,
                       height: 1.6,
-                      color: Colors.black87,
+                      color: GlobalVariables.primaryTextColor,
                     ),
                   ),
                 ),
@@ -581,7 +581,7 @@ class TeacherJobDescriptionScreen extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: GlobalVariables.primaryTextColor,
                   ),
                 ),
               ],

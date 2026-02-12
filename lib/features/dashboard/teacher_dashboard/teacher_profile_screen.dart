@@ -66,7 +66,7 @@ class TeacherProfileScreen extends StatelessWidget {
                       style: GoogleFonts.inter(
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
-                        color: Colors.black87,
+                        color: GlobalVariables.primaryTextColor,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -127,7 +127,7 @@ class TeacherProfileScreen extends StatelessWidget {
                 _infoCard(
                   title: 'Expected Salary',
                   value: '₹${teacher.expectedSalary!.min} - ₹${teacher.expectedSalary!.max}',
-                  icon: Icons.currency_rupee,
+                  icon: Icons.currency_rupee_rounded,
                 ),
 
               const SizedBox(height: 20),
@@ -204,7 +204,7 @@ class TeacherProfileScreen extends StatelessWidget {
               if (teacher.resume?.url != null && teacher.resume!.url!.isNotEmpty)
                 _actionTile(
                   text: 'View Resume',
-                  icon: Icons.picture_as_pdf,
+                  icon: Icons.picture_as_pdf_rounded,
                   onTap: () {
                     final url = teacher.resume!.url!;
                     launchUrl(
@@ -217,13 +217,13 @@ class TeacherProfileScreen extends StatelessWidget {
                 _infoCard(
                   title: 'Resume',
                   value: 'Not uploaded',
-                  icon: Icons.picture_as_pdf,
+                  icon: Icons.picture_as_pdf_rounded,
                 ),
 
               if (teacher.demoVideoUrl != null && teacher.demoVideoUrl!.isNotEmpty)
                 _actionTile(
                   text: 'Watch Demo Video',
-                  icon: Icons.play_circle_fill,
+                  icon: Icons.play_circle_rounded,
                   onTap: () async {
                     final uri = Uri.parse(teacher.demoVideoUrl!);
                     if (await canLaunchUrl(uri)) {
@@ -240,7 +240,7 @@ class TeacherProfileScreen extends StatelessWidget {
                 _infoCard(
                   title: 'Demo Video',
                   value: 'Not uploaded',
-                  icon: Icons.play_circle_fill,
+                  icon: Icons.play_circle_rounded,
                 ),
 
               const SizedBox(height: 24),
@@ -379,7 +379,7 @@ class TeacherProfileScreen extends StatelessWidget {
           style: GoogleFonts.inter(
             fontSize: 18,
             fontWeight: FontWeight.w700,
-            color: Colors.black87,
+            color: GlobalVariables.primaryTextColor,
           ),
         ),
         const SizedBox(height: 12),
@@ -488,7 +488,7 @@ class TeacherProfileScreen extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: GlobalVariables.primaryTextColor,
                   ),
                 ),
               ],

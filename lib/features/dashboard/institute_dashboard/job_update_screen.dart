@@ -248,7 +248,7 @@ class _JobUpdateScreenState extends State<JobUpdateScreen> {
                               Row(
                                 children: [
                                   Icon(
-                                    Icons.calendar_today,
+                                    Icons.calendar_today_rounded,
                                     color: GlobalVariables.selectedColor,
                                     size: 20,
                                   ),
@@ -312,7 +312,7 @@ class _JobUpdateScreenState extends State<JobUpdateScreen> {
         style: const TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.w600,
-          color: Colors.black87,
+          color: GlobalVariables.primaryTextColor,
         ),
       ),
     );
@@ -327,7 +327,7 @@ class _JobUpdateScreenState extends State<JobUpdateScreen> {
               (s) => Chip(
             label: Text(
               s,
-              style: const TextStyle(color: Colors.black87),
+              style: const TextStyle(color: GlobalVariables.primaryTextColor),
             ),
             backgroundColor: GlobalVariables.selectedColor.withOpacity(0.12),
             deleteIcon: Icon(

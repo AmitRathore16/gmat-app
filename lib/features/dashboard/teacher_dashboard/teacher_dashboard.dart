@@ -41,12 +41,12 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
         child: _currentIndex == 0
             ? _dashboard(scale)
             : _currentIndex == 1
-                ? const Center(child: Text('Jobs Screen'))
-                : _currentIndex == 2
-                    ? const Center(child: Text('Exams Screen'))
-                    : TeacherProfileScreen(
-                        name: auth.name ?? 'No name provided',
-                      ),
+            ? const Center(child: Text('Jobs Screen'))
+            : _currentIndex == 2
+            ? const Center(child: Text('Exams Screen'))
+            : TeacherProfileScreen(
+          name: auth.name ?? 'No name provided',
+        ),
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -62,25 +62,25 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
           backgroundColor: GlobalVariables.surfaceColor,
           showSelectedLabels: false,
           showUnselectedLabels: false,
-          items: const [
+          items:  const[
             BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard_outlined),
-              activeIcon: Icon(Icons.dashboard),
+              icon: Icon(Icons.dashboard_rounded),
+              activeIcon: Icon(Icons.dashboard_rounded),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.work_outline),
-              activeIcon: Icon(Icons.work),
+              icon: Icon(Icons.work_outline_rounded),
+              activeIcon: Icon(Icons.work_rounded),
               label: 'Jobs',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.school_outlined),
-              activeIcon: Icon(Icons.school),
+              activeIcon: Icon(Icons.school_rounded),
               label: 'Exams',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              activeIcon: Icon(Icons.person),
+              icon: Icon(Icons.person_outline_rounded),
+              activeIcon: Icon(Icons.person_rounded),
               label: 'Profile',
             ),
           ],
@@ -132,7 +132,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                     Expanded(
                       child: _statCard(
                         scale: scale,
-                        icon: Icons.star,
+                        icon: Icons.star_rounded,
                         title: 'Rating',
                         value: '${t.rating ?? 0}',
                         onTap: () {},
@@ -142,7 +142,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                     Expanded(
                       child: _statCard(
                         scale: scale,
-                        icon: Icons.verified,
+                        icon: Icons.verified_rounded,
                         title: 'Exams Passed',
                         value: '${t.examsPassed ?? 0}',
                         onTap: () {},
@@ -155,7 +155,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
 
                 _statCard(
                   scale: scale,
-                  icon: Icons.work_outline,
+                  icon: Icons.work_outline_rounded,
                   title: 'Jobs Applied',
                   value: '${t.jobsApplied ?? 0}',
                   onTap: () {
@@ -171,7 +171,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                   padding: EdgeInsets.all(20 * scale),
                   decoration: BoxDecoration(
                     color: GlobalVariables.primaryColor.withOpacity(0.96),
-                    borderRadius: BorderRadius.circular(22),
+                    borderRadius: BorderRadius.circular(GlobalVariables.largeRadius),
                     boxShadow: GlobalVariables.softCardShadow,
                   ),
                   child: Column(
@@ -306,7 +306,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                   children: [
                     Expanded(
                       child: _quickAction(
-                        icon: Icons.work,
+                        icon: Icons.work_rounded,
                         text: 'View Jobs',
                         onTap: () {
                           Navigator.pushNamed(context, TutorViewJobsScreen.routeName);
@@ -316,7 +316,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: _quickAction(
-                        icon: Icons.school,
+                        icon: Icons.school_rounded,
                         text: 'Take Exams',
                         onTap: () {
                           Navigator.pushNamed(context, ExamListingScreen.routeName);
@@ -349,15 +349,15 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                 CircleAvatar(
                   radius: 26,
                   backgroundColor:
-                      GlobalVariables.primaryColor.withOpacity(0.08),
+                  GlobalVariables.primaryColor.withOpacity(0.08),
                   backgroundImage:
-                      hasPhoto ? NetworkImage(teacher.photo!.url!) : null,
+                  hasPhoto ? NetworkImage(teacher.photo!.url!) : null,
                   child: !hasPhoto
                       ? const Icon(
-                          Icons.person,
-                          size: 32,
-                          color: Colors.black54,
-                        )
+                    Icons.person_rounded,
+                    size: 32,
+                    color: GlobalVariables.secondaryTextColor,
+                  )
                       : null,
                 ),
                 if (teacher?.isActive == true)
@@ -390,8 +390,8 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
         ),
         IconButton(
           onPressed: () {},
-          icon: const Icon(Icons.notifications_none_rounded,
-              color: Colors.black87),
+          icon: const Icon(Icons.notifications_rounded,
+              color: GlobalVariables.primaryTextColor),
         ),
       ],
     );
@@ -411,7 +411,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
         padding: EdgeInsets.all(18 * scale),
         decoration: BoxDecoration(
           color: GlobalVariables.surfaceColor,
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius),
           border: Border.all(
             color: Colors.grey.shade200,
             width: 1.2,
@@ -421,18 +421,18 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
         child: fullWidth
             ? Row(
           children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: GlobalVariables.primarySoft,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  icon,
-                  size: 24,
-                  color: GlobalVariables.primaryColor,
-                ),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: GlobalVariables.primarySoft,
+                borderRadius: BorderRadius.circular(GlobalVariables.smallRadius),
               ),
+              child: Icon(
+                icon,
+                size: 24,
+                color: GlobalVariables.primaryColor,
+              ),
+            ),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
@@ -459,7 +459,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
               ),
             ),
             Icon(
-              Icons.arrow_forward_ios,
+              Icons.arrow_forward_ios_rounded,
               size: 16,
               color: GlobalVariables.selectedColor.withOpacity(0.5),
             ),
@@ -508,7 +508,7 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
           color: GlobalVariables.surfaceColor,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(GlobalVariables.defaultRadius),
           border: Border.all(
             color: Colors.grey.shade200,
             width: 1.2,

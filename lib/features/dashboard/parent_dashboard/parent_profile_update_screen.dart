@@ -73,7 +73,7 @@ class _ParentProfileUpdateScreenState extends State<ParentProfileUpdateScreen> {
           style: GoogleFonts.inter(
             fontSize: 20,
             fontWeight: FontWeight.w600,
-            color: Colors.black87,
+            color: GlobalVariables.primaryTextColor,
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -135,7 +135,7 @@ class _ParentProfileUpdateScreenState extends State<ParentProfileUpdateScreen> {
                   controller: phoneCtrl,
                   hintText: 'Enter phone number',
                   keyboardType: TextInputType.phone,
-                  prefixIcon: Icons.phone,
+                  prefixIcon: Icons.phone_rounded,
                 ),
 
                 _gap(),
@@ -143,7 +143,7 @@ class _ParentProfileUpdateScreenState extends State<ParentProfileUpdateScreen> {
                 CustomTextField(
                   controller: cityCtrl,
                   hintText: 'City',
-                  prefixIcon: Icons.location_city,
+                  prefixIcon: Icons.location_city_rounded,
                 ),
 
                 const SizedBox(height: 32),

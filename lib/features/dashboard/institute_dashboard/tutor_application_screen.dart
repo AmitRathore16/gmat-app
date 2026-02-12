@@ -99,7 +99,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
                           if (teacher.expectedSalary != null) ...[
                             const SizedBox(height: 12),
                             _infoCard(
-                              icon: Icons.currency_rupee,
+                              icon: Icons.currency_rupee_rounded,
                               color: Colors.purple,
                               title: 'Expected Salary',
                               value:
@@ -127,7 +127,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
                           if (teacher.resume?.url != null &&
                               teacher.resume!.url!.isNotEmpty)
                             _resourceTile(
-                              icon: Icons.picture_as_pdf,
+                              icon: Icons.picture_as_pdf_rounded,
                               color: Colors.red,
                               title: 'Resume',
                               actionText: 'View',
@@ -149,7 +149,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
                           if (teacher.demoVideoUrl != null &&
                               teacher.demoVideoUrl!.isNotEmpty)
                             _resourceTile(
-                              icon: Icons.play_circle_fill,
+                              icon: Icons.play_circle_rounded,
                               color: Colors.blue,
                               title: 'Demo Video',
                               actionText: 'Watch',
@@ -179,7 +179,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
                               child: const Text(
                                 'No resources uploaded',
                                 style: TextStyle(
-                                  color: Colors.black54,
+                                  color: GlobalVariables.secondaryTextColor,
                                   fontSize: 14,
                                 ),
                               ),
@@ -221,7 +221,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
             'Update Application Status',
             style: TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w700,
               color: Colors.white,
             ),
           ),
@@ -275,8 +275,8 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
             teacherName ?? 'Name not provided',
             style: const TextStyle(
               fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+              color: GlobalVariables.primaryTextColor,
             ),
             textAlign: TextAlign.center,
           ),
@@ -341,7 +341,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
                   value,
                   style: const TextStyle(
                     fontSize: 15,
-                    color: Colors.black87,
+                    color: GlobalVariables.primaryTextColor,
                     fontWeight: FontWeight.w500,
                     height: 1.5,
                   ),
@@ -381,8 +381,8 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
             value,
             style: const TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+              color: GlobalVariables.primaryTextColor,
             ),
           ),
           const SizedBox(height: 4),
@@ -409,8 +409,8 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
           title,
           style: const TextStyle(
             fontSize: 15,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            fontWeight: FontWeight.w700,
+            color: GlobalVariables.primaryTextColor,
           ),
         ),
         const SizedBox(height: 12),
@@ -432,7 +432,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
               child: Text(
                 v,
                 style: const TextStyle(
-                  color: Colors.black87,
+                  color: GlobalVariables.primaryTextColor,
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
                 ),
@@ -487,7 +487,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
         status.toUpperCase(),
         style: TextStyle(
           color: color,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w700,
           fontSize: 13,
           letterSpacing: 0.5,
         ),
@@ -517,8 +517,8 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
               title,
               style: const TextStyle(
                 fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                fontWeight: FontWeight.w700,
+                color: GlobalVariables.primaryTextColor,
               ),
             ),
             const SizedBox(height: 16),
@@ -557,8 +557,8 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
                     'Update Status',
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      fontWeight: FontWeight.w700,
+                      color: GlobalVariables.primaryTextColor,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -630,7 +630,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
                             'Cancel',
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ),
@@ -652,7 +652,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
                             'Update',
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ),
@@ -714,7 +714,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+                  color: GlobalVariables.primaryTextColor,
                 ),
               ),
             ),
@@ -722,7 +722,7 @@ class _TutorApplicationScreenState extends State<TutorApplicationScreen> {
               actionText,
               style: TextStyle(
                 color: GlobalVariables.selectedColor,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w700,
                 fontSize: 14,
               ),
             ),

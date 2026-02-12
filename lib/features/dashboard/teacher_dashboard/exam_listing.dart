@@ -178,7 +178,7 @@ class ExamListingScreen extends StatelessWidget {
             style: GoogleFonts.inter(
               fontSize: 24,
               fontWeight: FontWeight.w700,
-              color: Colors.black87,
+              color: GlobalVariables.primaryTextColor,
             ),
           ),
           const SizedBox(height: 4),
@@ -306,7 +306,7 @@ class ExamListingScreen extends StatelessWidget {
                   style: GoogleFonts.inter(
                     color: levelColor,
                     fontSize: 11,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w700,
                     letterSpacing: 0.5,
                   ),
                 ),
@@ -331,7 +331,7 @@ class ExamListingScreen extends StatelessWidget {
             style: GoogleFonts.inter(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: Colors.black87,
+              color: GlobalVariables.primaryTextColor,
             ),
           ),
           const SizedBox(height: 6),

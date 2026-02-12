@@ -65,7 +65,7 @@ class JobPostingCard extends StatelessWidget {
                     ),
                   ),
                   child: Icon(
-                    Icons.school,
+                    Icons.school_rounded,
                     size: 24,
                     color: GlobalVariables.selectedColor,
                   ),
@@ -80,7 +80,7 @@ class JobPostingCard extends StatelessWidget {
                         style: GoogleFonts.inter(
                           fontSize: 17,
                           fontWeight: FontWeight.w700,
-                          color: Colors.black87,
+                          color: GlobalVariables.primaryTextColor,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -197,7 +197,7 @@ class JobPostingCard extends StatelessWidget {
                     job.jobType,
                     style: GoogleFonts.inter(
                       fontSize: 12,
-                      color: Colors.black87,
+                      color: GlobalVariables.primaryTextColor,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

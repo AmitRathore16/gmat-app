@@ -180,7 +180,7 @@ class _InstituteProfileUpdateScreenState
                                 ),
                                 child: logoImage() == null
                                     ? Icon(
-                                  Icons.business,
+                                  Icons.business_rounded,
                                   size: 40,
                                   color: GlobalVariables.selectedColor,
                                 )
@@ -479,7 +479,7 @@ class _InstituteProfileUpdateScreenState
       style: const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w600,
-        color: Colors.black87,
+        color: GlobalVariables.primaryTextColor,
       ),
     ),
   );

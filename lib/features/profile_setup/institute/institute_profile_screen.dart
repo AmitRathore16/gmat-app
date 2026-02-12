@@ -96,13 +96,13 @@ class _InstituteProfileCreateScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: GlobalVariables.backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: GlobalVariables.backgroundColor,
         elevation: 0,
         leading: currentStep > 0
             ? IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: GlobalVariables.primaryTextColor),
           onPressed: () => setState(() => currentStep--),
         )
             : null,
@@ -166,8 +166,8 @@ class _InstituteProfileCreateScreenState
         4,
             (index) => Expanded(
           child: Container(
-            height: 6,
-            margin: const EdgeInsets.symmetric(horizontal: 4),
+            height: 4,
+            margin: EdgeInsets.only(right: index < 3 ? 8 : 0),
             decoration: BoxDecoration(
               color: index <= currentStep
                   ? GlobalVariables.selectedColor
@@ -226,14 +226,14 @@ class _InstituteProfileCreateScreenState
           CustomTextField(
             controller: institutionNameCtrl,
             hintText: 'Institution Name',
-            prefixIcon: Icons.business,
+            prefixIcon: Icons.business_rounded,
           ),
           const SizedBox(height: 16),
           CustomDropdown<String>(
             value: institutionType,
             items: institutionTypes,
             hintText: 'Institution Type',
-            prefixIcon: Icons.school,
+            prefixIcon: Icons.school_rounded,
             itemLabel: (e) => e,
             onChanged: (val) => setState(() => institutionType = val),
           ),
@@ -260,20 +260,20 @@ class _InstituteProfileCreateScreenState
             readonly: true,
             controller: emailCtrl,
             hintText: 'Email',
-            prefixIcon: Icons.email,
+            prefixIcon: Icons.email_rounded,
           ),
           const SizedBox(height: 16),
           CustomTextField(
             readonly: true,
             controller: phoneCtrl,
             hintText: 'Phone',
-            prefixIcon: Icons.phone,
+            prefixIcon: Icons.phone_rounded,
           ),
           const SizedBox(height: 16),
           CustomTextField(
             controller: websiteCtrl,
             hintText: 'Website (Optional)',
-            prefixIcon: Icons.language,
+            prefixIcon: Icons.language_rounded,
           ),
         ],
       ),
@@ -354,7 +354,7 @@ class _InstituteProfileCreateScreenState
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.add_photo_alternate,
+                    Icons.add_photo_alternate_rounded,
                     size: 40,
                     color: GlobalVariables.selectedColor,
                   ),

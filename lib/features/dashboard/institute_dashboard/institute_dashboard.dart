@@ -8,11 +8,36 @@ class InstituteDashboard extends StatefulWidget {
   State<InstituteDashboard> createState() => _InstituteDashboardState();
 }
 
-class _InstituteDashboardState extends State<InstituteDashboard> {
+class _InstituteDashboardState extends State<InstituteDashboard>
+    with SingleTickerProviderStateMixin {
   int _currentIndex = 0;
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
   @override
   void initState() {
     super.initState();
+
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+
+    _fadeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOut,
+    );
+
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.02), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
+
+    _animationController.forward();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final auth = context.read<AuthProvider>();
@@ -20,50 +45,73 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
       if (auth.role == 'institute' && auth.token != null) {
         context.read<InstituteProvider>().fetchMyInstitute(
           context,
-          silent: true, // 👈 this handles profile-not-created case
+          silent: true,
         );
       }
 
-      context.read<JobApplicationProvider>()
-          .fetchRecentApplications(context);
+      context.read<JobApplicationProvider>().fetchRecentApplications(context);
     });
   }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final scale = MediaQuery.of(context).size.width / 393;
     String timeAgo(DateTime date) {
       final diff = DateTime.now().difference(date);
-      if (diff.inMinutes < 60) return '${diff.inMinutes} min ago';
-      if (diff.inHours < 24) return '${diff.inHours} hr ago';
-      return '${diff.inDays} days ago';
+      if (diff.inMinutes < 60) return '${diff.inMinutes}m';
+      if (diff.inHours < 24) return '${diff.inHours}h';
+      return '${diff.inDays}d';
     }
 
     return Scaffold(
-      backgroundColor: GlobalVariables.backgroundColor,
-
+      backgroundColor: const Color(0xFFF8F9FA),
       body: SafeArea(
         child: _currentIndex == 0
             ? RefreshIndicator(
-            onRefresh: () async {
-              await context
-                  .read<JobApplicationProvider>()
-                  .fetchRecentApplications(context);
-            },
-            child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 16 * scale),
+          onRefresh: () async {
+            await context
+                .read<JobApplicationProvider>()
+                .fetchRecentApplications(context);
+          },
+          color: const Color(0xFF3B82F6),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 20 * scale),
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: SlideTransition(
+                position: _slideAnimation,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 16),
                     _topHeader(scale),
-                    const SizedBox(height: 24),
-                    PrimaryText(text: 'Dashboard', size: 26 * scale),
-                    const SizedBox(height: 4),
-                    const SecondaryText(
-                      text: "Here's what's happening today.",
-                      size: 14,
+                    const SizedBox(height: 32),
+                    Text(
+                      'Dashboard',
+                      style: GoogleFonts.inter(
+                        fontSize: 32 * scale,
+                        fontWeight: FontWeight.w800,
+                        color: const Color(0xFF0F172A),
+                        letterSpacing: -0.8,
+                      ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 4),
+                    Text(
+                      "Here's what's happening today",
+                      style: GoogleFonts.inter(
+                        fontSize: 15,
+                        color: const Color(0xFF64748B),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
 
                     // Stats
                     Consumer<InstituteProvider>(
@@ -77,6 +125,8 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
                                 scale,
                                 title: 'Tutors Hired',
                                 value: '${institute?.tutorsHired ?? 0}',
+                                icon: Icons.people_outline_rounded,
+                                color: const Color(0xFF3B82F6),
                                 onTap: () {},
                               ),
                             ),
@@ -85,7 +135,9 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
                               child: _statCard(
                                 scale,
                                 title: 'Active Jobs',
-                                value: '${institute?.jobsPosted}',
+                                value: '${institute?.jobsPosted ?? 0}',
+                                icon: Icons.work_outline_rounded,
+                                color: const Color(0xFF10B981),
                                 onTap: () {
                                   Navigator.push(
                                     context,
@@ -108,194 +160,222 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
                     // Credit Balance
                     Consumer<InstituteProvider>(
                       builder: (context, provider, _) {
-                        final credits = provider.institution?.credits ?? 0;
-                        final maxCredits = 1000; // can come from backend later
+                        final credits =
+                            provider.institution?.credits ?? 0;
+                        final maxCredits = 1000;
                         final rawProgress = credits / maxCredits;
                         final progress = credits == 0
                             ? 0.02
                             : rawProgress.clamp(0.0, 1.0);
 
-                        return GestureDetector(
-                          onTap: () {
-                            final auth = context.read<AuthProvider>();
-                            Navigator.pushNamed(
-                              context,
-                              '/wallet',
-                              arguments: {
-                                'currentCredits': credits,
-                                'userId': auth.userId,
-                                'userRole': 'institute',
-                              },
-                            ).then((value) {
-                              if (value == true) {
-                                context
-                                    .read<InstituteProvider>()
-                                    .fetchMyInstitute(context, silent: true);
-                              }
-                            });
+                        return TweenAnimationBuilder<double>(
+                          duration: const Duration(milliseconds: 600),
+                          tween: Tween(begin: 0.0, end: 1.0),
+                          curve: Curves.easeOut,
+                          builder: (context, value, child) {
+                            return Opacity(
+                              opacity: value,
+                              child: Transform.translate(
+                                offset: Offset(0, 10 * (1 - value)),
+                                child: child,
+                              ),
+                            );
                           },
-                          child: Container(
-                            padding: EdgeInsets.all(20 * scale),
-                            decoration: BoxDecoration(
-                              color: GlobalVariables.primaryColor
-                                  .withOpacity(0.96),
-                              borderRadius: BorderRadius.circular(22),
-                              boxShadow: GlobalVariables.softCardShadow,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                            color:
-                                                Colors.white.withOpacity(0.16),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                          child: GestureDetector(
+                            onTap: () {
+                              final auth = context.read<AuthProvider>();
+                              Navigator.pushNamed(
+                                context,
+                                '/wallet',
+                                arguments: {
+                                  'currentCredits': credits,
+                                  'userId': auth.userId,
+                                  'userRole': 'institute',
+                                },
+                              ).then((value) {
+                                if (value == true) {
+                                  context
+                                      .read<InstituteProvider>()
+                                      .fetchMyInstitute(
+                                    context,
+                                    silent: true,
+                                  );
+                                }
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(24 * scale),
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    Color(0xFF3B82F6),
+                                    Color(0xFF2563EB),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(24),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFF3B82F6)
+                                        .withOpacity(0.3),
+                                    blurRadius: 24,
+                                    offset: const Offset(0, 8),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding:
+                                            const EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white
+                                                  .withOpacity(0.2),
+                                              borderRadius:
+                                              BorderRadius.circular(
+                                                  12),
+                                            ),
+                                            child: const Icon(
+                                              Icons
+                                                  .account_balance_wallet_rounded,
+                                              size: 20,
+                                              color: Colors.white,
+                                            ),
                                           ),
-                                          child: const Icon(
-                                            Icons.account_balance_wallet_rounded,
-                                            size: 20,
-                                            color: Colors.white,
+                                          const SizedBox(width: 12),
+                                          Text(
+                                            'Credit Balance',
+                                            style: GoogleFonts.inter(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white,
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                          'Credit Balance',
-                                          style: GoogleFonts.inter(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                            color:
-                                                Colors.white.withOpacity(0.95),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        final auth = context.read<AuthProvider>();
-                                        Navigator.pushNamed(
-                                          context,
-                                          '/wallet',
-                                          arguments: {
-                                            'currentCredits': credits,
-                                            'userId': auth.userId,
-                                            'userRole': 'institute',
-                                          },
-                                        ).then((value) {
-                                          // Refresh profile after payment
-                                          if (value == true) {
-                                            context
-                                                .read<InstituteProvider>()
-                                                .fetchMyInstitute(context, silent: true);
-                                          }
-                                        });
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 14,
+                                        ],
+                                      ),
+                                      Container(
+                                        padding:
+                                        const EdgeInsets.symmetric(
+                                          horizontal: 16,
                                           vertical: 8,
                                         ),
                                         decoration: BoxDecoration(
                                           color: Colors.white,
                                           borderRadius:
-                                              BorderRadius.circular(999),
+                                          BorderRadius.circular(100),
                                         ),
                                         child: Row(
                                           children: [
-                                            Icon(
-                                              Icons.add_circle,
+                                            const Icon(
+                                              Icons.add_circle_rounded,
                                               size: 16,
-                                              color:
-                                                  GlobalVariables.primaryColor,
+                                              color: Color(0xFF3B82F6),
                                             ),
                                             const SizedBox(width: 6),
                                             Text(
                                               'Top up',
                                               style: GoogleFonts.inter(
-                                                color: GlobalVariables
-                                                    .primaryColor,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 12,
+                                                color: const Color(
+                                                    0xFF3B82F6),
+                                                fontWeight:
+                                                FontWeight.w700,
+                                                fontSize: 13,
                                               ),
                                             ),
                                           ],
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-
-                                const SizedBox(height: 16),
-
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      '$credits',
-                                      style: GoogleFonts.inter(
-                                        fontSize: 40 * scale,
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 6),
-                                      child: Text(
-                                        'credits available',
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        '$credits',
                                         style: GoogleFonts.inter(
-                                          fontSize: 14,
-                                          color:
-                                              Colors.white.withOpacity(0.85),
+                                          fontSize: 48 * scale,
+                                          fontWeight: FontWeight.w800,
+                                          color: Colors.white,
+                                          height: 1,
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-
-                                const SizedBox(height: 14),
-
-                                Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: LinearProgressIndicator(
-                                        value: progress,
-                                        minHeight: 8,
-                                        backgroundColor:
-                                            Colors.white.withOpacity(0.2),
-                                        valueColor:
-                                            const AlwaysStoppedAnimation<Color>(
-                                          Colors.white,
+                                      const SizedBox(width: 8),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            bottom: 8),
+                                        child: Text(
+                                          'credits available',
+                                          style: GoogleFonts.inter(
+                                            fontSize: 14,
+                                            color: Colors.white
+                                                .withOpacity(0.9),
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
                                       ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 16),
+                                  ClipRRect(
+                                    borderRadius:
+                                    BorderRadius.circular(100),
+                                    child: TweenAnimationBuilder<double>(
+                                      duration: const Duration(
+                                          milliseconds: 1200),
+                                      tween:
+                                      Tween(begin: 0.0, end: progress),
+                                      curve: Curves.easeOutCubic,
+                                      builder: (context, value, _) {
+                                        return LinearProgressIndicator(
+                                          value: value,
+                                          minHeight: 6,
+                                          backgroundColor: Colors.white
+                                              .withOpacity(0.2),
+                                          valueColor:
+                                          const AlwaysStoppedAnimation<
+                                              Color>(Colors.white),
+                                        );
+                                      },
                                     ),
-                                  ],
-                                ),
-                              ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        );                      },
+                        );
+                      },
                     ),
 
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 32),
 
                     // Quick Actions
-                    const PrimaryText(text: 'Quick Actions', size: 18),
-                    const SizedBox(height: 12),
+                    Text(
+                      'Quick Actions',
+                      style: GoogleFonts.inter(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF0F172A),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
                     Row(
                       children: [
                         Expanded(
                           child: _quickAction(
-                            icon: Icons.add,
+                            icon: Icons.add_circle_outline_rounded,
                             text: 'Post a Job',
+                            color: const Color(0xFF3B82F6),
                             onTap: () {
                               Navigator.pushNamed(
                                 context,
@@ -307,8 +387,9 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: _quickAction(
-                            icon: Icons.search,
+                            icon: Icons.search_rounded,
                             text: 'Search Tutors',
+                            color: const Color(0xFF10B981),
                             onTap: () {
                               setState(() {
                                 _currentIndex = 2;
@@ -319,7 +400,7 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
                       ],
                     ),
 
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 32),
 
                     // Recent Applications
                     Consumer<InstituteProvider>(
@@ -327,11 +408,16 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
                         final institute = provider.institution;
 
                         return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
                           children: [
-                            const PrimaryText(
-                              text: 'Recent Applications',
-                              size: 18,
+                            Text(
+                              'Recent Applications',
+                              style: GoogleFonts.inter(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFF0F172A),
+                              ),
                             ),
                             TextButton(
                               onPressed: () {
@@ -344,11 +430,29 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
                                   ),
                                 );
                               },
-                              child: const Text(
-                                'View All',
-                                style: TextStyle(
-                                  color: GlobalVariables.selectedColor,
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
                                 ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'View All',
+                                    style: GoogleFonts.inter(
+                                      color: const Color(0xFF3B82F6),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  const Icon(
+                                    Icons.arrow_forward_rounded,
+                                    size: 16,
+                                    color: Color(0xFF3B82F6),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -368,15 +472,38 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
                         }
 
                         return Column(
-                          children: provider.recentApplications.map((app) {
-                            return RecentApplicationCard(
-                              onTap: () {},
-                              photo: app.tutorPhoto,
-                              name: app.tutorName,
-                              role: app.jobTitle,
-                              time: timeAgo(app.createdAt),
+                          children: provider.recentApplications
+                              .asMap()
+                              .entries
+                              .map((entry) {
+                            final index = entry.key;
+                            final app = entry.value;
+
+                            return TweenAnimationBuilder<double>(
+                              duration: Duration(
+                                  milliseconds: 400 + (index * 100)),
+                              tween: Tween(begin: 0.0, end: 1.0),
+                              curve: Curves.easeOut,
+                              builder: (context, value, child) {
+                                return Opacity(
+                                  opacity: value,
+                                  child: Transform.translate(
+                                    offset:
+                                    Offset(0, 20 * (1 - value)),
+                                    child: child,
+                                  ),
+                                );
+                              },
+                              child: RecentApplicationCard(
+                                onTap: () {},
+                                photo: app.tutorPhoto,
+                                name: app.tutorName,
+                                role: app.jobTitle,
+                                time: timeAgo(app.createdAt),
+                              ),
                             );
-                          }).toList(),
+                          })
+                              .toList(),
                         );
                       },
                     ),
@@ -384,47 +511,56 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
                     const SizedBox(height: 100),
                   ],
                 ),
-              )
+              ),
+            ),
+          ),
         )
             : _currentIndex == 1
-                ? const Text('Jobs Screen')
-                : _currentIndex == 2
-                    ? const TutorDiscoveryScreen()
-                    : const InstituteProfileScreen(),
+            ? const Text('Jobs Screen')
+            : _currentIndex == 2
+            ? const TutorDiscoveryScreen()
+            : const InstituteProfileScreen(),
       ),
-
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: GlobalVariables.surfaceColor,
-          boxShadow: GlobalVariables.subtleShadow,
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 12,
+              offset: const Offset(0, -2),
+            ),
+          ],
         ),
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (i) => setState(() => _currentIndex = i),
-          selectedItemColor: GlobalVariables.primaryColor,
-          unselectedItemColor: Colors.grey.shade400,
-          backgroundColor: GlobalVariables.surfaceColor,
+          selectedItemColor: const Color(0xFF3B82F6),
+          unselectedItemColor: const Color(0xFF94A3B8),
+          backgroundColor: Colors.transparent,
           showSelectedLabels: false,
           showUnselectedLabels: false,
+          type: BottomNavigationBarType.fixed,
+          elevation: 0,
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard_outlined),
-              activeIcon: Icon(Icons.dashboard),
+              icon: Icon(Icons.dashboard_outlined, size: 24),
+              activeIcon: Icon(Icons.dashboard_rounded, size: 24),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.work_outline),
-              activeIcon: Icon(Icons.work),
+              icon: Icon(Icons.work_outline_rounded, size: 24),
+              activeIcon: Icon(Icons.work_rounded, size: 24),
               label: 'Jobs',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.search_rounded),
-              activeIcon: Icon(Icons.search),
+              icon: Icon(Icons.search_rounded, size: 24),
+              activeIcon: Icon(Icons.search_rounded, size: 24),
               label: 'Search',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              activeIcon: Icon(Icons.person),
+              icon: Icon(Icons.person_outline_rounded, size: 24),
+              activeIcon: Icon(Icons.person_rounded, size: 24),
               label: 'Profile',
             ),
           ],
@@ -432,8 +568,6 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
       ),
     );
   }
-
-  // ───────── widgets ─────────
 
   Widget _topHeader(double scale) {
     return Consumer<InstituteProvider>(
@@ -446,58 +580,96 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
           children: [
             Row(
               children: [
-                Stack(
-                  children: [
-                    CircleAvatar(
-                      radius: 26,
-                      backgroundColor:
-                          GlobalVariables.primaryColor.withOpacity(0.08),
-                      backgroundImage:
-                          hasLogo ? NetworkImage(institute.logo!) : null,
-                      child: !hasLogo
-                          ? const Icon(
-                              Icons.school,
-                              size: 32,
-                              color: Colors.black54,
-                            )
-                          : null,
-                    ),
-
-                    // active indicator
-                    if (institute?.isActive == true)
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: Container(
-                          height: 10,
-                          width: 10,
-                          decoration: const BoxDecoration(
-                            color: Colors.green,
-                            shape: BoxShape.circle,
+                TweenAnimationBuilder<double>(
+                  duration: const Duration(milliseconds: 600),
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  curve: Curves.elasticOut,
+                  builder: (context, value, child) {
+                    return Transform.scale(
+                      scale: value,
+                      child: Stack(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: const Color(0xFFE5E7EB),
+                                width: 2,
+                              ),
+                            ),
+                            child: CircleAvatar(
+                              radius: 24,
+                              backgroundColor: const Color(0xFFF1F5F9),
+                              backgroundImage:
+                              hasLogo ? NetworkImage(institute.logo!) : null,
+                              child: !hasLogo
+                                  ? const Icon(
+                                Icons.school_rounded,
+                                size: 24,
+                                color: Color(0xFF64748B),
+                              )
+                                  : null,
+                            ),
                           ),
-                        ),
+                          if (institute?.isActive == true)
+                            Positioned(
+                              right: 2,
+                              bottom: 2,
+                              child: Container(
+                                height: 12,
+                                width: 12,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF10B981),
+                                  shape: BoxShape.circle,
+                                  border:
+                                  Border.all(color: Colors.white, width: 2),
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
-                  ],
+                    );
+                  },
                 ),
                 const SizedBox(width: 12),
-
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SecondaryText(text: 'Welcome back,', size: 12),
-                    PrimaryText(
-                      text: institute?.institutionName ?? 'Your Institute',
-                      size: 16,
+                    Text(
+                      'Welcome back',
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        color: const Color(0xFF64748B),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      institute?.institutionName ?? 'Your Institute',
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF0F172A),
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.notifications_none_rounded,
-                color: Colors.black87,
+            Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8FAFC),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
+              ),
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.notifications_none_rounded,
+                  color: Color(0xFF475569),
+                  size: 22,
+                ),
               ),
             ),
           ],
@@ -510,42 +682,76 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
       double scale, {
         required String title,
         required String value,
+        required IconData icon,
+        required Color color,
         required VoidCallback onTap,
       }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(18 * scale),
-        decoration: BoxDecoration(
-          color: GlobalVariables.surfaceColor,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: Colors.grey.shade200,
-            width: 1.2,
+    return TweenAnimationBuilder<double>(
+      duration: const Duration(milliseconds: 600),
+      tween: Tween(begin: 0.0, end: 1.0),
+      curve: Curves.easeOut,
+      builder: (context, animValue, child) {
+        return Opacity(
+          opacity: animValue,
+          child: Transform.translate(
+            offset: Offset(0, 15 * (1 - animValue)),
+            child: child,
           ),
-          boxShadow: GlobalVariables.subtleShadow,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              value,
-              style: GoogleFonts.inter(
-                fontSize: 32 * scale,
-                fontWeight: FontWeight.w700,
-                color: GlobalVariables.primaryTextColor,
+        );
+      },
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: EdgeInsets.all(20 * scale),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: const Color(0xFFE5E7EB), width: 1.5),
+            boxShadow: [
+              BoxShadow(
+                color: color.withOpacity(0.08),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: GlobalVariables.secondaryTextColor,
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      color.withOpacity(0.15),
+                      color.withOpacity(0.05),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(icon, size: 24, color: color),
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              Text(
+                value,
+                style: GoogleFonts.inter(
+                  fontSize: 32 * scale,
+                  fontWeight: FontWeight.w800,
+                  color: const Color(0xFF0F172A),
+                  height: 1,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                title,
+                style: GoogleFonts.inter(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF64748B),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -554,36 +760,36 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
   Widget _quickAction({
     required IconData icon,
     required String text,
+    required Color color,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
         decoration: BoxDecoration(
-          color: GlobalVariables.surfaceColor,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Colors.grey.shade200,
-            width: 1.2,
-          ),
-          boxShadow: GlobalVariables.subtleShadow,
+          border: Border.all(color: const Color(0xFFE5E7EB), width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.08),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              size: 20,
-              color: GlobalVariables.primaryColor,
-            ),
+            Icon(icon, size: 22, color: color),
             const SizedBox(width: 10),
             Text(
               text,
               style: GoogleFonts.inter(
                 fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: GlobalVariables.primaryTextColor,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF0F172A),
               ),
             ),
           ],
@@ -593,49 +799,65 @@ class _InstituteDashboardState extends State<InstituteDashboard> {
   }
 
   Widget _emptyState(double scale) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(
-        color: GlobalVariables.surfaceColor,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.grey.shade200,
-          width: 1.2,
+    return TweenAnimationBuilder<double>(
+      duration: const Duration(milliseconds: 600),
+      tween: Tween(begin: 0.0, end: 1.0),
+      curve: Curves.easeOut,
+      builder: (context, value, child) {
+        return Opacity(
+          opacity: value,
+          child: Transform.scale(
+            scale: value,
+            child: child,
+          ),
+        );
+      },
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(40),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: const Color(0xFFE5E7EB), width: 1.5),
         ),
-      ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: GlobalVariables.successColor.withOpacity(0.08),
-              shape: BoxShape.circle,
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    const Color(0xFF10B981).withOpacity(0.15),
+                    const Color(0xFF10B981).withOpacity(0.05),
+                  ],
+                ),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.check_circle_outline_rounded,
+                size: 48,
+                color: Color(0xFF10B981),
+              ),
             ),
-            child: Icon(
-              Icons.check_circle_outline,
-              size: 48,
-              color: GlobalVariables.successColor,
+            const SizedBox(height: 20),
+            Text(
+              "You're all caught up!",
+              style: GoogleFonts.inter(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF0F172A),
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'You are all caught up!',
-            style: GoogleFonts.inter(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: GlobalVariables.primaryTextColor,
+            const SizedBox(height: 6),
+            Text(
+              'No new applications at the moment',
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                color: const Color(0xFF64748B),
+              ),
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'No new applications at the moment',
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              color: GlobalVariables.secondaryTextColor,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -84,7 +84,7 @@ class _AppliedJobsScreenState extends State<AppliedJobsScreen> {
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
-                        Icons.work_outline,
+                        Icons.work_outline_rounded,
                         size: 48,
                         color: GlobalVariables.selectedColor,
                       ),

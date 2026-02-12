@@ -93,7 +93,7 @@ class _ParentProfileCreateScreenState extends State<ParentProfileCreateScreen> {
                 ),
               ],
             ),
-            child: const Icon(Icons.arrow_back_rounded, color: Colors.black87, size: 20),
+            child: const Icon(Icons.arrow_back_rounded, color: GlobalVariables.primaryTextColor, size: 20),
           ),
           onPressed: () => setState(() => currentStep--),
         )
@@ -263,7 +263,7 @@ class _ParentProfileCreateScreenState extends State<ParentProfileCreateScreen> {
                   child: const Icon(
                     Icons.person_rounded,
                     size: 52,
-                    color: Colors.black87,
+                    color: GlobalVariables.primaryTextColor,
                   ),
                 ),
               ),
